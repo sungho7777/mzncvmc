@@ -1,0 +1,13 @@
+package com.in.mzncvmc;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class MzncvmcApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(MzncvmcApplication.class, args);
+	}
+
+}

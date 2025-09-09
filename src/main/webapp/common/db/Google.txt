@@ -1,0 +1,7 @@
+Additional information
+Google 이름
+    MyTestApp
+클라이언트 ID
+    459447321516-8hjjdokop2tl4a8ettbb6kcdiutq7kv0.apps.googleusercontent.com
+승인된 리디렉션 URI
+    http://localhost:8080/login/oauth2/code/google

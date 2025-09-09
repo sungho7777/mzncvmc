@@ -1,0 +1,159 @@
+mysql> create database mzncvmc;
+
+use mzncvmc;
+
+# 테이블 삭제
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS company;
+
+# 테이블 생성
+CREATE TABLE company (
+    company_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '회사 고유 ID',
+    company_name VARCHAR(200) NOT NULL COMMENT '회사명',
+    company_eng_name VARCHAR(200) DEFAULT NULL COMMENT '영문 회사명',
+    business_number VARCHAR(20) UNIQUE NOT NULL COMMENT '사업자 등록번호',
+    ceo_name VARCHAR(100) DEFAULT NULL COMMENT '대표자명',
+    established_date DATE DEFAULT NULL COMMENT '설립일',
+    company_type VARCHAR(50) DEFAULT NULL COMMENT '회사 형태(예: 주식회사, LLC 등)',
+    industry VARCHAR(100) DEFAULT NULL COMMENT '업종',
+    phone VARCHAR(20) DEFAULT NULL COMMENT '대표 전화번호',
+    fax VARCHAR(20) DEFAULT NULL COMMENT '팩스 번호',
+    email VARCHAR(100) DEFAULT NULL COMMENT '대표 이메일',
+    website VARCHAR(200) DEFAULT NULL COMMENT '홈페이지',
+
+    postal_code VARCHAR(10) DEFAULT NULL COMMENT '우편번호',
+    address VARCHAR(300) DEFAULT NULL COMMENT '주소',
+    address_detail VARCHAR(300) DEFAULT NULL COMMENT '상세 주소',
+
+    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+
+    status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '상태'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사 정보 테이블';
+
+# 테이블 입력
+INSERT INTO company (company_name, company_eng_name, business_number, ceo_name, established_date, company_type, industry, phone, fax, email, website, postal_code, address, address_detail, status)
+VALUES
+('한국테크', 'KOREA TECH', '123-45-67890', '홍길동', '2010-05-01', '주식회사', 'IT/소프트웨어', '02-1234-5678', '02-1234-5679', 'info@koreatech.com', 'https://www.koreatech.com', '04524', '서울특별시 중구 세종대로 110', '12층', 'ACTIVE'),
+('글로벌솔루션', 'GLOBAL SOLUTION', '987-65-43210', '김철수', '2015-08-15', 'LLC', '컨설팅', '02-9876-5432', '02-9876-5433', 'contact@globalsol.com', 'https://www.globalsol.com', '06123', '서울특별시 강남구 테헤란로 200', '10층', 'ACTIVE'),
+('에코에너지', 'ECO ENERGY', '111-22-33333', '박영희', '2012-03-20', '주식회사', '에너지', '031-555-1111', '031-555-1112', 'eco@ecoenergy.com', 'https://www.ecoenergy.com', '13579', '경기도 성남시 분당구 판교역로 20', '5층', 'ACTIVE'),
+('스마트모빌리티', 'SMART MOBILITY', '222-33-44444', '이민호', '2018-11-11', '주식회사', '자동차/모빌리티', '032-444-2222', '032-444-2223', 'smart@mobility.com', 'https://www.mobility.com', '45678', '인천광역시 남동구 인주대로 300', '8층', 'ACTIVE'),
+('퓨처메디컬', 'FUTURE MEDICAL', '333-44-55555', '최수정', '2016-07-07', 'LLC', '의료기기', '02-7890-1234', '02-7890-1235', 'info@futuremed.com', 'https://www.futuremed.com', '07890', '서울특별시 송파구 올림픽로 25', '15층', 'ACTIVE'),
+('아이티코어', 'IT CORE', '444-55-66666', '정우성', '2013-09-01', '주식회사', 'IT/서비스', '02-3456-7890', '02-3456-7891', 'contact@itcore.com', 'https://www.itcore.com', '05555', '서울특별시 강서구 마곡중앙로 150', '9층', 'ACTIVE'),
+('넥스트로보틱스', 'NEXT ROBOTICS', '555-66-77777', '김하늘', '2020-01-10', '주식회사', '로봇/AI', '042-987-6543', '042-987-6544', 'robot@nextrobotics.com', 'https://www.nextrobotics.com', '30012', '대전광역시 유성구 대학로 100', '7층', 'ACTIVE'),
+('그린푸드', 'GREEN FOOD', '666-77-88888', '오지현', '2011-04-04', '주식회사', '식품', '051-234-5678', '051-234-5679', 'green@greenfood.com', 'https://www.greenfood.com', '48912', '부산광역시 해운대구 센텀서로 45', '11층', 'ACTIVE'),
+('한빛건설', 'HANBIT CONSTRUCTION', '777-88-99999', '윤태호', '2009-02-28', '주식회사', '건설', '02-6543-2100', '02-6543-2101', 'info@hanbitconst.com', 'https://www.hanbitconst.com', '04512', '서울특별시 종로구 종로 50', '14층', 'ACTIVE'),
+('스타엔터', 'STAR ENTERTAINMENT', '888-99-00000', '장미란', '2017-12-24', 'LLC', '엔터테인먼트', '02-1111-2222', '02-1111-2223', 'star@starent.com', 'https://www.starent.com', '12345', '서울특별시 강남구 청담동 99', '3층', 'ACTIVE'),
+('코스메틱스코리아', 'COSMETICS KOREA', '999-00-11111', '김소연', '2014-06-18', '주식회사', '화장품', '031-222-3333', '031-222-3334', 'cs@cosmekorea.com', 'https://www.cosmekorea.com', '16789', '경기도 용인시 기흥구 강남로 88', '2층', 'ACTIVE'),
+('하이브리드솔루션', 'HYBRID SOLUTION', '112-23-33444', '정민수', '2019-10-05', 'LLC', '소프트웨어', '02-8765-4321', '02-8765-4322', 'hyb@solution.com', 'https://www.solution.com', '04567', '서울특별시 영등포구 국제금융로 20', '20층', 'ACTIVE'),
+('로지스틱스코리아', 'LOGISTICS KOREA', '223-34-44555', '송지훈', '2008-08-08', '주식회사', '물류/유통', '031-777-8888', '031-777-8889', 'logi@logikorea.com', 'https://www.logikorea.com', '14567', '경기도 평택시 진위면 산업로 30', '1층', 'ACTIVE'),
+('바이오헬스', 'BIO HEALTH', '334-45-55666', '이서연', '2013-05-15', '주식회사', '바이오/헬스케어', '02-1599-8888', '02-1599-9999', 'bio@biohealth.com', 'https://www.biohealth.com', '07555', '서울특별시 마포구 월드컵북로 100', '13층', 'ACTIVE'),
+('디지털뱅크', 'DIGITAL BANK', '445-56-66777', '한지훈', '2011-01-01', '주식회사', '핀테크', '02-9000-1111', '02-9000-1112', 'bank@digitalbank.com', 'https://www.digitalbank.com', '05001', '서울특별시 종로구 종각로 25', '18층', 'ACTIVE'),
+('스카이항공', 'SKY AIRLINE', '556-67-77888', '조윤아', '2007-09-09', '주식회사', '항공', '032-555-6666', '032-555-6667', 'sky@skyair.com', 'https://www.skyair.com', '22334', '인천광역시 중구 공항로 272', '2층', 'ACTIVE'),
+('메가리테일', 'MEGA RETAIL', '667-78-88999', '안지훈', '2016-11-30', 'LLC', '리테일', '031-333-4444', '031-333-4445', 'mega@retail.com', 'https://www.megaretail.com', '13245', '경기도 고양시 일산동구 중앙로 300', '6층', 'ACTIVE'),
+('뉴미디어랩', 'NEW MEDIA LAB', '778-89-99000', '백지원', '2019-04-19', '주식회사', '미디어', '02-3210-5432', '02-3210-5433', 'media@newmedialab.com', 'https://www.newmedialab.com', '06789', '서울특별시 서초구 서초대로 70', '10층', 'ACTIVE'),
+('에이스스포츠', 'ACE SPORTS', '889-90-00111', '강철민', '2012-12-12', '주식회사', '스포츠', '051-765-4321', '051-765-4322', 'ace@sports.com', 'https://www.acesports.com', '45601', '부산광역시 수영구 광안해변로 10', '4층', 'ACTIVE'),
+('오션마린', 'OCEAN MARINE', '990-01-11222', '김도윤', '2018-06-06', 'LLC', '해운/조선', '052-123-4567', '052-123-4568', 'ocean@oceanmarine.com', 'https://www.oceanmarine.com', '67890', '울산광역시 남구 산업로 200', '5층', 'ACTIVE'),
+('퓨처에듀', 'FUTURE EDU', '101-12-22333', '박민정', '2015-09-01', '주식회사', '교육', '02-8080-6060', '02-8080-6061', 'edu@futureedu.com', 'https://www.futureedu.com', '02456', '서울특별시 동대문구 휘경로 30', '12층', 'ACTIVE'),
+('에코텍', 'ECO TECH', '202-23-33444', '신영호', '2014-02-02', '주식회사', '환경', '02-2222-3333', '02-2222-3334', 'eco@ecotech.com', 'https://www.ecotech.com', '03456', '서울특별시 성동구 성수이로 35', '6층', 'ACTIVE'),
+('크리에이티브랩', 'CREATIVE LAB', '303-34-44555', '윤미라', '2020-07-20', 'LLC', '디자인', '031-666-7777', '031-666-7778', 'lab@creativelab.com', 'https://www.creativelab.com', '14568', '경기도 성남시 판교로 75', '8층', 'ACTIVE'),
+('한빛전자', 'HANBIT ELECTRONICS', '404-45-55666', '임재현', '2013-03-03', '주식회사', '전자/전기', '02-7654-3210', '02-7654-3211', 'elec@hanbitelec.com', 'https://www.hanbitelec.com', '07891', '서울특별시 용산구 한강대로 120', '16층', 'ACTIVE'),
+('브라이트AI', 'BRIGHT AI', '505-56-66777', '문지훈', '2019-11-11', '주식회사', 'AI/데이터', '02-3434-5656', '02-3434-5657', 'ai@brightai.com', 'https://www.brightai.com', '08890', '서울특별시 강남구 선릉로 250', '17층', 'ACTIVE'),
+('오렌지게임즈', 'ORANGE GAMES', '606-67-77888', '서유리', '2012-10-10', 'LLC', '게임', '02-5656-7878', '02-5656-7879', 'games@orange.com', 'https://www.orangegames.com', '06678', '서울특별시 구로구 디지털로 300', '20층', 'ACTIVE'),
+('클린워터', 'CLEAN WATER', '707-78-88999', '이성호', '2009-09-09', '주식회사', '환경/수자원', '031-454-7878', '031-454-7879', 'water@cleanwater.com', 'https://www.cleanwater.com', '15432', '경기도 안양시 동안구 시민대로 50', '2층', 'ACTIVE'),
+('베스트하우징', 'BEST HOUSING', '808-89-99000', '양지혜', '2017-01-01', '주식회사', '부동산', '02-3030-5050', '02-3030-5051', 'best@housing.com', 'https://www.besthousing.com', '12346', '서울특별시 동작구 노량진로 70', '7층', 'ACTIVE'),
+('한강투어', 'HANGANG TOUR', '909-90-00111', '오준호', '2011-11-05', 'LLC', '관광', '02-6060-9090', '02-6060-9091', 'tour@hangang.com', 'https://www.hangangtour.com', '08891', '서울특별시 종로구 삼청로 50', '1층', 'ACTIVE'),
+('다이나믹파워', 'DYNAMIC POWER', '010-11-11222', '배수진', '2016-04-22', '주식회사', '전력', '02-1112-3333', '02-1112-3334', 'power@dynamic.com', 'https://www.dynamicpower.com', '09991', '서울특별시 서대문구 충정로 120', '19층', 'ACTIVE');
+
+# 테이블 조회
+SELECT * FROM company;
+
+
+
+# 테이블 생성
+CREATE TABLE users (
+        user_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '사용자 고유 ID',
+        company_id BIGINT NOT NULL COMMENT '소속 회사 ID (FK: company.company_id)',
+        username VARCHAR(100) NOT NULL UNIQUE COMMENT '로그인 아이디',
+        password VARCHAR(255) NOT NULL COMMENT '암호화된 비밀번호',
+        full_name VARCHAR(100) DEFAULT NULL COMMENT '사용자 이름',
+        email VARCHAR(100) DEFAULT NULL COMMENT '이메일',
+        phone VARCHAR(20) DEFAULT NULL COMMENT '전화번호',
+        role ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER' COMMENT '권한',
+        status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '계정 상태',
+
+        registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
+        update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
+
+        last_login TIMESTAMP NULL DEFAULT NULL COMMENT '마지막 로그인 시각',
+
+        CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES company(company_id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자 정보 테이블';
+
+# 테이블 입력
+INSERT INTO users (company_id, username, password, full_name, email, phone, role, status, last_login)
+VALUES
+    (1, 'admin', '1', '홍길동', 'admin@koreatech.com', '010-1111-2222', 'ADMIN', 'ACTIVE', NULL),
+    (2, 'user_lee', '1', '이영희', 'userlee@koreatech.com', '010-3333-4444', 'USER', 'ACTIVE', NULL),
+    (2, 'manager_global', '1', '김철수', 'manager@globalsol.com', '010-5555-6666', 'MANAGER', 'ACTIVE', NULL),
+    (3, 'user_park', '1', '박성백', 'userpark@globalsol.com', '010-7777-8888', 'USER', 'INACTIVE', NULL),
+    (3, 'user_kim', '1', '김민수', 'userminsu@koreatech.com', '010-1212-3434', 'USER', 'ACTIVE', NULL),
+    (3, 'user_choi', '1', '최은지', 'userchoi@koreatech.com', '010-5656-7878', 'USER', 'ACTIVE', NULL),
+    (4, 'user_jung', '1', '정호석', 'userjung@globalsol.com', '010-9090-1010', 'USER', 'INACTIVE', NULL),
+    (4, 'manager_kang', '1', '강서준', 'managerkang@globalsol.com', '010-1122-3344', 'MANAGER', 'ACTIVE', NULL),
+    (4, 'user_han', '1', '한지원', 'userhan@koreatech.com', '010-2233-4455', 'USER', 'ACTIVE', NULL),
+    (5, 'user_song', '1', '송다현', 'usersong@globalsol.com', '010-6677-8899', 'USER', 'INACTIVE', NULL),
+    (5, 'manager_oh', '1', '오세훈', 'manageroh@koreatech.com', '010-1111-9999', 'MANAGER', 'ACTIVE', NULL),
+    (5, 'user_shin', '1', '신지우', 'usershin@globalsol.com', '010-4444-2222', 'USER', 'ACTIVE', NULL),
+    (5, 'user_yang', '1', '양도윤', 'useryang@koreatech.com', '010-5555-3333', 'USER', 'ACTIVE', NULL),
+    (6, 'user_kwon', '1', '권예진', 'userkwon@globalsol.com', '010-6666-1111', 'USER', 'INACTIVE', NULL),
+    (6, 'manager_hwang', '1', '황지민', 'managerhwang@koreatech.com', '010-7777-5555', 'MANAGER', 'ACTIVE', NULL),
+    (6, 'user_im', '1', '임채영', 'userim@globalsol.com', '010-8888-4444', 'USER', 'ACTIVE', NULL),
+    (6, 'user_baek', '1', '백현우', 'userbaek@koreatech.com', '010-9999-6666', 'USER', 'ACTIVE', NULL),
+    (6, 'user_jang', '1', '장유진', 'userjang@globalsol.com', '010-1234-9876', 'USER', 'INACTIVE', NULL),
+    (7, 'manager_yoo', '1', '유다은', 'manageryoo@koreatech.com', '010-3456-7890', 'MANAGER', 'ACTIVE', NULL),
+    (7, 'user_hong', '1', '홍서준', 'userhong@globalsol.com', '010-6543-2109', 'USER', 'ACTIVE', NULL),
+    (7, 'user_ahn', '1', '안지훈', 'userahn@koreatech.com', '010-7410-8520', 'USER', 'ACTIVE', NULL),
+    (7, 'manager_nam', '1', '남도현', 'managernam@globalsol.com', '010-9630-1470', 'MANAGER', 'ACTIVE', NULL),
+    (7, 'user_seo', '1', '서민재', 'userseo@koreatech.com', '010-8520-3690', 'USER', 'ACTIVE', NULL),
+    (7, 'user_ha', '1', '하지은', 'userha@globalsol.com', '010-1470-2580', 'USER', 'INACTIVE', NULL),
+    (7, 'user_yun', '1', '윤지호', 'useryun@koreatech.com', '010-7530-9510', 'USER', 'ACTIVE', NULL),
+    (8, 'user_go', '1', '고아람', 'usergo@globalsol.com', '010-1590-3570', 'USER', 'ACTIVE', NULL),
+    (8, 'manager_sim', '1', '심다혜', 'managersim@koreatech.com', '010-2580-6540', 'MANAGER', 'ACTIVE', NULL),
+    (8, 'user_noh', '1', '노은우', 'usernoh@globalsol.com', '010-3570-8520', 'USER', 'INACTIVE', NULL),
+    (8, 'user_jo', '1', '조현아', 'userjo@koreatech.com', '010-4560-1590', 'USER', 'ACTIVE', NULL),
+    (8, 'user_ma', '1', '마세영', 'userma@globalsol.com', '010-9510-4560', 'USER', 'ACTIVE', NULL);
+
+
+# 테이블 조회
+SELECT * FROM users;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+drop table neo;
+CREATE TABLE neo (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        company VARCHAR(50) NOT NULL UNIQUE,
+        addr VARCHAR(255) NOT NULL,
+        tel VARCHAR(255)
+    );
+select * from neo;
+
+mysql> INSERT INTO neo (company, addr, tel) VALUES
+        ('NStringInfo', '서울 가산 1234', '02-1234-1234'),
+        ('Google Company', '인천 중구 7777', '02-7777-7777'),
+        ('Naver Company', '부산 동구 5555', '02-5555-5555');
