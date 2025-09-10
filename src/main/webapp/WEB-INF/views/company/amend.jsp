@@ -7,37 +7,22 @@
         <button type="button" onclick="testData();">TestData</button><br>
         <br>
         <input type="text" name="mapping" value="${mapping}"><br>
-        <input type="text" name="userId" value="${empty user.userId ? 0 : user.userId}"><br>
+        <input type="text" name="companyId" value="${empty company.companyId ? 0 : company.companyId}"><br>
 
         <br>
-        <label for="username">아이디</label>
-        <input type="text" name="username" value="${user.username}" /><br>
+        <label for="companyName">회사명</label>
+        <input type="text" name="companyName" value="${company.companyName}" /><br>
 
-        <label for="companyId">회사</label>
-        <input type="text" name="companyId" value="${user.companyId}" /><br>
-
-        <label for="fullName">이름</label>
-        <input type="text" name="fullName" value="${user.fullName}" /><br>
-
-        <label for="email">이메일</label>
-        <input type="text" name="email" value="${user.email}" /><br>
-
-        <label for="phone">phone</label>
-        <input type="text" name="phone" value="${user.phone}" /><br>
-
-
-        <label for="status">룰</label>
-        <input type="text" name="role" value="${user.role}" /><br>
 
         <label for="status">상태</label>
-        <input type="text" name="status" value="${user.status}" /><br>
+        <input type="text" name="status" value="${company.status}" /><br>
 
-        <button type="button" onclick="amendData();">${empty user.userId ? 'Create' : 'Amend'}</button>
+        <button type="button" onclick="amendData();">${empty company.companyId ? 'Create' : 'Amend'}</button>
     </form>
 </main>
 
 <script type="text/javascript">
-    const MENU = "users";
+    const MENU = "company";
     const API_URL = "/api/" + MENU;
 
     window.onload = function() {
@@ -62,7 +47,7 @@
         const form = document.getElementById("amendForm");
         const data = Object.fromEntries(new FormData(form).entries());
         const mappingType = data.mapping == "PUT" ? "UPDATE" :
-                            data.mapping == "POST" ? "NEW" : null;
+            data.mapping == "POST" ? "NEW" : null;
         // 숫자 필드 변환 및 null 처리
         //data.age = data.age ? parseInt(data.age) : null;
         //data.salary = data.salary ? parseFloat(data.salary) : null;
@@ -76,7 +61,7 @@
         $('#loading').show(); // 로딩 표시
 
         try {
-            const res = await fetch(API_URL + `/` + data.userId, {
+            const res = await fetch(API_URL + `/` + data.companyId, {
                 method: data.mapping,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
@@ -117,22 +102,8 @@
             errors.push("mapping 값을 입력하세요.");
         }
 
-        if (!data.username || data.username.trim() === "") {
-            errors.push("사용자 ID를 입력하세요.");
-        }
-
-        if (!data.fullName || data.fullName.trim() === "") {
-            errors.push("사용자 이름을 입력하세요.");
-        }
-
-        // 이메일 형식 체크
-        if (data.email && !/^[\w.-]+@[\w.-]+\.\w+$/.test(data.email)) {
-            errors.push("이메일 형식이 올바르지 않습니다.");
-        }
-
-        // 비밀번호는 8자 이상
-        if (data.password && data.password.length < 8) {
-            errors.push("비밀번호는 8자 이상이어야 합니다.");
+        if (!data.companyName || data.companyName.trim() === "") {
+            errors.push("회사 이름을 입력하세요.");
         }
 
         return errors;

@@ -53,28 +53,5 @@
 <%@ include file="include/modal/deleteModal.jsp" %>
 </body>
 
-<script type="text/javascript">
-
-
-
-
-
-    const goList = (menu) => {
-        window.location.href = "/" + menu + "/list";
-    };
-    const goView = (menu, id) => {
-        window.location.href = "/" + menu + "/view/" + id;
-    };
-    const goAmend = (menu, id, mapping) => {
-        window.location.href = "/" + menu + "/amend/" + id + "?mapping=" + mapping;
-    };
-    const goDelete = (menu, id) => {
-        // 모달 띄우기
-        $('#deleteModal').modal('show');
-
-
-        // 모달 안의 버튼에 id 저장
-        $('#delete-btn').data('id', id);
-    }
-</script>
+<script src="/common/sbadmin/js/main.js"></script>
 </html>

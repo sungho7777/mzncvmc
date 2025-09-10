@@ -1,4 +1,4 @@
-package com.in.mzncvmc.content.users;
+package com.in.mzncvmc.content.company;
 
 import com.in.mzncvmc.content.common.ApiResponse;
 import org.slf4j.Logger;
@@ -7,23 +7,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 import static com.in.mzncvmc.content.common.CommonConstants.*;
 
 @RestController
-@RequestMapping(SLASH_API + "/users")
-public class UsersRestController {
+@RequestMapping(SLASH_API + "/company")
+public class CompanyRestcontroller {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final UsersService usersService;
+    private final CompanyService companyService;
 
     @Autowired
-    public UsersRestController(UsersService usersService) {
-        this.usersService = usersService;
+    public CompanyRestcontroller(CompanyService companyService) {
+        this.companyService = companyService;
     }
 
     // Search DTO
-    public record UsersSearchDto(String search, String status) {}
+    public record CompanySearchDto(String search, String status) {}
 
     /**
      * C.해당 데이터 생성 (Create)
@@ -33,14 +31,13 @@ public class UsersRestController {
      * @throws IllegalArgumentException 잘못된 입력 값
      */
     @PostMapping(SLASH_ID)
-    public ApiResponse<Long> createData(@RequestBody UsersDto dto) {
-        logger.debug("UsersRestcontroller.createData : " + dto);
+    public ApiResponse<Long> createData(@RequestBody CompanyDto dto) {
+        logger.debug("CompanyRestcontroller.createData : " + dto);
 
-        Long newDataId = usersService.insert(dto);
+        Long newDataId = companyService.insert(dto);
 
         return ApiResponse.success(newDataId, "New Data created successfully");
     }
-
     /**
      * R.해당 데이터 목록조회 (Read List)
      *
@@ -48,13 +45,13 @@ public class UsersRestController {
      * @since 2025-09-09
      */
     @GetMapping
-    public ApiResponse<Page<UsersDto>> getPagedUsers(
+    public ApiResponse<Page<CompanyDto>> getPagedUsers(
             @RequestParam(defaultValue = "${app.pagination.default-page:0}") int page,
             @RequestParam(defaultValue = "${app.pagination.default-size:10}") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status) {
 
-        Page<UsersDto> result = usersService.getPagedDatas(page, size, search, status);
+        Page<CompanyDto> result = companyService.getPagedDatas(page, size, search, status);
         return ApiResponse.success(result, "Data paged list retrieved successfully");
     }
 
@@ -68,10 +65,10 @@ public class UsersRestController {
      * @since 2025-09-09
      */
     @GetMapping(SLASH_ID)
-    public ApiResponse<UsersDto> getData(@PathVariable Long id) {
-        logger.debug("UsersRestcontroller.getData : " + id);
+    public ApiResponse<CompanyDto> getData(@PathVariable Long id) {
+        logger.debug("CompanyRestcontroller.getData : " + id);
 
-        UsersDto dto = usersService.findById(id);
+        CompanyDto dto = companyService.findById(id);
 
         return ApiResponse.success(dto, "Data retrieved successfully");
     }
@@ -85,14 +82,14 @@ public class UsersRestController {
      * @throws IllegalArgumentException ID 불일치 또는 데이터 미존재
      */
     @PutMapping(SLASH_ID)
-    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody UsersDto dto) {
-        logger.debug("UsersRestcontroller.updateData : " + dto);
+    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody CompanyDto dto) {
+        logger.debug("CompanyRestcontroller.updateData : " + dto);
 
-        if (!id.equals(dto.getUserId())) {
+        if (!id.equals(dto.getCompanyId())) {
             throw new IllegalArgumentException("ID 불일치");
         }
 
-        usersService.update(dto);
+        companyService.update(dto);
 
         return ApiResponse.success(id, "Data updated successfully");
     }
@@ -106,9 +103,9 @@ public class UsersRestController {
      */
     @DeleteMapping(SLASH_ID)
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        logger.debug("UsersRestcontroller.deleteData : " + id);
+        logger.debug("CompanyRestcontroller.deleteData : " + id);
 
-        usersService.delete(id);
+        companyService.delete(id);
 
         return ApiResponse.success(id, "Data deleted successfully");
     }

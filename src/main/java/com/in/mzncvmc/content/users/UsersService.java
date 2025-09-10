@@ -1,7 +1,11 @@
 package com.in.mzncvmc.content.users;
 
 
+import com.in.mzncvmc.content.company.Company;
+import com.in.mzncvmc.content.company.CompanyRepository;
 import com.in.mzncvmc.content.company.CompanyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,13 +24,14 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 public class UsersService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private UsersRepository usersRepository;
-    private CompanyService companyService;
+    private CompanyRepository companyRepository;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, CompanyService companyService) {
+    public UsersService(UsersRepository usersRepository, CompanyRepository companyRepository) {
         this.usersRepository = usersRepository;
-        this.companyService = companyService;
+        this.companyRepository = companyRepository;
     }
 
     /**
@@ -38,9 +43,12 @@ public class UsersService {
      */
     @Transactional
     public Long insert(UsersDto dto) {
+        Company company = companyRepository.findById(dto.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+
         Users user = new Users();
         user.setUsername(dto.getUsername());
-        user.setCompanyId(companyService.findByCompanyId(dto.getCompanyId()));
+        user.setCompanyId(company);
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
@@ -63,7 +71,7 @@ public class UsersService {
      *
      */
     @Transactional(readOnly = true)
-    public Page<UsersDto> getPagedUsers(int page, int size, String search, String status) {
+    public Page<UsersDto> getPagedDatas(int page, int size, String search, String status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "userId"));
 
         // status 처리
@@ -77,16 +85,16 @@ public class UsersService {
             }
         }
 
-        Page<Users> usersPage;
+        Page<Users> DataPage;
 
         if ((search == null || search.isBlank()) && statusEnum == null) {
-            usersPage = usersRepository.findAll(pageable);
+            DataPage = usersRepository.findAll(pageable);
         } else {
             // 검색어 존재
-            usersPage = usersRepository.searchAll(search.trim(), statusEnum, pageable);
+            DataPage = usersRepository.searchAll(search.trim(), statusEnum, pageable);
         }
 
-        return usersPage.map(this::toDto);
+        return DataPage.map(this::toDto);
     }
 
 
@@ -100,7 +108,7 @@ public class UsersService {
     @Transactional(readOnly = true)
     public UsersDto findById(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
 
         return toDto(user); // 엔티티 → DTO 변환 메서드
     }
@@ -108,7 +116,7 @@ public class UsersService {
     /**
      * U.데이터 수정
      *
-     * @param Data 수정할 데이터 엔티티 (password 제외)
+     * @param !Data 수정할 데이터 엔티티 (password 제외)
      * @throws IllegalArgumentException 데이터 미존재
      */
     @Transactional
@@ -116,8 +124,11 @@ public class UsersService {
         Users existing = usersRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
+        Company company = companyRepository.findById(dto.getCompanyId())
+                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+
         existing.setUsername(dto.getUsername());
-        existing.setCompanyId(companyService.findByCompanyId(dto.getCompanyId()));
+        existing.setCompanyId(company);
         existing.setFullName(dto.getFullName());
         existing.setEmail(dto.getEmail());
         existing.setPhone(dto.getPhone());
@@ -136,17 +147,18 @@ public class UsersService {
     @Transactional
     public void delete(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
+
         usersRepository.delete(user);
     }
 
     /**
      * ETC.엔티티 → DTO 변환용 private 메서드
      *
-     * @param Entity 데이터
+     * @param !Entity 데이터
      */
     private UsersDto toDto(Users entity) {
-        return UsersDto.builder()
+        UsersDto dto = UsersDto.builder()
             .userId(entity.getUserId())
             .username(entity.getUsername())
             .fullName(entity.getFullName())
@@ -160,5 +172,8 @@ public class UsersService {
             .companyType(entity.getCompanyId() != null ? entity.getCompanyId().getCompanyType() : null)
 
             .build();
+
+        logger.debug("UsersDto : " + dto);
+        return dto;
     }
 }

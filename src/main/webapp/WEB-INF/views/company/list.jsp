@@ -61,7 +61,7 @@
                             </label>
                         </div>
                         <div class="col-sm-12 col-md-6">
-                            <a href="#" onclick="goAmend('users', '0', 'POST');" class="btn btn-secondary btn-icon-split" style="margin-left: 5px;">
+                            <a href="#" onclick="goAmend('company', '0', 'POST');" class="btn btn-secondary btn-icon-split" style="margin-left: 5px;">
                                     <span class="icon text-white-50">
                                         New
                                     </span>
@@ -100,7 +100,7 @@
 </main>
 
 <script type="text/javascript">
-    const MENU = "users";
+    const MENU = "company";
     const API_URL = "/api/" + MENU;
     window.onload = function() {
 
@@ -109,7 +109,7 @@
     };
     const init = () => {
 
-        console.log("init");
+        console.log("list init");
     }
 
     /**
@@ -126,7 +126,6 @@
             status: status || "",
             page: page,   // 몇 번째 페이지 (0부터 시작)
             size: size    // 페이지당 데이터 개수
-            // sort: "userId,desc"  // 필요하면 정렬도 추가 가능
         });
 
         $('#loading').show();
@@ -192,12 +191,8 @@
             tr.innerHTML = [
                 '<td>' + (index + 1) + '</td>',
                 '<td>' + item.companyType + ' ' + item.companyName + '</td>',
-                '<td>' + item.fullName + '<br/>(' + item.userId + ':' + item.username + ')</td>',
-                '<td>' + item.email + '</td>',
-                '<td>' + item.phone + '</td>',
-                '<td>' + item.role + '</td>',
-                '<td>' + item.status + '</td>',
-                '<td class="text-center">' + createActionButtons(item.userId) + '</td>'
+                '<td>' + item.companyName +  '</td>',
+                '<td class="text-center">' + createActionButtons(item.companyId) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

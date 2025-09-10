@@ -129,7 +129,7 @@
         </li>
 
         <!-- Nav Item - Company -->
-        <li class="nav-item ${sidebar eq 'company' ? 'active' : ''}">
+        <li class="nav-item ${sidebar eq 'companys' ? 'active' : ''}">
             <a class="nav-link" href="/company/list">
                 <i class="fas fa-company fa-chart-area"></i>
                 <span>Company</span></a>
