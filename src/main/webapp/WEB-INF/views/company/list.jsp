@@ -132,7 +132,10 @@
 
         await fetch(API_URL + "?" + query.toString(), {
             method: "GET",
-            headers: { "Content-Type": "application/json" }
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
         })
             .then(res => res.json())
             .then(result => {
@@ -154,7 +157,10 @@
     const deleteData = async (id) => {
         await fetch(API_URL + `/` + id, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" }
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
         })
             .then(response => {
                 if (!response.ok)

@@ -1,5 +1,7 @@
 package com.in.mzncvmc.content.users;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import static com.in.mzncvmc.content.common.CommonConstants.*;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/m/users")
 public class UsersController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final String USER = "user";
     private final String USERS = "users";
     private final String MENU_LIST_JSP = "users/list.jsp";
@@ -35,6 +39,8 @@ public class UsersController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
+        logger.debug("UsersController.viewPage : " + id);
+
         UsersDto dto = usersService.findById(id);
 
         model.addAttribute(USER, dto);

@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.company;
 
-import com.in.mzncvmc.content.users.UsersDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +12,8 @@ import static com.in.mzncvmc.content.common.CommonConstants.*;
 import static com.in.mzncvmc.content.common.CommonConstants.CONTENT_PAGE;
 
 @Controller
-@RequestMapping("/company")
-public class Companycontroller {
+@RequestMapping("/m/company")
+public class CompanyController {
     private final String COMPANY = "company";
     private final String COMPANYS = "companys";
     private final String MENU_LIST_JSP = "company/list.jsp";
@@ -24,7 +23,7 @@ public class Companycontroller {
     private final CompanyService companyService;
 
     @Autowired
-    public Companycontroller(CompanyService companyService) {
+    public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
     }
 

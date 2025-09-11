@@ -17,7 +17,7 @@
 
         <!-- Nav Item - Dashboard -->
         <li class="nav-item ${sidebar eq 'dashboard' ? 'active' : ''}">
-            <a class="nav-link" href="/dashboard/dashboardSystem">
+            <a class="nav-link" href="/m/dashboard/dashboard">
                 <i class="fas fa-fw fa-tachometer-alt"></i>
                 <span>Dashboard </span></a>
         </li>
@@ -40,7 +40,7 @@
             <div id="collapseNeo" class="collapse ${sidebar eq 'neo' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom NStringIn:</h6>
-                    <a class="collapse-item ${sidebar eq 'neo' ? 'active' : ''}" href="/neo/list">List</a>
+                    <a class="collapse-item ${sidebar eq 'neo' ? 'active' : ''}" href="/m/neo/list">List</a>
                     <a class="collapse-item" href="cards.html">Cards</a>
                 </div>
             </div>
@@ -123,14 +123,14 @@
 
         <!-- Nav Item - User -->
         <li class="nav-item ${sidebar eq 'users' ? 'active' : ''}">
-            <a class="nav-link" href="/users/list">
+            <a class="nav-link" href="/m/users/list">
                 <i class="fas fa-user fa-chart-area"></i>
                 <span>Users</span></a>
         </li>
 
         <!-- Nav Item - Company -->
         <li class="nav-item ${sidebar eq 'companys' ? 'active' : ''}">
-            <a class="nav-link" href="/company/list">
+            <a class="nav-link" href="/m/company/list">
                 <i class="fas fa-company fa-chart-area"></i>
                 <span>Company</span></a>
         </li>

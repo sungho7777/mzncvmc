@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,20 +20,69 @@ import org.springframework.data.domain.PageRequest; // PageRequest.of()
 import org.springframework.data.domain.Sort;        // 정렬 옵션
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
 public class UsersService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private PasswordEncoder passwordEncoder;
     private UsersRepository usersRepository;
     private CompanyRepository companyRepository;
 
     @Autowired
-    public UsersService(UsersRepository usersRepository, CompanyRepository companyRepository) {
+    public UsersService(PasswordEncoder passwordEncoder, UsersRepository usersRepository, CompanyRepository companyRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.usersRepository = usersRepository;
         this.companyRepository = companyRepository;
     }
+
+    public Users createUser(String username, String email, String password) {
+        if (usersRepository.existsByUsername(username)) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (usersRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Users user = new Users();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+
+        return usersRepository.save(user);
+    }
+
+    public Optional<Users> findByUsername(String username) {
+        return usersRepository.findByUsername(username);
+    }
+
+    public boolean existsByUsername(String username) {
+        return usersRepository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return usersRepository.existsByEmail(email);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * C.데이터 생성
@@ -173,7 +223,7 @@ public class UsersService {
 
             .build();
 
-        logger.debug("UsersDto : " + dto);
+        //logger.debug("UsersDto : " + dto);
         return dto;
     }
 }

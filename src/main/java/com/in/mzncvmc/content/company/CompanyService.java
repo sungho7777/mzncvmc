@@ -138,7 +138,7 @@ public class CompanyService {
 
             .build();
 
-        logger.debug("CompanyDto : " + dto);
+        //logger.debug("CompanyDto : " + dto);
         return dto;
     }
 }

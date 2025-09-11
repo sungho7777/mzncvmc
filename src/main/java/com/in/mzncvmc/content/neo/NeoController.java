@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
 
 @Controller
-@RequestMapping("/neo")
+@RequestMapping("/m/neo")
 public class NeoController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final NeoService neoService;

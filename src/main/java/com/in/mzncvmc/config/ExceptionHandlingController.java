@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class ExceptionHandlingController implements ErrorController {
     private final String ERROR_ETC_PAGE_PATH = "/error/error";
 
 
-    @RequestMapping(value = "/error")
+    @RequestMapping(value = "/error", method = {RequestMethod.GET, RequestMethod.POST})
     public String handleError(HttpServletRequest request, Model model) {
 
         // 에러 코드를 획득한다.

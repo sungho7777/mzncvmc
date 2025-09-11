@@ -29,11 +29,13 @@
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 동작을 막음
 
-            fetch('/logout', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' // 서버가 JSON을 예상할 경우
-                }
+            // 로컬 스토리지에서 토큰 제거
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('username');
+
+            fetch('/api/auth/logout', {
+                method: 'POST'
             })
                 .then(response => {
                     if (response.ok) {

@@ -1,15 +1,15 @@
 
 // 목록 화면이동
 const goList = (menu) => {
-    window.location.href = "/" + menu + "/list";
+    window.location.href = "/m/" + menu + "/list";
 };
 // 상세보기 화면이동
 const goView = (menu, id) => {
-    window.location.href = "/" + menu + "/view/" + id;
+    window.location.href = "/m/" + menu + "/view/" + id;
 };
 // 생성&수정 화면이동
 const goAmend = (menu, id, mapping) => {
-    window.location.href = "/" + menu + "/amend/" + id + "?mapping=" + mapping;
+    window.location.href = "/m/" + menu + "/amend/" + id + "?mapping=" + mapping;
 };
 // 삭제 모달띄우기
 const goDelete = (menu, id) => {

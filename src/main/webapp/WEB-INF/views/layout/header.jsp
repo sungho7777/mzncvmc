@@ -42,16 +42,16 @@
                         </a>
                         <ul class="dropdown-menu text-small shadow">
                             <li>
-                                <a class="dropdown-item" href="/system/project">New project...</a>
+                                <a class="dropdown-item" href="#">New project...</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/system/settings">Settings</a>
+                                <a class="dropdown-item" href="#">Settings</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/user/profile">Profile</a>
+                                <a class="dropdown-item" href="#">Profile</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="/system/space">Space</a>
+                                <a class="dropdown-item" href="#">Space</a>
                             </li>
                             <li>
                                 <hr class="dropdown-divider">

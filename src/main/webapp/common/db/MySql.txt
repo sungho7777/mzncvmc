@@ -126,6 +126,12 @@ VALUES
     (8, 'user_jo', '1', '조현아', 'userjo@koreatech.com', '010-4560-1590', 'USER', 'ACTIVE', NULL),
     (8, 'user_ma', '1', '마세영', 'userma@globalsol.com', '010-9510-4560', 'USER', 'ACTIVE', NULL);
 
+ALTER TABLE users
+ADD COLUMN enabled BOOLEAN NOT NULL DEFAULT TRUE,
+ADD COLUMN account_non_expired BOOLEAN NOT NULL DEFAULT TRUE,
+ADD COLUMN account_non_locked BOOLEAN NOT NULL DEFAULT TRUE,
+ADD COLUMN credentials_non_expired BOOLEAN NOT NULL DEFAULT TRUE;
+
 
 # 테이블 조회
 SELECT * FROM users;

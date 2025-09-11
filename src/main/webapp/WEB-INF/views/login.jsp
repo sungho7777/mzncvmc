@@ -36,10 +36,10 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <form class="user" action="/login" method="post">
+                                <form id="loginForm" class="user" action="/api/auth/login" method="post">
                                     <div class="form-group">
-                                        <input type="email" class="form-control form-control-user"
-                                               id="userid" name="userid" aria-describedby="emailHelp"
+                                        <input type="text" class="form-control form-control-user"
+                                               id="username" name="username" aria-describedby="emailHelp"
                                                placeholder="Enter Email Address...">
                                     </div>
                                     <div class="form-group">
@@ -96,15 +96,135 @@
 </body>
 
 <script type="text/javascript">
-    window.onload = function() {
-        init();
+    window.addEventListener('load', async function() {
+        const token = localStorage.getItem('accessToken');
 
-    };
+        if (token) {
+            console.log(token);
+            console.log('토큰이 존재함, 유효성 검증 후 main 페이지로 이동');
 
-    const init = () => {
+            try {
+                // 토큰 유효성 검증을 위해 보호된 API 호출
+                const response = await fetch('/api/user/authorities', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-        console.log("init");
+                if (response.ok) {
+                    console.log('유효한 토큰, 메인 페이지로 리다이렉트');
+
+                    // 사용자에게 알림 (선택사항)
+                    const username = localStorage.getItem('username');
+                    if (username) {
+                        console.log(`${username}님, 이미 로그인되어 있습니다.`);
+                    }
+
+                    // 메인 페이지로 리다이렉트
+                    window.location.href = '/main';
+                    return; // 함수 종료
+
+                } else if (response.status === 401) {
+                    console.log('토큰이 만료됨, 갱신 시도');
+
+                    // 토큰 갱신 시도
+                    const refreshSuccess = await tryRefreshToken();
+                    if (refreshSuccess) {
+                        console.log('토큰 갱신 성공, 메인 페이지로 리다이렉트');
+                        window.location.href = '/main';
+                        return;
+                    } else {
+                        console.log('토큰 갱신 실패, 로컬 스토리지 정리');
+                        // 갱신 실패 시 토큰 정리
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('refreshToken');
+                        localStorage.removeItem('username');
+                    }
+                }
+
+            } catch (error) {
+                console.error('토큰 검증 중 오류:', error);
+                // 네트워크 오류 등의 경우 토큰 제거
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('username');
+            }
+        }
+
+        console.log('로그인 페이지 유지');
+    });
+
+    // 토큰 갱신 함수
+    async function tryRefreshToken() {
+        const refreshToken = localStorage.getItem('refreshToken');
+
+        if (!refreshToken) {
+            console.log('리프레시 토큰이 없음');
+            return false;
+        }
+
+        try {
+            const response = await fetch('/api/auth/refresh', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    refreshToken: refreshToken
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('accessToken', data.accessToken);
+                console.log('토큰 갱신 성공');
+                return true;
+            } else {
+                console.log('토큰 갱신 실패:', response.status);
+                return false;
+            }
+        } catch (error) {
+            console.error('토큰 갱신 중 오류:', error);
+            return false;
+        }
     }
 
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // 로그인 성공 - 토큰을 localStorage에 저장
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('refreshToken', data.refreshToken);
+            localStorage.setItem('username', data.username);
+
+            // 잠시 후 메인화면으로 이동
+            setTimeout(() => {
+                window.location.href = '/main';
+            }, 150);
+
+        } else {
+            // 로그인 실패
+            alert(data.error || '로그인에 실패했습니다.');
+        }
+    });
 </script>
 </html>

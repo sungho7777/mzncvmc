@@ -131,20 +131,27 @@
 
         $('#loading').show();
 
-        await fetch(API_URL + "?" + query.toString(), {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(res => res.json())
-            .then(result => {
-                renderGrid(result.data.content, "grid");   // data.content → 실제 데이터
-                renderPagination(result.data);             // 페이지네이션 UI 추가
-                renderSummary(result.data);
-            })
-            .finally(() => {
-                setTimeout(() => $('#loading').hide(), 250);
-            })
-            .catch(err => console.error("에러:", err));
+        try {
+            const res = await fetch(API_URL + "?" + query.toString(), {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                }
+            });
+
+            if (!res.ok) throw new Error('Network response was not ok');
+
+            const result = await res.json();
+            renderGrid(result.data.content, "grid");
+            renderPagination(result.data);
+            renderSummary(result.data);
+        } catch (err) {
+            console.error("에러:", err);
+        } finally {
+            setTimeout(() => $('#loading').hide(), 250);
+        }
+
     };
 
     /**
@@ -155,7 +162,10 @@
     const deleteData = async (id) => {
         await fetch(API_URL + `/` + id, {
             method: "DELETE",
-            headers: { "Content-Type": "application/json" }
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
         })
             .then(response => {
                 if (!response.ok)

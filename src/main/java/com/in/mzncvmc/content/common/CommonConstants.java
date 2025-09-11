@@ -12,6 +12,7 @@ public final class CommonConstants {
     public static final String SLASH_VIEW_ID = "/view/{id}";
     public static final String SLASH_AMEND_ID = "/amend/{id}";
 
+    public static final String SLASH_DASHBOARD = "/dashboard";
 
 
 

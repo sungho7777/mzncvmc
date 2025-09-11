@@ -160,7 +160,7 @@
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                <span id="usernameSpan" class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee11</span>
                 <img class="img-profile rounded-circle"
                      src="/common/sbadmin/img/undraw_profile.svg">
             </a>
@@ -189,3 +189,11 @@
 
     </ul>
 </nav>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById("usernameSpan").textContent = username;
+        }
+    });
+</script>
