@@ -9,6 +9,7 @@
     <meta name="author" content="">
 
     <title>SB Admin 2 - Dashboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Custom fonts for this template-->
     <link href="/common/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">

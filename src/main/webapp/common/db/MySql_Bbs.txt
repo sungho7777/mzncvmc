@@ -1,0 +1,562 @@
+use mzncvmc;
+
+
+DROP TABLE IF EXISTS bbs_statistics;
+DROP TABLE IF EXISTS bbs_reports;
+DROP TABLE IF EXISTS bbs_user_settings;
+DROP TABLE IF EXISTS bbs_post_tags;
+DROP TABLE IF EXISTS bbs_tags;
+DROP TABLE IF EXISTS bbs_view_logs;
+DROP TABLE IF EXISTS bbs_votes;
+DROP TABLE IF EXISTS bbs_comments;
+DROP TABLE IF EXISTS bbs_posts;
+DROP TABLE IF EXISTS bbs_categories;
+
+
+# BBS 카테고리 테이블 (게시판 분류)
+CREATE TABLE bbs_categories (
+    category_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_name VARCHAR(100) NOT NULL COMMENT '카테고리명',
+    category_code VARCHAR(50) NOT NULL UNIQUE COMMENT '카테고리 코드',
+    description TEXT COMMENT '카테고리 설명',
+    sort_order INT DEFAULT 0 COMMENT '정렬 순서',
+    is_active BOOLEAN DEFAULT TRUE COMMENT '활성 여부',
+    allow_anonymous BOOLEAN DEFAULT FALSE COMMENT '익명 게시 허용',
+    allow_file_upload BOOLEAN DEFAULT TRUE COMMENT '파일 업로드 허용',
+    max_file_count INT DEFAULT 10 COMMENT '최대 파일 개수',
+    read_permission VARCHAR(50) DEFAULT 'ALL' COMMENT '읽기 권한 (ALL, USER, ADMIN)',
+    write_permission VARCHAR(50) DEFAULT 'USER' COMMENT '쓰기 권한 (USER, ADMIN)',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_by BIGINT COMMENT '생성자 ID',
+
+    INDEX idx_category_code (category_code),
+    INDEX idx_sort_order (sort_order),
+    INDEX idx_is_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BBS 카테고리';
+
+# BBS 게시글 테이블
+CREATE TABLE bbs_posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT NOT NULL COMMENT '카테고리 ID',
+    title VARCHAR(500) NOT NULL COMMENT '제목',
+    content LONGTEXT NOT NULL COMMENT '내용',
+    author_id BIGINT COMMENT '작성자 ID (NULL이면 익명)',
+    author_name VARCHAR(100) COMMENT '작성자명 (익명 또는 닉네임)',
+    author_ip VARCHAR(45) COMMENT '작성자 IP',
+    password VARCHAR(100) COMMENT '익명 게시글 비밀번호 (암호화)',
+
+    # 게시글 상태
+    status VARCHAR(20) DEFAULT 'ACTIVE' COMMENT '상태 (ACTIVE, HIDDEN, DELETED, BLOCKED)',
+    is_notice BOOLEAN DEFAULT FALSE COMMENT '공지사항 여부',
+    is_top_fixed BOOLEAN DEFAULT FALSE COMMENT '상단 고정 여부',
+    is_secret BOOLEAN DEFAULT FALSE COMMENT '비밀글 여부',
+
+    # 조회/통계
+    view_count BIGINT DEFAULT 0 COMMENT '조회수',
+    like_count BIGINT DEFAULT 0 COMMENT '좋아요 수',
+    dislike_count BIGINT DEFAULT 0 COMMENT '싫어요 수',
+    comment_count BIGINT DEFAULT 0 COMMENT '댓글 수',
+    file_count INT DEFAULT 0 COMMENT '첨부파일 수',
+
+    # 답글 관련 (계층형 게시판)
+    parent_id BIGINT COMMENT '부모 게시글 ID',
+    depth INT DEFAULT 0 COMMENT '답글 깊이',
+    group_id BIGINT COMMENT '답글 그룹 ID',
+    group_order INT DEFAULT 0 COMMENT '그룹내 순서',
+
+    # 메타 정보
+    tags VARCHAR(500) COMMENT '태그 (쉼표 구분)',
+    meta_data JSON COMMENT '추가 메타 데이터',
+
+    # 시간 정보
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_date DATETIME COMMENT '삭제 일시',
+
+    FOREIGN KEY (category_id) REFERENCES bbs_categories(category_id),
+    FOREIGN KEY (parent_id) REFERENCES bbs_posts(post_id),
+
+    INDEX idx_category_status (category_id, status),
+    INDEX idx_author_id (author_id),
+    INDEX idx_created_date (created_date DESC),
+    INDEX idx_view_count (view_count DESC),
+    INDEX idx_is_notice (is_notice, is_top_fixed),
+    INDEX idx_parent_group (parent_id, group_id, group_order),
+    INDEX idx_status_created (status, created_date DESC),
+    FULLTEXT INDEX ft_title_content (title, content)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BBS 게시글';
+
+# BBS 댓글 테이블
+CREATE TABLE bbs_comments (
+    comment_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id BIGINT NOT NULL COMMENT '게시글 ID',
+    parent_id BIGINT COMMENT '부모 댓글 ID (대댓글)',
+    depth INT DEFAULT 0 COMMENT '댓글 깊이',
+    content TEXT NOT NULL COMMENT '댓글 내용',
+
+    author_id BIGINT COMMENT '작성자 ID',
+    author_name VARCHAR(100) COMMENT '작성자명',
+    author_ip VARCHAR(45) COMMENT '작성자 IP',
+    password VARCHAR(100) COMMENT '익명 댓글 비밀번호',
+
+    status VARCHAR(20) DEFAULT 'ACTIVE' COMMENT '상태 (ACTIVE, HIDDEN, DELETED, BLOCKED)',
+    like_count BIGINT DEFAULT 0 COMMENT '좋아요 수',
+    dislike_count BIGINT DEFAULT 0 COMMENT '싫어요 수',
+
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_date DATETIME COMMENT '삭제 일시',
+
+    FOREIGN KEY (post_id) REFERENCES bbs_posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES bbs_comments(comment_id),
+
+    INDEX idx_post_id (post_id),
+    INDEX idx_parent_depth (parent_id, depth),
+    INDEX idx_author_id (author_id),
+    INDEX idx_status_created (status, created_date),
+    INDEX idx_created_date (created_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BBS 댓글';
+
+# 게시글/댓글 추천/비추천 테이블
+CREATE TABLE bbs_votes (
+    vote_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    target_type VARCHAR(20) NOT NULL COMMENT '대상 타입 (POST, COMMENT)',
+    target_id BIGINT NOT NULL COMMENT '대상 ID',
+    user_id BIGINT NOT NULL COMMENT '투표한 사용자 ID',
+    vote_type VARCHAR(10) NOT NULL COMMENT '투표 타입 (LIKE, DISLIKE)',
+    ip_address VARCHAR(45) COMMENT 'IP 주소',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_user_target (target_type, target_id, user_id),
+    INDEX idx_target (target_type, target_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_created_date (created_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='게시글/댓글 투표';
+
+# 게시글 조회 기록 테이블
+CREATE TABLE bbs_view_logs (
+    view_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT COMMENT '조회한 사용자 ID (NULL이면 비회원)',
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent TEXT COMMENT '사용자 에이전트',
+    referer VARCHAR(500) COMMENT '리퍼러',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_post_id (post_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_ip_date (ip_address, created_date),
+    INDEX idx_created_date (created_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='게시글 조회 로그';
+
+# 게시글 태그 테이블 (정규화된 태그 관리)
+CREATE TABLE bbs_tags (
+    tag_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(50) NOT NULL UNIQUE COMMENT '태그명',
+    use_count BIGINT DEFAULT 0 COMMENT '사용 횟수',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_tag_name (tag_name),
+    INDEX idx_use_count (use_count DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BBS 태그';
+
+# 게시글-태그 연결 테이블
+CREATE TABLE bbs_post_tags (
+    post_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (post_id, tag_id),
+    FOREIGN KEY (post_id) REFERENCES bbs_posts(post_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES bbs_tags(tag_id) ON DELETE CASCADE,
+
+    INDEX idx_tag_id (tag_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='게시글-태그 연결';
+
+# 사용자 게시판 설정 테이블
+CREATE TABLE bbs_user_settings (
+    user_id BIGINT PRIMARY KEY,
+    posts_per_page INT DEFAULT 20 COMMENT '페이지당 게시글 수',
+    default_category_id BIGINT COMMENT '기본 카테고리',
+    email_notification BOOLEAN DEFAULT FALSE COMMENT '이메일 알림 여부',
+    comment_notification BOOLEAN DEFAULT TRUE COMMENT '댓글 알림 여부',
+    hide_deleted_posts BOOLEAN DEFAULT TRUE COMMENT '삭제된 게시글 숨김',
+    theme VARCHAR(20) DEFAULT 'DEFAULT' COMMENT '테마',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자 게시판 설정';
+
+# 신고 테이블
+CREATE TABLE bbs_reports (
+    report_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    target_type VARCHAR(20) NOT NULL COMMENT '신고 대상 (POST, COMMENT)',
+    target_id BIGINT NOT NULL COMMENT '신고 대상 ID',
+    reporter_id BIGINT COMMENT '신고자 ID',
+    reporter_ip VARCHAR(45) COMMENT '신고자 IP',
+    reason_code VARCHAR(20) NOT NULL COMMENT '신고 사유 코드',
+    reason_detail TEXT COMMENT '신고 상세 사유',
+    status VARCHAR(20) DEFAULT 'PENDING' COMMENT '처리 상태 (PENDING, PROCESSED, REJECTED)',
+    admin_memo TEXT COMMENT '관리자 메모',
+    processed_by BIGINT COMMENT '처리한 관리자 ID',
+    processed_date DATETIME COMMENT '처리 일시',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    INDEX idx_target (target_type, target_id),
+    INDEX idx_reporter (reporter_id),
+    INDEX idx_status (status),
+    INDEX idx_created_date (created_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='신고 관리';
+
+# 게시판 통계 테이블 (일별 집계)
+CREATE TABLE bbs_statistics (
+    stat_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    stat_date DATE NOT NULL COMMENT '통계 날짜',
+    category_id BIGINT COMMENT '카테고리 ID (NULL이면 전체)',
+    post_count INT DEFAULT 0 COMMENT '게시글 수',
+    comment_count INT DEFAULT 0 COMMENT '댓글 수',
+    view_count BIGINT DEFAULT 0 COMMENT '조회수',
+    new_user_count INT DEFAULT 0 COMMENT '신규 사용자 수',
+    active_user_count INT DEFAULT 0 COMMENT '활성 사용자 수',
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_date_category (stat_date, category_id),
+    INDEX idx_stat_date (stat_date),
+    INDEX idx_category_date (category_id, stat_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='게시판 통계';
+
+
+
+
+# 초기 데이터 입력 bbs_categories
+INSERT INTO bbs_categories (category_name, category_code, description, sort_order) VALUES
+('공지사항', 'NOTICE', '사이트 공지사항', 1),
+('자유게시판', 'FREE', '자유로운 의견 교환', 2),
+('질문답변', 'QNA', '질문과 답변', 3),
+('자료실', 'DATA', '각종 자료 공유', 4),
+('건의사항', 'SUGGESTION', '사이트 개선 건의', 5);
+
+# 초기 데이터 입력 bbs_posts
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(1, '[필독] 사이트 이용규칙 안내',
+'안녕하세요. 사이트를 이용해주셔서 감사합니다.
+
+다음은 사이트 이용 시 지켜주셔야 할 규칙입니다:
+
+1. 욕설, 비방, 차별적 발언 금지
+2. 개인정보 노출 금지
+3. 상업적 광고 게시 금지
+4. 저작권 침해 콘텐츠 업로드 금지
+5. 도배, 스팸성 게시물 금지
+
+위반 시 게시물 삭제 및 계정 제재가 있을 수 있습니다.
+건전한 커뮤니티 문화 조성에 협조 부탁드립니다.
+
+감사합니다.',
+1, '관리자', 'ACTIVE', TRUE, TRUE, 1250, 45, 12,
+'2024-01-15 09:00:00', '2024-01-15 09:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(1, '2024년 시스템 점검 안내',
+'시스템 안정성 향상을 위한 정기 점검을 실시합니다.
+
+▶ 점검 일시: 2024년 3월 15일(금) 02:00 ~ 06:00 (4시간)
+▶ 점검 내용:
+  - 서버 보안 업데이트
+  - 데이터베이스 최적화
+  - 새로운 기능 업데이트
+
+점검 시간 중에는 사이트 이용이 제한됩니다.
+이용에 불편을 드려 죄송합니다.
+
+문의사항이 있으시면 고객센터로 연락 부탁드립니다.',
+1, '관리자', 'ACTIVE', TRUE, FALSE, 892, 23, 8,
+'2024-03-10 14:30:00', '2024-03-10 14:30:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, '안녕하세요! 새로 가입한 회원입니다.',
+'처음 가입해서 인사드립니다!
+앞으로 잘 부탁드려요 ^^
+
+이 사이트 정말 좋은 것 같아요.
+유용한 정보들이 많이 있네요.
+
+다들 좋은 하루 되세요~',
+2, '새내기회원', 'ACTIVE', FALSE, FALSE, 156, 12, 5,
+'2024-03-12 10:15:00', '2024-03-12 10:15:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, '오늘 날씨가 정말 좋네요!',
+'창밖을 보니 햇살이 너무 좋아서 기분이 좋아집니다.
+이런 날엔 야외활동 하기 딱 좋을 것 같아요.
+
+여러분들은 좋은 날씨에 주로 뭐 하시나요?
+저는 산책하거나 카페에서 책 읽는 것을 좋아해요.
+
+추천해주실 만한 활동이 있다면 댓글로 알려주세요!',
+3, '햇살좋아', 'ACTIVE', FALSE, FALSE, 234, 8, 15,
+'2024-03-13 11:20:00', '2024-03-13 11:20:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, '맛있는 점심 메뉴 추천 좀 해주세요!',
+'매일 점심 메뉴 정하는 게 고민이에요 ㅠㅠ
+오늘도 뭐 먹을지 모르겠네요.
+
+회사 근처에 맛집이 많긴 한데
+항상 비슷한 것만 먹게 되더라고요.
+
+새로운 메뉴에 도전해보고 싶은데
+추천해주실 만한 음식 있나요?
+
+한식, 양식, 중식, 일식 다 좋아해요!',
+4, '점심고민러', 'ACTIVE', FALSE, FALSE, 189, 6, 22,
+'2024-03-13 12:00:00', '2024-03-13 12:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(3, '[질문] 스프링부트 파일 업로드 관련 질문입니다.',
+'안녕하세요. 스프링부트 초보 개발자입니다.
+
+파일 업로드 기능을 구현하고 있는데요,
+MultipartFile을 사용해서 업로드는 되는데
+파일 크기 제한을 어떻게 설정하는지 모르겠습니다.
+
+application.properties에서 설정하는 방법과
+코드에서 체크하는 방법 둘 다 알고 싶어요.
+
+그리고 보안상 위험한 파일 확장자는 어떻게 차단하나요?
+
+고수님들의 조언 부탁드립니다!',
+5, '초보개발자', 'ACTIVE', FALSE, FALSE, 445, 18, 7,
+'2024-03-11 16:30:00', '2024-03-11 16:30:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(3, '[답변] Re: 스프링부트 파일 업로드 관련 질문입니다.',
+'안녕하세요! 답변드릴게요.
+
+**1. 파일 크기 제한 설정:**
+
+application.properties에서:
+```
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=100MB
+```
+
+**2. 코드에서 체크:**
+```java
+if (file.getSize() > maxSize) {
+    throw new IllegalArgumentException("파일 크기 초과");
+}
+```
+
+**3. 확장자 차단:**
+```java
+String extension = FilenameUtils.getExtension(filename);
+List<String> blocked = Arrays.asList("exe", "bat", "sh");
+if (blocked.contains(extension.toLowerCase())) {
+    throw new IllegalArgumentException("업로드 금지 파일");
+}
+```
+
+도움이 되셨나요?',
+6, '시니어개발자', 'ACTIVE', FALSE, FALSE, 223, 25, 3,
+'2024-03-11 17:15:00', '2024-03-11 17:15:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(4, '유용한 개발 도구 모음집',
+'개발할 때 유용한 도구들을 정리해봤습니다.
+
+**코드 에디터:**
+- Visual Studio Code (무료)
+- IntelliJ IDEA (유료/무료)
+- Sublime Text
+
+**데이터베이스 도구:**
+- DBeaver (무료)
+- MySQL Workbench
+- phpMyAdmin
+
+**API 테스트:**
+- Postman
+- Insomnia
+- REST Client (VS Code 확장)
+
+**버전 관리:**
+- Git
+- GitHub Desktop
+- SourceTree
+
+**디자인 도구:**
+- Figma (무료/유료)
+- Adobe XD
+- Sketch (Mac 전용)
+
+다들 어떤 도구들 사용하시나요?',
+7, '개발도구마니아', 'ACTIVE', FALSE, FALSE, 678, 34, 18,
+'2024-03-09 14:00:00', '2024-03-09 14:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(4, 'MySQL 성능 최적화 팁 모음',
+'MySQL 성능 최적화 경험을 공유합니다.
+
+**1. 인덱스 최적화:**
+- 자주 조회되는 컬럼에 인덱스 추가
+- 복합 인덱스 순서 주의
+- 불필요한 인덱스 제거
+
+**2. 쿼리 최적화:**
+- SELECT * 대신 필요한 컬럼만 조회
+- LIMIT 사용하여 결과 제한
+- EXISTS vs IN 성능 비교
+
+**3. 설정 튜닝:**
+- innodb_buffer_pool_size 조정
+- query_cache_size 설정
+- max_connections 적절히 설정
+
+**4. 테이블 설계:**
+- 적절한 데이터 타입 선택
+- 정규화 vs 비정규화 고려
+- 파티셔닝 활용
+
+더 자세한 내용은 첨부파일 참고하세요!',
+8, 'DBA전문가', 'ACTIVE', FALSE, FALSE, 892, 56, 12,
+'2024-03-08 10:30:00', '2024-03-08 10:30:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(5, '게시판에 태그 기능 추가 건의',
+'안녕하세요. 사이트를 자주 이용하는 사용자입니다.
+
+게시판에 태그 기능이 있으면 좋겠어요.
+예를 들어 개발 관련 게시글에는 #개발 #프로그래밍
+맛집 관련 글에는 #맛집 #음식 이런 식으로요.
+
+태그별로 게시글을 필터링할 수 있다면
+원하는 정보를 더 쉽게 찾을 수 있을 것 같아요.
+
+그리고 인기 태그나 최근 태그 같은
+통계 기능도 있으면 재밌을 것 같습니다.
+
+검토 부탁드려요!',
+9, '기능제안자', 'ACTIVE', FALSE, FALSE, 156, 23, 8,
+'2024-03-12 20:00:00', '2024-03-12 20:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(5, '모바일 앱 개발 건의드립니다.',
+'사이트를 모바일로 자주 이용하는데
+웹브라우저로 접속하기가 불편해요.
+
+전용 앱이 있다면 훨씬 편할 것 같아요.
+푸시 알림도 받을 수 있고
+오프라인에서도 일부 기능을 사용할 수 있다면 좋겠어요.
+
+안드로이드와 iOS 둘 다 지원해주시면 감사하겠습니다.
+
+개발 일정이나 계획이 있으시다면 알려주세요!',
+10, '모바일러버', 'ACTIVE', FALSE, FALSE, 298, 18, 15,
+'2024-03-10 15:45:00', '2024-03-10 15:45:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, '주말에 뭐 하시나요?',
+'다가오는 주말에 특별한 계획 있으신가요?
+저는 집에서 넷플릭스나 봐야겠어요 ㅋㅋ
+
+여러분들의 주말 계획 공유해주세요!',
+11, '주말기대', 'ACTIVE', FALSE, FALSE, 89, 5, 3,
+'2024-03-13 18:00:00', '2024-03-13 18:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, 'Re: 주말에 뭐 하시나요?',
+'저는 등산 갈 예정이에요!
+날씨도 좋고 벚꽃도 피었다고 하니까
+사진도 찍고 오려고 합니다.
+
+운동도 되고 스트레스도 풀리고 일석이조죠!',
+12, '등산마니아', 'ACTIVE', FALSE, FALSE, 34, 3, 0,
+'2024-03-13 18:30:00', '2024-03-13 18:30:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+
+(2, '고민 상담 좀 해주세요... (익명)',
+'익명으로 올립니다...
+요즘 고민이 많아서 털어놓고 싶어요.
+
+회사에서 스트레스가 너무 심해서
+이직을 고려하고 있는데
+경제적 부담도 있고 해서 결정하기가 어렵네요.
+
+비슷한 경험 있으신 분들 조언 부탁드려요.
+정말 절실합니다...',
+NULL, '익명의고민러', 'ACTIVE', FALSE, FALSE, 167, 8, 12,
+'2024-03-13 21:00:00', '2024-03-13 21:00:00');
+
+INSERT INTO bbs_posts (
+    category_id, title, content, author_id, author_name,
+    status, is_notice, is_top_fixed, view_count, like_count,
+    comment_count, created_date, updated_date
+) VALUES
+(2, '개인적인 고민이 있습니다',
+'개인적인 내용이라 비밀글로 작성합니다.
+관리자님만 확인해주세요.',
+13, '고민많은회원', 'ACTIVE', FALSE, FALSE,  12, 0, 1,
+'2024-03-13 22:15:00', '2024-03-13 22:15:00');
+
+
+UPDATE bbs_posts SET group_id = post_id WHERE parent_id IS NULL;
+UPDATE bbs_posts SET group_id = (SELECT group_id FROM (SELECT group_id FROM bbs_posts p2 WHERE p2.post_id = bbs_posts.parent_id) AS temp) WHERE parent_id IS NOT NULL;
+

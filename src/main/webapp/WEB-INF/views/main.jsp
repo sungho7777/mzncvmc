@@ -53,5 +53,6 @@
 <%@ include file="include/modal/deleteModal.jsp" %>
 </body>
 
-<script src="/common/sbadmin/js/main.js"></script>
+<script src="<c:url value="/common/sbadmin/js/main.js?v=1"/>"></script>
+<script src="<c:url value="/common/sbadmin/js/fileUpload.js?v=1"/>"></script>
 </html>

@@ -21,6 +21,7 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.multipart.support.MultipartFilter;
 
 import java.util.Arrays;
 
@@ -63,6 +64,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
+
+                        .requestMatchers("/api/files/preview/**").permitAll() // 미리보기는 인증 없이 허용
+                        .requestMatchers("/api/files/**").authenticated() // 나머지 파일 API는 인증 필요
 
                         // Swagger 리소스들 permitAll
                         .requestMatchers(

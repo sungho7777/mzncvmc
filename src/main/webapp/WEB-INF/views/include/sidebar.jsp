@@ -135,6 +135,20 @@
                 <span>Company</span></a>
         </li>
 
+        <!-- Nav Item - files -->
+        <li class="nav-item ${sidebar eq 'files' ? 'active' : ''}">
+            <a class="nav-link" href="#" onclick="goList('files')">
+                <i class="fas fa-company fa-chart-area"></i>
+                <span>File Upload</span></a>
+        </li>
+
+        <!-- Nav Item - bbs -->
+        <li class="nav-item ${sidebar eq 'bbs' ? 'active' : ''}">
+            <a class="nav-link" href="#" onclick="goList('bbs')">
+                <i class="fas fa-company fa-chart-area"></i>
+                <span>Bbs</span></a>
+        </li>
+
         <!-- Nav Item - Tables -->
         <li class="nav-item ${sidebar eq 'tables' ? 'active' : ''}">
             <a class="nav-link" href="#">

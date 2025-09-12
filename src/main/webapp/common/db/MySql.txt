@@ -1,4 +1,4 @@
-mysql> create database mzncvmc;
+create database mzncvmc;
 
 use mzncvmc;
 
@@ -135,6 +135,28 @@ ADD COLUMN credentials_non_expired BOOLEAN NOT NULL DEFAULT TRUE;
 
 # 테이블 조회
 SELECT * FROM users;
+
+
+# 펌부파일 테이블 생성
+CREATE TABLE files (
+    file_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    reference_type VARCHAR(50) NOT NULL COMMENT '참조 테이블명 (user, company, bbs 등)',
+    reference_id BIGINT NOT NULL COMMENT '참조 테이블의 ID',
+    original_filename VARCHAR(255) NOT NULL COMMENT '원본 파일명',
+    stored_filename VARCHAR(255) NOT NULL COMMENT '저장된 파일명 (UUID)',
+    file_path VARCHAR(500) NOT NULL COMMENT '파일 저장 경로',
+    file_size BIGINT NOT NULL COMMENT '파일 크기 (bytes)',
+    file_extension VARCHAR(10) NOT NULL COMMENT '파일 확장자',
+    mime_type VARCHAR(100) COMMENT 'MIME 타입',
+    upload_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '업로드 일시',
+    created_by BIGINT COMMENT '업로드한 사용자 ID',
+    is_deleted BOOLEAN DEFAULT FALSE COMMENT '삭제 여부',
+    deleted_date DATETIME COMMENT '삭제 일시',
+
+    INDEX idx_reference (reference_type, reference_id),
+    INDEX idx_created_by (created_by),
+    INDEX idx_upload_date (upload_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='첨부파일 관리 테이블';
 
 
 
