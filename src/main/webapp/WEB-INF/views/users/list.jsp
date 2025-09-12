@@ -104,7 +104,6 @@
     const API_URL = "/api/" + MENU;
     window.onload = function() {
 
-        init();
         getList();
     };
     const init = () => {

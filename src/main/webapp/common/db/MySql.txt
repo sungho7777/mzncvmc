@@ -147,9 +147,6 @@ SELECT * FROM users;
 
 
 
-
-
-
 drop table neo;
 CREATE TABLE neo (
         id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,14 +1,22 @@
 
+// dashboard 화면이동
+const goDashboard = (menu) => {
+    if(!accessTokenCheck) return false;
+    window.location.href = "/m/" + menu + "/dashboard";
+};
 // 목록 화면이동
 const goList = (menu) => {
+    if(!accessTokenCheck) return false;
     window.location.href = "/m/" + menu + "/list";
 };
 // 상세보기 화면이동
 const goView = (menu, id) => {
+    if(!accessTokenCheck) return false;
     window.location.href = "/m/" + menu + "/view/" + id;
 };
 // 생성&수정 화면이동
 const goAmend = (menu, id, mapping) => {
+    if(!accessTokenCheck) return false;
     window.location.href = "/m/" + menu + "/amend/" + id + "?mapping=" + mapping;
 };
 // 삭제 모달띄우기
@@ -19,8 +27,52 @@ const goDelete = (menu, id) => {
     // 모달 안의 버튼에 id 저장
     $('#delete-btn').data('id', id);
 }
+// 로그아웃
+const goLogout = () => {
 
+    fetch('/api/auth/logout', {
+        method: 'POST'
+    })
+        .then(response => {
+            if (response.ok) {
+                // 로컬 스토리지에서 토큰 제거
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                localStorage.removeItem('username');
 
+                window.location.href = '/login';
+            } else {
+                // 다른 상태 코드
+                throw new Error('로그아웃 실패');
+            }
+        })
+        .catch(error => {
+            console.error('로그아웃 실패:', error);
+            alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
+        });
+}
+
+const accessTokenCheck = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("accessToken", accessToken);
+
+    if (accessToken) {
+        // 토큰 유효성 검증을 위해 보호된 API 호출
+        const response = await fetch('/api/user/authorities', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + accessToken,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.ok) {
+            return true;
+        }
+    }
+    alert('잘못된 토큰 정보입니다. 로그아웃처리 됩니다.');
+    goLogout();
+    return false;
+}
 
 const renderPagination = (pageData) => {
     const pagination = $("#pagination"); // 페이지네이션 영역 (div or ul)

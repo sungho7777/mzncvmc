@@ -29,28 +29,7 @@
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 동작을 막음
 
-            // 로컬 스토리지에서 토큰 제거
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
-            localStorage.removeItem('username');
-
-            fetch('/api/auth/logout', {
-                method: 'POST'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // 상태 코드 200-299
-                        //alert('로그아웃되었습니다.');
-                        window.location.href = '/login';
-                    } else {
-                        // 다른 상태 코드
-                        throw new Error('로그아웃 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('로그아웃 실패:', error);
-                    alert('로그아웃에 실패했습니다. 다시 시도해 주세요.');
-                });
+            goLogout();
         });
     });
 </script>

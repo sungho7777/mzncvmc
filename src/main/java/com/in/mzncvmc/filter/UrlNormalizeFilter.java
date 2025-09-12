@@ -3,15 +3,14 @@ package com.in.mzncvmc.filter;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Log4j2
 @Component
 public class UrlNormalizeFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

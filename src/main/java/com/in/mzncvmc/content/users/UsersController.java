@@ -1,7 +1,6 @@
 package com.in.mzncvmc.content.users;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.in.mzncvmc.content.common.CommonConstants.*;
 
+@Log4j2
 @Controller
 @RequestMapping("/m/users")
 public class UsersController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     private final String USER = "user";
     private final String USERS = "users";
     private final String MENU_LIST_JSP = "users/list.jsp";
@@ -39,7 +37,7 @@ public class UsersController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
-        logger.debug("UsersController.viewPage : " + id);
+        log.debug("UsersController.viewPage : " + id);
 
         UsersDto dto = usersService.findById(id);
 

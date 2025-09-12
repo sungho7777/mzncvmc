@@ -1,12 +1,13 @@
 package com.in.mzncvmc.auth.controller;
+
 import com.in.mzncvmc.auth.dto.LoginRequest;
 import com.in.mzncvmc.auth.dto.LoginResponse;
 import com.in.mzncvmc.auth.dto.RegisterRequest;
 import com.in.mzncvmc.auth.util.JwtUtil;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,18 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        logger.debug("login.loginRequest : " + loginRequest);
+        log.debug("login.loginRequest : " + loginRequest);
 
         try {
             authenticationManager.authenticate(

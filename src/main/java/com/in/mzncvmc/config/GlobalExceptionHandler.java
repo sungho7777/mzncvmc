@@ -2,8 +2,7 @@ package com.in.mzncvmc.config;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Date;
 
+@Log4j2
 @Controller
 public class GlobalExceptionHandler {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private final String ERROR_ETC_PAGE_PATH = "ㄷrror";
+    private final String ERROR_ETC_PAGE_PATH = "error";
 
 
     @RequestMapping(value = "/customError")
@@ -28,7 +26,7 @@ public class GlobalExceptionHandler {
         if (status != null) {
             int statusCode = Integer.valueOf(status.toString());
 
-            logger.info("httpStatus : " + statusCode);
+            log.info("httpStatus : " + statusCode);
 
             // 404 error
             if (statusCode == HttpStatus.NOT_FOUND.value()) {

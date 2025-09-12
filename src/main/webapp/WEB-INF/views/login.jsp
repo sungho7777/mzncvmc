@@ -216,6 +216,10 @@
             localStorage.setItem('refreshToken', data.refreshToken);
             localStorage.setItem('username', data.username);
 
+            console.log("login");
+            console.log("login.accessToken", data.accessToken);
+            console.log("login.refreshToken", data.refreshToken);
+            console.log("login.username", data.username);
             // 잠시 후 메인화면으로 이동
             setTimeout(() => {
                 window.location.href = '/main';

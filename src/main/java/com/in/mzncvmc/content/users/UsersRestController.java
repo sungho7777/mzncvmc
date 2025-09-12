@@ -1,18 +1,18 @@
 package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.content.common.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
+import static com.in.mzncvmc.content.common.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.content.common.CommonConstants.SLASH_ID;
 
+@Log4j2
 @RestController
 @RequestMapping(SLASH_API + "/users")
 public class UsersRestController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UsersService usersService;
 
     @Autowired
@@ -32,7 +32,7 @@ public class UsersRestController {
      */
     @PostMapping(SLASH_ID)
     public ApiResponse<Long> createData(@RequestBody UsersDto dto) {
-        logger.debug("UsersRestcontroller.createData : " + dto);
+        log.debug("UsersRestcontroller.createData : " + dto);
 
         Long newDataId = usersService.insert(dto);
 
@@ -67,7 +67,7 @@ public class UsersRestController {
      */
     @GetMapping(SLASH_ID)
     public ApiResponse<UsersDto> getData(@PathVariable Long id) {
-        logger.debug("UsersRestcontroller.getData : " + id);
+        log.debug("UsersRestcontroller.getData : " + id);
 
         UsersDto dto = usersService.findById(id);
 
@@ -84,7 +84,7 @@ public class UsersRestController {
      */
     @PutMapping(SLASH_ID)
     public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody UsersDto dto) {
-        logger.debug("UsersRestcontroller.updateData : " + dto);
+        log.debug("UsersRestcontroller.updateData : " + dto);
 
         if (!id.equals(dto.getUserId())) {
             throw new IllegalArgumentException("ID 불일치");
@@ -104,7 +104,7 @@ public class UsersRestController {
      */
     @DeleteMapping(SLASH_ID)
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        logger.debug("UsersRestcontroller.deleteData : " + id);
+        log.debug("UsersRestcontroller.deleteData : " + id);
 
         usersService.delete(id);
 

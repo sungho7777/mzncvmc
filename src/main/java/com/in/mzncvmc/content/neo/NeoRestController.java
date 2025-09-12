@@ -1,18 +1,16 @@
 package com.in.mzncvmc.content.neo;
 
 import com.in.mzncvmc.content.common.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/neo")
 public class NeoRestController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final NeoService neoService;
 
     @Autowired
@@ -26,7 +24,7 @@ public class NeoRestController {
     // Read All
     @GetMapping
     public List<Neo> getList() {
-        logger.debug("NeoController.getList");
+        log.debug("NeoController.getList");
 
 
         return neoService.findAll();
@@ -34,7 +32,7 @@ public class NeoRestController {
     // Read One
     @GetMapping("/{id}")
     public Neo getData(@PathVariable Long id) {
-        logger.debug("NeoController.getData : " + id);
+        log.debug("NeoController.getData : " + id);
 
 
         return neoService.findById(id);
@@ -43,7 +41,7 @@ public class NeoRestController {
     // Create
     @PostMapping
     public ApiResponse<Neo> createData(@RequestBody Neo neo) {
-        logger.debug("NeoController.createData : " + neo);
+        log.debug("NeoController.createData : " + neo);
 
         neoService.insert(neo);
 
@@ -56,7 +54,7 @@ public class NeoRestController {
     // Update
     @PutMapping("/{id}")
     public ApiResponse<Neo> updateData(@PathVariable Long id, @RequestBody Neo neo) {
-        logger.debug("NeoController.updateData : " + neo);
+        log.debug("NeoController.updateData : " + neo);
 
         neo.setId(id);
         neoService.update(neo);
@@ -68,7 +66,7 @@ public class NeoRestController {
     // Delete
     @DeleteMapping("/{id}")
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        logger.debug("NeoController.deleteData : " + id);
+        log.debug("NeoController.deleteData : " + id);
 
         neoService.delete(id);
 

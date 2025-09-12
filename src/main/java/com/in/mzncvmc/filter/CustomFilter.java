@@ -2,15 +2,14 @@ package com.in.mzncvmc.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Log4j2
 @Component
 public class CustomFilter implements Filter {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void doFilter(ServletRequest request
@@ -21,7 +20,7 @@ public class CustomFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
 
         String uri = httpRequest.getRequestURI();
-        //logger.debug("Requested URI: " + uri);
+        log.debug("Requested URI: " + uri);
 
         // 요청 전 처리
         //System.out.println("Before filter logic");

@@ -3,31 +3,25 @@ package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
-import com.in.mzncvmc.content.company.CompanyService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.data.domain.Page;        // Page<T>
-import org.springframework.data.domain.Pageable;   // Pageable
-import org.springframework.data.domain.PageRequest; // PageRequest.of()
-import org.springframework.data.domain.Sort;        // 정렬 옵션
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @Transactional(readOnly = true)
-public class UsersService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+public class UsersService{
     private PasswordEncoder passwordEncoder;
     private UsersRepository usersRepository;
     private CompanyRepository companyRepository;
@@ -223,7 +217,8 @@ public class UsersService {
 
             .build();
 
-        //logger.debug("UsersDto : " + dto);
+        //log.debug("UsersDto : " + dto);
         return dto;
     }
+
 }

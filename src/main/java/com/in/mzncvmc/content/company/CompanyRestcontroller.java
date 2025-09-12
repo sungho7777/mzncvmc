@@ -1,18 +1,18 @@
 package com.in.mzncvmc.content.company;
 
 import com.in.mzncvmc.content.common.ApiResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
+import static com.in.mzncvmc.content.common.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.content.common.CommonConstants.SLASH_ID;
 
+@Log4j2
 @RestController
 @RequestMapping(SLASH_API + "/company")
 public class CompanyRestcontroller {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CompanyService companyService;
 
     @Autowired
@@ -32,7 +32,7 @@ public class CompanyRestcontroller {
      */
     @PostMapping(SLASH_ID)
     public ApiResponse<Long> createData(@RequestBody CompanyDto dto) {
-        logger.debug("CompanyRestcontroller.createData : " + dto);
+        log.debug("CompanyRestcontroller.createData : " + dto);
 
         Long newDataId = companyService.insert(dto);
 
@@ -66,7 +66,7 @@ public class CompanyRestcontroller {
      */
     @GetMapping(SLASH_ID)
     public ApiResponse<CompanyDto> getData(@PathVariable Long id) {
-        logger.debug("CompanyRestcontroller.getData : " + id);
+        log.debug("CompanyRestcontroller.getData : " + id);
 
         CompanyDto dto = companyService.findById(id);
 
@@ -83,7 +83,7 @@ public class CompanyRestcontroller {
      */
     @PutMapping(SLASH_ID)
     public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody CompanyDto dto) {
-        logger.debug("CompanyRestcontroller.updateData : " + dto);
+        log.debug("CompanyRestcontroller.updateData : " + dto);
 
         if (!id.equals(dto.getCompanyId())) {
             throw new IllegalArgumentException("ID 불일치");
@@ -103,7 +103,7 @@ public class CompanyRestcontroller {
      */
     @DeleteMapping(SLASH_ID)
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        logger.debug("CompanyRestcontroller.deleteData : " + id);
+        log.debug("CompanyRestcontroller.deleteData : " + id);
 
         companyService.delete(id);
 

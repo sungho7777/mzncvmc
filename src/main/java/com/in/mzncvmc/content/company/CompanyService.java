@@ -1,7 +1,6 @@
 package com.in.mzncvmc.content.company;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Log4j2
 @Service
 @Transactional(readOnly = true)
 public class CompanyService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CompanyRepository companyRepository;
 
     @Autowired
@@ -138,7 +137,7 @@ public class CompanyService {
 
             .build();
 
-        //logger.debug("CompanyDto : " + dto);
+        //log.debug("CompanyDto : " + dto);
         return dto;
     }
 }
