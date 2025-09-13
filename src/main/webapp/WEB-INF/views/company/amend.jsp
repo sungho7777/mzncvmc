@@ -1,25 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <main>
     <form id="amendForm">
-        <button type="button" onclick="testData();">TestData</button><br>
-        <br>
-        <input type="text" name="mapping" value="${mapping}"><br>
-        <input type="text" name="companyId" value="${empty company.companyId ? 0 : company.companyId}"><br>
+        <input type="text" name="mapping" value="${mapping}">
+        <input type="text" name="companyId" value="${empty company.companyId ? 0 : company.companyId}">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th style="width: 15%;">Entity</th>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>회사명</td><td><input type="text" name="companyName" value="${company.companyName}" /></td></tr>
+                    <tr><td>영문 회사명</td><td><input type="text" name="companyEngName" value="${company.companyEngName}" /></td></tr>
+                    <tr><td>사업자 등록번호</td><td><input type="text" name="businessNumber" value="${company.businessNumber}" /></td></tr>
+                    <tr><td>대표자명</td><td><input type="text" name="ceoName" value="${company.ceoName}" /></td></tr>
+                    <tr><td>설립일</td><td><input type="text" name="establishedDate" value="${company.establishedDate}" /></td></tr>
+                    <tr><td>회사 형태</td><td><input type="text" name="companyType" value="${company.companyType}" /></td></tr>
+                    <tr><td>업종</td><td><input type="text" name="industry" value="${company.industry}" /></td></tr>
+                    <tr><td>대표 전화번호</td><td><input type="text" name="phone" value="${company.phone}" /></td></tr>
+                    <tr><td>팩스 번호</td><td><input type="text" name="fax" value="${company.fax}" /></td></tr>
+                    <tr><td>대표 이메일</td><td><input type="text" name="email" value="${company.email}" /></td></tr>
+                    <tr><td>홈페이지</td><td><input type="text" name="website" value="${company.website}" /></td></tr>
+                    <tr><td>우편번호</td><td><input type="text" name="postalCode" value="${company.postalCode}" /></td></tr>
+                    <tr><td>주소</td><td><input type="text" name="address" value="${company.address}" /></td></tr>
+                    <tr><td>상세 주소</td><td><input type="text" name="addressDetail" value="${company.addressDetail}" /></td></tr>
+                    <tr><td>상태</td><td><input type="text" name="status" value="${company.status}" /></td></tr>
 
-        <br>
-        <label for="companyName">회사명</label>
-        <input type="text" name="companyName" value="${company.companyName}" /><br>
-
-
-        <label for="status">상태</label>
-        <input type="text" name="status" value="${company.status}" /><br>
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <button type="button" onclick="amendData();">${empty company.companyId ? 'Create' : 'Amend'}</button>
+
     </form>
 </main>
+
+
+
 
 <script type="text/javascript">
     const MENU = "company";

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.in.mzncvmc.content.company.Company;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,43 +22,55 @@ import java.util.Collections;
 public class Users implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Comment("사용자 고유 ID")
     private Long userId; // user_id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     @JsonIgnore
+    @Comment("소속 회사 ID (FK: company.company_id)")
     private Company companyId;
 
     @Column(nullable = false, unique = true, length = 100)
+    @Comment("로그인 아이디")
     private String username;
 
     @Column(nullable = false, length = 255)
+    @Comment("암호화된 비밀번호")
     private String password;
 
     @Column(length = 100)
+    @Comment("사용자 이름")
     private String fullName;
 
     @Column(length = 100)
+    @Comment("이메일")
     private String email;
 
     @Column(length = 20)
+    @Comment("전화번호")
     private String phone;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Comment("권한")
     private Role role = Role.USER;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    @Comment("계정 상태")
     private Status status = Status.ACTIVE;
 
-    private LocalDateTime registrationDate;
+    @Comment("등록일시")
+    private LocalDateTime createdDate;
+    @Comment("수정일시")
     private LocalDateTime updateDate;
+    @Comment("마지막 로그인 시각")
     private LocalDateTime lastLogin;
 
     @PrePersist
     public void prePersist() {
-        registrationDate = LocalDateTime.now();
+        createdDate = LocalDateTime.now();
         updateDate = LocalDateTime.now();
     }
 

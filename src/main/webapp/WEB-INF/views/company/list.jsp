@@ -73,14 +73,16 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>idx</th>
-                                    <th>company</th>
-                                    <th>fullName</th>
-                                    <th>Email</th>
-                                    <th>phone</th>
-                                    <th>role</th>
-                                    <th>status</th>
-                                    <th>Btn</th>
+                                    <th>순서</th>
+                                    <th>회사명</th>
+                                    <th>사업자 등록번호</th>
+                                    <th>대표자명</th>
+                                    <th>업종</th>
+                                    <th>전화번호</th>
+                                    <th>이메일</th>
+                                    <th>홈페이지</th>
+                                    <th>상태</th>
+                                    <th>비고</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grid" />
@@ -139,6 +141,7 @@
         })
             .then(res => res.json())
             .then(result => {
+                console.log(result.data.content);
                 renderGrid(result.data.content, "grid");   // data.content → 실제 데이터
                 renderPagination(result.data);             // 페이지네이션 UI 추가
                 renderSummary(result.data);
@@ -196,8 +199,20 @@
             const tr = document.createElement("tr");
             tr.innerHTML = [
                 '<td>' + (index + 1) + '</td>',
-                '<td>' + item.companyType + ' ' + item.companyName + '</td>',
-                '<td>' + item.companyName +  '</td>',
+                '<td>',
+                    item.companyType + ' ' + item.companyName + '<br/>',
+                    '(' + item.companyEngName + ')',
+                '</td>',
+                '<td>' + item.businessNumber +  '</td>',
+                '<td>' + item.ceoName +  '</td>',
+                '<td>' + item.industry +  '</td>',
+                '<td>',
+                    item.phone + '<br/>',
+                    '(' + item.fax + ')',
+                '</td>',
+                '<td>' + item.email +  '</td>',
+                '<td>' + item.website +  '</td>',
+                '<td>' + item.status +  '</td>',
                 '<td class="text-center">' + createActionButtons(item.companyId) + '</td>'
             ].join('');
 
@@ -205,24 +220,6 @@
         });
     };
 
-    /**
-     * ETC.액션 버튼 HTML 생성 함수
-     * @param {id} 데이터 ID
-     * @returns {Grid} Grid
-     */
-    const createActionButtons = (id) => {
-        const buttons = [
-            { class: 'btn-info', icon: 'fas fa-info-circle', action: 'goView(\'' + (MENU) + '\', ' + id + ')' },
-            { class: 'btn-warning', icon: 'fas fa-exclamation-triangle', action: 'goAmend(\'' + (MENU) + '\', ' + id + ', \'PUT\')' },
-            { class: 'btn-danger', icon: 'fa fa-trash', action: 'goDelete(\'' + (MENU) + '\', ' + id + ')' }
-        ];
-
-        return buttons.map(btn =>
-            '<a href="#" class="btn ' + btn.class + ' btn-circle btn-sm" style="margin-right: 5px;" onclick="' + btn.action + '">' +
-            '<i class="' + btn.icon + '"></i>' +
-            '</a>'
-        ).join('');
-    };
 
 
 </script>

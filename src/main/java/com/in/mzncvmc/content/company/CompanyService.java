@@ -1,5 +1,6 @@
 package com.in.mzncvmc.content.company;
 
+import com.in.mzncvmc.content.users.Users;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,9 +31,22 @@ public class CompanyService {
     @Transactional
     public Long insert(CompanyDto dto) {
         Company company = new Company();
+
         company.setCompanyName(dto.getCompanyName());
         company.setCompanyEngName(dto.getCompanyEngName());
+        company.setBusinessNumber(dto.getBusinessNumber());
+        company.setCeoName(dto.getCeoName());
+        company.setEstablishedDate(dto.getEstablishedDate());
         company.setCompanyType(dto.getCompanyType());
+        company.setIndustry(dto.getIndustry());
+        company.setPhone(dto.getPhone());
+        company.setFax(dto.getFax());
+        company.setEmail(dto.getEmail());
+        company.setWebsite(dto.getWebsite());
+        company.setPostalCode(dto.getPostalCode());
+        company.setAddress(dto.getAddress());
+        company.setAddressDetail(dto.getAddressDetail());
+        company.setStatus(Company.Status.valueOf(dto.getStatus().toUpperCase()));
 
         Company saved = companyRepository.save(company);
 
@@ -47,7 +61,7 @@ public class CompanyService {
      *
      */
     @Transactional(readOnly = true)
-    public Page<CompanyDto> getPagedDatas(int page, int size, String search, String status) {
+    public Page<CompanyDto> getPagedLists(int page, int size, String search, String status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "companyId"));
 
         // status 처리
@@ -64,9 +78,11 @@ public class CompanyService {
         Page<Company> DataPage;
 
         if ((search == null || search.isBlank()) && statusEnum == null) {
+            log.debug("CompanyService.getPagedDatas.findAll");
             DataPage = companyRepository.findAll(pageable);
         } else {
             // 검색어 존재
+            log.debug("CompanyService.getPagedDatas.searchAll");
             DataPage = companyRepository.searchAll(search.trim(), statusEnum, pageable);
         }
 
@@ -98,9 +114,22 @@ public class CompanyService {
     public void update(CompanyDto dto) {
         Company existing = companyRepository.findById(dto.getCompanyId())
                 .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+
         existing.setCompanyName(dto.getCompanyName());
         existing.setCompanyEngName(dto.getCompanyEngName());
+        existing.setBusinessNumber(dto.getBusinessNumber());
+        existing.setCeoName(dto.getCeoName());
+        existing.setEstablishedDate(dto.getEstablishedDate());
         existing.setCompanyType(dto.getCompanyType());
+        existing.setIndustry(dto.getIndustry());
+        existing.setPhone(dto.getPhone());
+        existing.setFax(dto.getFax());
+        existing.setEmail(dto.getEmail());
+        existing.setWebsite(dto.getWebsite());
+        existing.setPostalCode(dto.getPostalCode());
+        existing.setAddress(dto.getAddress());
+        existing.setAddressDetail(dto.getAddressDetail());
+
 
         existing.setStatus(Company.Status.valueOf(dto.getStatus().toUpperCase()));
 
@@ -131,8 +160,18 @@ public class CompanyService {
             .companyId(entity.getCompanyId())
             .companyName(entity.getCompanyName())
             .companyEngName(entity.getCompanyEngName())
+            .businessNumber(entity.getBusinessNumber())
+            .ceoName(entity.getCeoName())
+            .establishedDate(entity.getEstablishedDate())
             .companyType(entity.getCompanyType())
-
+            .industry(entity.getIndustry())
+            .phone(entity.getPhone())
+            .fax(entity.getFax())
+            .email(entity.getEmail())
+            .website(entity.getWebsite())
+            .postalCode(entity.getPostalCode())
+            .address(entity.getAddress())
+            .addressDetail(entity.getAddressDetail())
             .status(entity.getStatus().name())
 
             .build();

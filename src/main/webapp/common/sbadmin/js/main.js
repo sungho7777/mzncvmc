@@ -136,3 +136,23 @@ const renderSummary = (pageData) => {
 
     $('#summary').text("총 " + total + "건 중 " + currentCount + "건 조회 (페이지 " + page + " / " + pageData.totalPages + ")");
 };
+
+
+/**
+ * ETC.액션 버튼 HTML 생성 함수
+ * @param {id} 데이터 ID
+ * @returns {Grid} Grid
+ */
+const createActionButtons = (id) => {
+    const buttons = [
+        { class: 'btn-info', icon: 'fas fa-info-circle', action: 'goView(\'' + (MENU) + '\', ' + id + ')' },
+        { class: 'btn-warning', icon: 'fas fa-exclamation-triangle', action: 'goAmend(\'' + (MENU) + '\', ' + id + ', \'PUT\')' },
+        { class: 'btn-danger', icon: 'fa fa-trash', action: 'goDelete(\'' + (MENU) + '\', ' + id + ')' }
+    ];
+
+    return buttons.map(btn =>
+        '<a href="#" class="btn ' + btn.class + ' btn-circle btn-sm" style="margin-right: 5px;" onclick="' + btn.action + '">' +
+        '<i class="' + btn.icon + '"></i>' +
+        '</a>'
+    ).join('');
+};

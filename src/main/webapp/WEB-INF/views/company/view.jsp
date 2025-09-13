@@ -14,7 +14,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>회사 고유 ID</td><td>${company.companyId}</td></tr>
+                    <tr><td>ID</td><td>${company.companyId}</td></tr>
                     <tr><td>회사명</td><td>${company.companyName}</td></tr>
                     <tr><td>영문 회사명</td><td>${company.companyEngName}</td></tr>
                     <tr><td>사업자 등록번호</td><td>${company.businessNumber}</td></tr>

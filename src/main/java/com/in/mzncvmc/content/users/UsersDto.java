@@ -5,22 +5,19 @@ import lombok.*;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public class UsersDto {
-    private Long userId;
-    private String username;
-    private String fullName;
-    private String email;
-    private String phone;
-    private String role;
-    private String status;
+    private Long userId; // 사용자 고유 ID
+    private Long companyId; // 소속 회사 고유 ID (FK: company.company_id)
+    private String companyName; // 소속 회사명
+    private String companyType; // 소속 회사 형태(예: 주식회사, LLC 등)
+    private String username; // 로그인 아이디
+    private String fullName; // 사용자 이름
+    private String email; // 이메일
+    private String phone; // 전화번호
+    private String role; // 권한
+    private String status; // 계정 상태
 
-    // company 정보 포함
-    private Long companyId;
-    private String companyName;
-    private String companyType;
 
-    public UsersDto() {
-
-    }
 }

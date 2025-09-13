@@ -73,14 +73,14 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>idx</th>
-                                    <th>company</th>
-                                    <th>fullName</th>
-                                    <th>Email</th>
-                                    <th>phone</th>
-                                    <th>role</th>
-                                    <th>status</th>
-                                    <th>Btn</th>
+                                    <th>순서</th>
+                                    <th>소속 회사명</th>
+                                    <th>아이디</th>
+                                    <th>이메일</th>
+                                    <th>전화번호</th>
+                                    <th>권한</th>
+                                    <th>상태</th>
+                                    <th>비고</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grid" />
@@ -213,24 +213,6 @@
         });
     };
 
-    /**
-     * ETC.액션 버튼 HTML 생성 함수
-     * @param {id} 데이터 ID
-     * @returns {Grid} Grid
-     */
-    const createActionButtons = (id) => {
-        const buttons = [
-            { class: 'btn-info', icon: 'fas fa-info-circle', action: 'goView(\'' + (MENU) + '\', ' + id + ')' },
-            { class: 'btn-warning', icon: 'fas fa-exclamation-triangle', action: 'goAmend(\'' + (MENU) + '\', ' + id + ', \'PUT\')' },
-            { class: 'btn-danger', icon: 'fa fa-trash', action: 'goDelete(\'' + (MENU) + '\', ' + id + ')' }
-        ];
-
-        return buttons.map(btn =>
-            '<a href="#" class="btn ' + btn.class + ' btn-circle btn-sm" style="margin-right: 5px;" onclick="' + btn.action + '">' +
-            '<i class="' + btn.icon + '"></i>' +
-            '</a>'
-        ).join('');
-    };
 
 
 </script>

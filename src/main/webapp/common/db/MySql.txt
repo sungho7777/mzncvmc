@@ -25,7 +25,7 @@ CREATE TABLE company (
     address VARCHAR(300) DEFAULT NULL COMMENT '주소',
     address_detail VARCHAR(300) DEFAULT NULL COMMENT '상세 주소',
 
-    registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
+    created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
     update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
 
     status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '상태'
@@ -82,9 +82,8 @@ CREATE TABLE users (
         role ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER' COMMENT '권한',
         status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '계정 상태',
 
-        registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
+        created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
         update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
-
         last_login TIMESTAMP NULL DEFAULT NULL COMMENT '마지막 로그인 시각',
 
         CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES company(company_id)
@@ -164,21 +163,3 @@ CREATE TABLE files (
 
 
 
-
-
-
-
-
-drop table neo;
-CREATE TABLE neo (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        company VARCHAR(50) NOT NULL UNIQUE,
-        addr VARCHAR(255) NOT NULL,
-        tel VARCHAR(255)
-    );
-select * from neo;
-
-mysql> INSERT INTO neo (company, addr, tel) VALUES
-        ('NStringInfo', '서울 가산 1234', '02-1234-1234'),
-        ('Google Company', '인천 중구 7777', '02-7777-7777'),
-        ('Naver Company', '부산 동구 5555', '02-5555-5555');

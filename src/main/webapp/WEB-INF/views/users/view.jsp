@@ -13,6 +13,7 @@
                 </tr>
                 </thead>
                 <tbody>
+                <tr><td>ID</td><td>${user.userId}</td></tr>
                 <tr><td>회사</td><td>${user.companyType} ${user.companyName}</td></tr>
                 <tr><td>아이디</td><td>${user.username}</td></tr>
                 <tr><td>이름</td><td>${user.fullName}</td></tr>

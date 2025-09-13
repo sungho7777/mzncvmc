@@ -4,35 +4,31 @@
 
 <main>
     <form id="amendForm">
-        <button type="button" onclick="testData();">TestData</button><br>
-        <br>
-        <input type="text" name="mapping" value="${mapping}"><br>
-        <input type="text" name="userId" value="${empty user.userId ? 0 : user.userId}"><br>
-
-        <br>
-        <label for="username">아이디</label>
-        <input type="text" name="username" value="${user.username}" /><br>
-
-        <label for="companyId">회사</label>
-        <input type="text" name="companyId" value="${user.companyId}" /><br>
-
-        <label for="fullName">이름</label>
-        <input type="text" name="fullName" value="${user.fullName}" /><br>
-
-        <label for="email">이메일</label>
-        <input type="text" name="email" value="${user.email}" /><br>
-
-        <label for="phone">phone</label>
-        <input type="text" name="phone" value="${user.phone}" /><br>
-
-
-        <label for="status">룰</label>
-        <input type="text" name="role" value="${user.role}" /><br>
-
-        <label for="status">상태</label>
-        <input type="text" name="status" value="${user.status}" /><br>
-
+        <input type="hidden" name="mapping" value="${mapping}">
+        <input type="hidden" name="userId" value="${empty user.userId ? 0 : user.userId}">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th style="width: 15%;">Entity</th>
+                        <th>Content</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>회사</td><td><input type="text" name="companyId" value="${user.companyId}" /></td></tr>
+                    <tr><td>아이디</td><td><input type="text" name="username" value="${user.username}" /></td></tr>
+                    <tr><td>이름</td><td><input type="text" name="fullName" value="${user.fullName}" /></td></tr>
+                    <tr><td>이메일</td><td><input type="text" name="email" value="${user.email}" /></td></tr>
+                    <tr><td>전화번호</td><td><input type="text" name="phone" value="${user.phone}" /></td></tr>
+                    <tr><td>룰</td><td><input type="text" name="role" value="${user.role}" /></td></tr>
+                    <tr><td>상태</td><td><input type="text" name="status" value="${user.status}" /></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <button type="button" onclick="amendData();">${empty user.userId ? 'Create' : 'Amend'}</button>
+
     </form>
 </main>
 

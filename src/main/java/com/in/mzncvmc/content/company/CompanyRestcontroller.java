@@ -45,13 +45,13 @@ public class CompanyRestcontroller {
      * @since 2025-09-09
      */
     @GetMapping
-    public ApiResponse<Page<CompanyDto>> getPagedUsers(
+    public ApiResponse<Page<CompanyDto>> getPagedLists(
             @RequestParam(defaultValue = "${app.pagination.default-page:0}") int page,
             @RequestParam(defaultValue = "${app.pagination.default-size:10}") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status) {
 
-        Page<CompanyDto> result = companyService.getPagedDatas(page, size, search, status);
+        Page<CompanyDto> result = companyService.getPagedLists(page, size, search, status);
         return ApiResponse.success(result, "Data paged list retrieved successfully");
     }
 

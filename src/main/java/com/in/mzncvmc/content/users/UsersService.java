@@ -115,7 +115,7 @@ public class UsersService{
      *
      */
     @Transactional(readOnly = true)
-    public Page<UsersDto> getPagedDatas(int page, int size, String search, String status) {
+    public Page<UsersDto> getPagedLists(int page, int size, String search, String status) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "userId"));
 
         // status 처리
