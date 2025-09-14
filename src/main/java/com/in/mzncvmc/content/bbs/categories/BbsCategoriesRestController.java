@@ -1,10 +1,9 @@
-package com.in.mzncvmc.content.users;
+package com.in.mzncvmc.content.bbs.categories;
 
 import com.in.mzncvmc.content.common.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import static com.in.mzncvmc.content.common.CommonConstants.SLASH_API;
@@ -12,17 +11,17 @@ import static com.in.mzncvmc.content.common.CommonConstants.SLASH_ID;
 
 @Log4j2
 @RestController
-@RequestMapping(SLASH_API + "/users")
-public class UsersRestController {
-    private final UsersService usersService;
+@RequestMapping(SLASH_API + "/bbs/bbsCategories")
+public class BbsCategoriesRestController {
+    private final BbsCategoriesService bbsCategoriesService;
 
     @Autowired
-    public UsersRestController(UsersService usersService) {
-        this.usersService = usersService;
+    public BbsCategoriesRestController(BbsCategoriesService bbsCategoriesService) {
+        this.bbsCategoriesService = bbsCategoriesService;
     }
 
     // Search DTO
-    public record UsersSearchDto(String search, String status) {}
+    public record BbsCategoriesSearchDto(String search) {}
 
     /**
      * C.해당 데이터 생성 (Create)
@@ -32,10 +31,10 @@ public class UsersRestController {
      * @throws IllegalArgumentException 잘못된 입력 값
      */
     @PostMapping(SLASH_ID)
-    public ApiResponse<Long> createData(@RequestBody UsersDto dto) {
-        log.debug("UsersRestcontroller.createData : " + dto);
+    public ApiResponse<Long> createData(@RequestBody BbsCategoriesDto dto) {
+        log.debug("BbsCategoriesRestController.createData : " + dto);
 
-        Long newDataId = usersService.insert(dto);
+        Long newDataId = bbsCategoriesService.insert(dto);
 
         return ApiResponse.success(newDataId, "New Data created successfully");
     }
@@ -47,13 +46,13 @@ public class UsersRestController {
      * @since 2025-09-09
      */
     @GetMapping
-    public ApiResponse<Page<UsersDto>> getPagedLists(
+    public ApiResponse<Page<BbsCategoriesDto>> getPagedLists(
             @RequestParam(defaultValue = "${app.pagination.default-page:0}") int page,
             @RequestParam(defaultValue = "${app.pagination.default-size:10}") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String status) {
 
-        Page<UsersDto> result = usersService.getPagedLists(page, size, search, status);
+        Page<BbsCategoriesDto> result = bbsCategoriesService.getPagedLists(page, size, search);
         return ApiResponse.success(result, "Data paged list retrieved successfully");
     }
 
@@ -67,10 +66,10 @@ public class UsersRestController {
      * @since 2025-09-09
      */
     @GetMapping(SLASH_ID)
-    public ApiResponse<UsersDto> getData(@PathVariable Long id) {
-        log.debug("UsersRestcontroller.getData : " + id);
+    public ApiResponse<BbsCategoriesDto> getData(@PathVariable Long id) {
+        log.debug("BbsCategoriesRestController.getData : " + id);
 
-        UsersDto dto = usersService.findById(id);
+        BbsCategoriesDto dto = bbsCategoriesService.findById(id);
 
         return ApiResponse.success(dto, "Data retrieved successfully");
     }
@@ -84,14 +83,14 @@ public class UsersRestController {
      * @throws IllegalArgumentException ID 불일치 또는 데이터 미존재
      */
     @PutMapping(SLASH_ID)
-    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody UsersDto dto) {
-        log.debug("UsersRestcontroller.updateData : " + dto);
+    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody BbsCategoriesDto dto) {
+        log.debug("BbsCategoriesRestController.updateData : " + dto);
 
-        if (!id.equals(dto.getUserId())) {
+        if (!id.equals(dto.getCategoryId())) {
             throw new IllegalArgumentException("ID 불일치");
         }
 
-        usersService.update(dto);
+        bbsCategoriesService.update(dto);
 
         return ApiResponse.success(id, "Data updated successfully");
     }
@@ -105,9 +104,9 @@ public class UsersRestController {
      */
     @DeleteMapping(SLASH_ID)
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        log.debug("UsersRestcontroller.deleteData : " + id);
+        log.debug("BbsCategoriesRestController.deleteData : " + id);
 
-        usersService.delete(id);
+        bbsCategoriesService.delete(id);
 
         return ApiResponse.success(id, "Data deleted successfully");
     }

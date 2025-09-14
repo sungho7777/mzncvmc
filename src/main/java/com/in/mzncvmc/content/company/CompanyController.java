@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.CommonConstants.CONTENT_PAGE;
+import static com.in.mzncvmc.content.common.StringConstants.*;
 
 @Controller
 @RequestMapping("/m/company")
@@ -56,6 +56,7 @@ public class CompanyController {
 
     private void setCommonAttributes(Model model, String contentPage) {
         model.addAttribute(SIDEBAR, COMPANYS);
+        model.addAttribute(SUB_SIDEBAR, EMPTY);
         model.addAttribute(CONTENT_PAGE, contentPage);
     }
 }

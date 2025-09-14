@@ -6,6 +6,8 @@ import com.in.mzncvmc.auth.dto.RegisterRequest;
 import com.in.mzncvmc.auth.util.JwtUtil;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +45,6 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
-        log.debug("login.loginRequest : " + loginRequest);
-
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -63,9 +63,14 @@ public class AuthController {
         final String accessToken = jwtUtil.generateToken(userDetails);
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
+        // 🔑 userId 조회 (예: 커스텀 User 엔티티)
+        Users users = usersService.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
         LoginResponse response = new LoginResponse(
                 accessToken,
                 refreshToken,
+                users.getUserId(),
                 userDetails.getUsername(),
                 "Bearer"
         );

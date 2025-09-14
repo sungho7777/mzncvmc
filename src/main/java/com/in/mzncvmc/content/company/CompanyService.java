@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.company;
 
-import com.in.mzncvmc.content.users.Users;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -86,7 +85,7 @@ public class CompanyService {
             DataPage = companyRepository.searchAll(search.trim(), statusEnum, pageable);
         }
 
-        return DataPage.map(this::toDto);
+        return DataPage.map(this::entityToDto);
     }
 
     /**
@@ -101,7 +100,7 @@ public class CompanyService {
         Company company = companyRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Data not found"));
 
-        return toDto(company); // 엔티티 → DTO 변환 메서드
+        return entityToDto(company); // 엔티티 → DTO 변환 메서드
     }
 
     /**
@@ -130,7 +129,6 @@ public class CompanyService {
         existing.setAddress(dto.getAddress());
         existing.setAddressDetail(dto.getAddressDetail());
 
-
         existing.setStatus(Company.Status.valueOf(dto.getStatus().toUpperCase()));
 
         companyRepository.save(existing);
@@ -155,7 +153,7 @@ public class CompanyService {
      *
      * @param !Entity 데이터
      */
-    private CompanyDto toDto(Company entity) {
+    private CompanyDto entityToDto(Company entity) {
         CompanyDto dto = CompanyDto.builder()
             .companyId(entity.getCompanyId())
             .companyName(entity.getCompanyName())

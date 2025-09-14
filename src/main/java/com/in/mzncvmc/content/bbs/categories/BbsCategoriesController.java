@@ -1,4 +1,4 @@
-package com.in.mzncvmc.content.users;
+package com.in.mzncvmc.content.bbs.categories;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,23 +10,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.StringConstants.*;
 
 @Log4j2
 @Controller
-@RequestMapping("/m/users")
-public class UsersController {
-    private final String USER = "user";
-    private final String USERS = "users";
-    private final String MENU_LIST_JSP = "users/list.jsp";
-    private final String MENU_VIEW_JSP = "users/view.jsp";
-    private final String MENU_AMEND_JSP = "users/amend.jsp";
+@RequestMapping("/m/bbs/bbsCategories")
+public class BbsCategoriesController {
+    private final String BBS = "bbs";
+    private final String BBS_CATEGORIES = "bbsCategories";
+    private final String MENU_LIST_JSP = "bbs/bbsCategories/list.jsp";
+    private final String MENU_VIEW_JSP = "bbs/bbsCategories/view.jsp";
+    private final String MENU_AMEND_JSP = "bbs/bbsCategories/amend.jsp";
 
-    private final UsersService usersService;
+    private final BbsCategoriesService bbsCategoriesService;
 
     @Autowired
-    public UsersController(UsersService usersService) {
-        this.usersService = usersService;
+    public BbsCategoriesController(BbsCategoriesService bbsCategoriesService) {
+        this.bbsCategoriesService = bbsCategoriesService;
     }
 
     @GetMapping(SLASH_LIST)
@@ -38,19 +37,18 @@ public class UsersController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
-        log.debug("UsersController.viewPage : " + id);
+        BbsCategoriesDto dto = bbsCategoriesService.findById(id);
 
-        UsersDto dto = usersService.findById(id);
-
-        model.addAttribute(USER, dto);
+        model.addAttribute(BBS_CATEGORIES, dto);
         setCommonAttributes(model, MENU_VIEW_JSP);
         return MAIN;
     }
 
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
-        UsersDto dto = (id != null && id > 0) ? usersService.findById(id) : new UsersDto();
-        model.addAttribute(USER, dto);
+        BbsCategoriesDto dto = (id != null && id > 0) ? bbsCategoriesService.findById(id) : new BbsCategoriesDto();
+        model.addAttribute(BBS_CATEGORIES, dto);
+
 
         model.addAttribute(MAPPING, mapping);
         setCommonAttributes(model, MENU_AMEND_JSP);
@@ -58,8 +56,8 @@ public class UsersController {
     }
 
     private void setCommonAttributes(Model model, String contentPage) {
-        model.addAttribute(SIDEBAR, USERS);
-        model.addAttribute(SUB_SIDEBAR, EMPTY);
+        model.addAttribute(SIDEBAR, BBS);
+        model.addAttribute(SUB_SIDEBAR, BBS_CATEGORIES);
         model.addAttribute(CONTENT_PAGE, contentPage);
     }
 }

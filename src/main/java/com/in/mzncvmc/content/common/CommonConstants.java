@@ -17,5 +17,6 @@ public final class CommonConstants {
 
 
     public static final String SIDEBAR = "sidebar";
+    public static final String SUB_SIDEBAR = "sub_sidebar";
     public static final String CONTENT_PAGE = "contentPage";
 }

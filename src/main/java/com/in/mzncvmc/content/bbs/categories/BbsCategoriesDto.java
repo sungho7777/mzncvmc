@@ -21,7 +21,26 @@ public class BbsCategoriesDto {
     private Integer maxFileCount; // 최대 파일 개수
     private String readPermission; // 읽기 권한 (ALL, USER, ADMIN)
     private String writePermission; // 쓰기 권한 (USER, ADMIN)
-    private LocalDateTime registrationDate; // 생성일
+    private LocalDateTime createdDate; // 생성일
     private LocalDateTime updatedDate; // 수정일
     private Long createdBy; // 생성자 ID
+
+    /*
+
+CategoryId
+CategoryName
+CategoryCode
+Description
+SortOrder
+IsActive
+AllowAnonymous
+AllowFileUpload
+MaxFileCount
+ReadPermission
+WritePermission
+CreatedDate
+UpdatedDate
+CreatedBy
+
+     */
 }

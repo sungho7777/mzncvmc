@@ -48,17 +48,18 @@
 
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-               aria-expanded="true" aria-controls="collapseTwo">
+        <li class="nav-item ${sidebar eq 'bbs' ? 'active' : ''}">
+            <a class="nav-link ${sidebar eq 'bbs' ? '' : 'collapsed'}" href="#" data-toggle="collapse" data-target="#collapseBbs"
+               aria-expanded="true" aria-controls="collapseBbs">
                 <i class="fas fa-fw fa-cog"></i>
-                <span>Components</span>
+                <span>Bbs</span>
             </a>
-            <div id="collapseTwo" class="collapse " aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseBbs" class="collapse ${sidebar eq 'bbs' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item" href="buttons.html">Buttons</a>
-                    <a class="collapse-item" href="cards.html">Cards</a>
+                    <a class="collapse-item ${subSidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsCategories')">categories</a>
+                    <a class="collapse-item ${subSidebar eq 'bbsPosts' ? 'active' : ''}" href="#" onclick="goList('bbs/posts')">posts</a>
+
                 </div>
             </div>
         </li>
@@ -143,8 +144,8 @@
         </li>
 
         <!-- Nav Item - bbs -->
-        <li class="nav-item ${sidebar eq 'bbs' ? 'active' : ''}">
-            <a class="nav-link" href="#" onclick="goList('bbs')">
+        <li class="nav-item ${sidebar eq 'bbs11' ? 'active' : ''}">
+            <a class="nav-link" href="#" onclick="goList('bbs11')">
                 <i class="fas fa-company fa-chart-area"></i>
                 <span>Bbs</span></a>
         </li>

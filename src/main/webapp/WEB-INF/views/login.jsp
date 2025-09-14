@@ -39,12 +39,12 @@
                                 <form id="loginForm" class="user" action="/api/auth/login" method="post">
                                     <div class="form-group">
                                         <input type="text" class="form-control form-control-user"
-                                               id="username" name="username" aria-describedby="emailHelp"
+                                               id="username" name="username" value="manager" aria-describedby="emailHelp"
                                                placeholder="Enter Email Address...">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" class="form-control form-control-user"
-                                               id="password" name="password" placeholder="Password">
+                                               id="password" name="password" value="1212" placeholder="Password">
                                     </div>
                                     <div class="form-group">
                                         <div class="custom-control custom-checkbox small">
@@ -97,6 +97,7 @@
 
 <script type="text/javascript">
     window.addEventListener('load', async function() {
+
         const token = localStorage.getItem('accessToken');
 
         if (token) {
@@ -214,12 +215,9 @@
             // 로그인 성공 - 토큰을 localStorage에 저장
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('refreshToken', data.refreshToken);
+            localStorage.setItem('userId', data.userId);
             localStorage.setItem('username', data.username);
 
-            console.log("login");
-            console.log("login.accessToken", data.accessToken);
-            console.log("login.refreshToken", data.refreshToken);
-            console.log("login.username", data.username);
             // 잠시 후 메인화면으로 이동
             setTimeout(() => {
                 window.location.href = '/main';

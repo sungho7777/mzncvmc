@@ -14,7 +14,15 @@
                 </thead>
                 <tbody>
                 <tr><td>ID</td><td>${user.userId}</td></tr>
-                <tr><td>회사</td><td>${user.companyType} ${user.companyName}</td></tr>
+                <tr>
+                    <td>회사</td>
+                    <td>
+                        ${user.companyType} ${user.companyName}
+                        <a href="#" class="btn btn-info" style="margin-right: 5px;" onclick="goView('company', ${user.companyId});">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+                    </td>
+                </tr>
                 <tr><td>아이디</td><td>${user.username}</td></tr>
                 <tr><td>이름</td><td>${user.fullName}</td></tr>
                 <tr><td>이메일</td><td>${user.email}</td></tr>

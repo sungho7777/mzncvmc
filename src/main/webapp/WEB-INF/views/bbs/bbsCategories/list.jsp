@@ -46,12 +46,6 @@
                                 <span class="mr-2">Search:</span>
                                 <input type="search" id="searchBox" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" style="width: 30%;">
 
-                                <span class="mr-2">Status:</span>
-                                <select id="status" class="form-control form-control-sm" style="width: 30%;">
-                                    <option value="">-- 전체 --</option> <!-- 선택 안함일 경우 전체 조회 -->
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="INACTIVE">INACTIVE</option>
-                                </select>
                                 <a href="#" onclick="getList();" class="btn btn-primary btn-icon-split" style="margin-left: 5px;">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-search fa-sm"></i>
@@ -74,20 +68,18 @@
                                 <thead>
                                 <tr>
                                     <th>순서</th>
-                                    <th>회사명</th>
-                                    <th>사업자 등록번호</th>
-                                    <th>대표자명</th>
-                                    <th>업종</th>
-                                    <th>전화번호</th>
-                                    <th>이메일</th>
-                                    <th>홈페이지</th>
-                                    <th>상태</th>
+                                    <th>카테고리명</th>
+                                    <th>카테고리 코드</th>
+                                    <th>카테고리 설명</th>
+                                    <th>익명 게시 허용</th>
+                                    <th>파일 업로드 허용</th>
+                                    <th>활성 여부</th>
                                     <th>비고</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grid" />
                                 <tr>
-                                    <td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>
+                                    <td colspan="8" class="text-center">조회된 데이터가 없습니다.</td>
                                 </tr>
                             </table>
                             <div id="pagination" class="pagination"></div>
@@ -102,7 +94,7 @@
 </main>
 
 <script type="text/javascript">
-    const MENU = "company";
+    const MENU = "bbs/bbsCategories";
     const API_URL = "/api/" + MENU;
     window.onload = function() {
 
@@ -121,12 +113,10 @@
      */
     const getList = async (page = 0, size = 10) => {
         const search = $('#searchBox').val();
-        const status = $('#status').val();
 
         // 쿼리스트링 만들기
         const query = new URLSearchParams({
             search: search || "",
-            status: status || "",
             page: page,   // 몇 번째 페이지 (0부터 시작)
             size: size    // 페이지당 데이터 개수
         });
@@ -190,7 +180,7 @@
         if (!data || data.length === 0) {
             // 데이터 없으면 안내 메시지 표시
             const tr = document.createElement("tr");
-            tr.innerHTML = `<td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>`;
+            tr.innerHTML = `<td colspan="8" class="text-center">조회된 데이터가 없습니다.</td>`;
             tbody.appendChild(tr);
             return;
         }
@@ -200,21 +190,13 @@
             const tr = document.createElement("tr");
             tr.innerHTML = [
                 '<td>' + (index + 1) + '</td>',
-                '<td>',
-                    item.companyType + ' ' + item.companyName + '<br/>',
-                    '(' + item.companyEngName + ')',
-                '</td>',
-                '<td>' + item.businessNumber +  '</td>',
-                '<td>' + item.ceoName +  '</td>',
-                '<td>' + item.industry +  '</td>',
-                '<td>',
-                    item.phone + '<br/>',
-                    '(' + item.fax + ')',
-                '</td>',
-                '<td>' + item.email +  '</td>',
-                '<td>' + item.website +  '</td>',
-                '<td>' + item.status +  '</td>',
-                '<td class="text-center">' + createActionButtons(item.companyId) + '</td>'
+                '<td>' + item.sortOrder + "." + item.categoryName +  '</td>',
+                '<td>' + item.categoryCode +  '</td>',
+                '<td>' + item.description +  '</td>',
+                '<td>' + item.allowAnonymous +  '</td>',
+                '<td>' + item.allowFileUpload +  '</td>',
+                '<td>' + item.isActive +  '</td>',
+                '<td class="text-center">' + createActionButtons(item.categoryId) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

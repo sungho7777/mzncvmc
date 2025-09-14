@@ -61,7 +61,7 @@
                             </label>
                         </div>
                         <div class="col-sm-12 col-md-6">
-                            <a href="#" onclick="goAmend('users', '0', 'POST');" class="btn btn-secondary btn-icon-split" style="margin-left: 5px;">
+                            <a id="goAmendBtn" href="#" class="btn btn-secondary btn-icon-split" style="margin-left: 5px;">
                                     <span class="icon text-white-50">
                                         New
                                     </span>
@@ -103,11 +103,14 @@
     const MENU = "users";
     const API_URL = "/api/" + MENU;
     window.onload = function() {
+        if(!accessTokenCheck()) return false;
 
+        init();
         getList();
     };
     const init = () => {
 
+        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', '0', 'POST');");
         console.log("init");
     }
 

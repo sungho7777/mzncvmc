@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.users;
 
-
 import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
 import lombok.extern.log4j.Log4j2;
@@ -9,9 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -100,7 +96,7 @@ public class UsersService{
         user.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
 
         // 비밀번호 기본값 설정 (암호화 적용)
-        user.setPassword("1");
+        user.setPassword(passwordEncoder.encode(dto.getUsername()));
 
         Users saved = usersRepository.save(user);
 
@@ -138,7 +134,7 @@ public class UsersService{
             DataPage = usersRepository.searchAll(search.trim(), statusEnum, pageable);
         }
 
-        return DataPage.map(this::toDto);
+        return DataPage.map(this::entityToDto);
     }
 
 
@@ -154,7 +150,7 @@ public class UsersService{
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Data not found"));
 
-        return toDto(user); // 엔티티 → DTO 변환 메서드
+        return entityToDto(user); // 엔티티 → DTO 변환 메서드
     }
 
     /**
@@ -201,7 +197,7 @@ public class UsersService{
      *
      * @param !Entity 데이터
      */
-    private UsersDto toDto(Users entity) {
+    private UsersDto entityToDto(Users entity) {
         UsersDto dto = UsersDto.builder()
             .userId(entity.getUserId())
             .username(entity.getUsername())
