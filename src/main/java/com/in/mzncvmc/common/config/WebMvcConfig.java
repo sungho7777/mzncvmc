@@ -21,6 +21,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(crudTrackingInterceptor)
                 .addPathPatterns("/api/**") // API 경로만 추적
-                .excludePathPatterns("/api/login", "/api/logout", "/api/user/authorities"); // 로그인/로그아웃은 별도 처리
+                .excludePathPatterns("/api/login",
+                                    "/api/logout",
+                                    "/api/auth/login",
+                                    "/api/auth/logout",
+
+                                    "/api/user/authorities"); // 로그인/로그아웃은 별도 처리
     }
 }

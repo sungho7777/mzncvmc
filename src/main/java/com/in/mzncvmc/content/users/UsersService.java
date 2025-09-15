@@ -94,6 +94,7 @@ public class UsersService{
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         user.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
+        //user.setConnected(Users.Connected.valueOf("N"));
 
         // 비밀번호 기본값 설정 (암호화 적용)
         user.setPassword(passwordEncoder.encode(dto.getUsername()));
@@ -206,6 +207,7 @@ public class UsersService{
             .phone(entity.getPhone())
             .role(entity.getRole().name())
             .status(entity.getStatus().name())
+            .connected(entity.getConnected().name())
 
             .companyId(entity.getCompanyId() != null ? entity.getCompanyId().getCompanyId() : null)
             .companyName(entity.getCompanyId() != null ? entity.getCompanyId().getCompanyName() : null)
@@ -217,4 +219,25 @@ public class UsersService{
         return dto;
     }
 
+    /**
+     * ETC.사용자 접속여부를 업데이트 한다.
+     *
+     * @param !ID, connected
+     */
+    @Transactional
+    public int updateUsersConnected(String username, String connected){
+
+        return usersRepository.updateUsersConnected(username, Users.Connected.valueOf(connected.toUpperCase()));
+    }
+
+    /**
+     * ETC.모든 사용자 접속여부를 업데이트 한다.
+     *
+     * @param connected
+     */
+    @Transactional
+    public int updateAllUsersConnected(String connected){
+
+        return usersRepository.updateAllUsersConnected(Users.Connected.valueOf(connected.toUpperCase()));
+    }
 }

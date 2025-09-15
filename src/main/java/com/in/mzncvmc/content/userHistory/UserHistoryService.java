@@ -21,15 +21,15 @@ public class UserHistoryService {
         }
     }
 
-    public void saveLogin(String userId, String clientIp) {
-        saveHistory(UserHistory.createLoginHistory(userId, clientIp));
+    public void saveLogin(String username, String clientIp) {
+        saveHistory(UserHistory.createLoginHistory(username, clientIp));
     }
 
-    public void saveLogout(String userId, String clientIp) {
-        saveHistory(UserHistory.createLogoutHistory(userId, clientIp));
+    public void saveLogout(String username, String clientIp) {
+        saveHistory(UserHistory.createLogoutHistory(username, clientIp));
     }
 
-    public void saveCrudAction(String userId,
+    public void saveCrudAction(String username,
                                String actionType,
                                String uri,
                                String httpMethod,
@@ -37,7 +37,7 @@ public class UserHistoryService {
                                String requestData,
                                String clientIp) {
         saveHistory(UserHistory.createCrudHistory(
-                userId,
+                username,
                 actionType,
                 uri,
                 httpMethod,

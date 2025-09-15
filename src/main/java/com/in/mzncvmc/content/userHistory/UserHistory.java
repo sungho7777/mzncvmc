@@ -24,7 +24,7 @@ public class UserHistory {
     private Long id;
 
     @Column(nullable = false, length = 100)
-    private String userId;
+    private String username;
 
     @Column(nullable = false, length = 20)
     private String actionType; // LOGIN, LOGOUT, CREATE, READ, UPDATE, DELETE
@@ -47,9 +47,9 @@ public class UserHistory {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    public static UserHistory createLoginHistory(String userId, String clientIp) {
+    public static UserHistory createLoginHistory(String username, String clientIp) {
         UserHistory history = new UserHistory();
-        history.userId = userId;
+        history.username = username;
         history.actionType = "LOGIN";
         history.uri = "/login";
         history.httpMethod = "POST";
@@ -58,9 +58,9 @@ public class UserHistory {
         return history;
     }
 
-    public static UserHistory createLogoutHistory(String userId, String clientIp) {
+    public static UserHistory createLogoutHistory(String username, String clientIp) {
         UserHistory history = new UserHistory();
-        history.userId = userId;
+        history.username = username;
         history.actionType = "LOGOUT";
         history.uri = "/logout";
         history.httpMethod = "POST";
@@ -69,11 +69,11 @@ public class UserHistory {
         return history;
     }
 
-    public static UserHistory createCrudHistory(String userId, String actionType, String uri,
+    public static UserHistory createCrudHistory(String username, String actionType, String uri,
                                                 String httpMethod, String controllerMethod,
                                                 String requestData, String clientIp) {
         UserHistory history = new UserHistory();
-        history.userId = userId;
+        history.username = username;
         history.actionType = actionType;
         history.uri = uri;
         history.httpMethod = httpMethod;

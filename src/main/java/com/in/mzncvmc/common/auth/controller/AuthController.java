@@ -6,6 +6,7 @@ import com.in.mzncvmc.common.auth.dto.RegisterRequest;
 import com.in.mzncvmc.common.auth.util.JwtUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.users.Users;
+import com.in.mzncvmc.content.users.UsersDto;
 import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -49,6 +50,16 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+        // 1. 사용자 엔티티 조회
+        Users users = usersService.findByUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+        // 2. 접속 상태 확인
+        if (users.getConnected() == Users.Connected.Y) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "이미 다른 곳에서 접속 중입니다.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409 Conflict
+        }
+        // 3. 인증 시도
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -61,16 +72,15 @@ public class AuthController {
             error.put("error", "Invalid username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
-
-        final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(loginRequest.getUsername());
+        // 4. 토큰 생성
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
         final String accessToken = jwtUtil.generateToken(userDetails);
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
-
-        // 🔑 userId 조회 (예: 커스텀 User 엔티티)
-        Users users = usersService.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new RuntimeException("사용자 없음"));
-
+        // 5. 로그인 성공 → 상태 Y 로 변경
+        usersService.updateUsersConnected(loginRequest.getUsername(), "Y");
+        // 6. 히스토리 저장
+        userHistoryService.saveLogin(loginRequest.getUsername(), getClientIp(request));
+        // 7. 응답 리턴
         LoginResponse response = new LoginResponse(
                 accessToken,
                 refreshToken,
@@ -78,9 +88,6 @@ public class AuthController {
                 userDetails.getUsername(),
                 "Bearer"
         );
-
-        // 로그인 성공시 히스토리 저장
-        userHistoryService.saveLogin(loginRequest.getUsername(), getClientIp(request));
 
         return ResponseEntity.ok(response);
     }
@@ -135,10 +142,11 @@ public class AuthController {
         if (token != null && token.startsWith("Bearer ")) {
             String actualToken = token.substring(7);
             try {
-                String userId = jwtUtil.extractUsername(actualToken);
-                userHistoryService.saveLogout(userId, getClientIp(request));
+                String username = jwtUtil.extractUsername(actualToken);
+                userHistoryService.saveLogout(username, getClientIp(request));
 
-
+                // 로그인 접속상태 Y 으로 업데이트
+                usersService.updateUsersConnected(username, "N");
             } catch (Exception e) {
                 // 토큰이 유효하지 않아도 로그아웃은 성공으로 처리
             }
@@ -150,7 +158,6 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
-
 
     private String getClientIp(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");

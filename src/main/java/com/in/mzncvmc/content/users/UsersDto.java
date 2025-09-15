@@ -18,6 +18,7 @@ public class UsersDto {
     private String phone; // 전화번호
     private String role; // 권한
     private String status; // 계정 상태
+    private String connected; // 접속여부
 
 /*
 userId
@@ -30,5 +31,6 @@ email
 phone
 role
 status
+connected
  */
 }

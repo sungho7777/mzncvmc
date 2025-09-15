@@ -83,6 +83,7 @@ CREATE TABLE users (
         phone VARCHAR(20) DEFAULT NULL COMMENT '전화번호',
         role ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER' COMMENT '권한',
         status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '계정 상태',
+        connected ENUM('N','Y') DEFAULT 'N' COMMENT '접속여부',
 
         created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '등록일시',
         update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
@@ -94,38 +95,38 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자 정보 테이블';
 
 # 테이블 입력
-INSERT INTO users (company_id, username, password, full_name, email, phone, role, status, last_login)
+INSERT INTO users (company_id, username, password, full_name, email, phone, role, status, connected, last_login)
 VALUES
-    (1, 'admin', '1', '홍길동', 'admin@koreatech.com', '010-1111-2222', 'ADMIN', 'ACTIVE', NULL),
-    (2, 'user_lee', '1', '이영희', 'userlee@koreatech.com', '010-3333-4444', 'USER', 'ACTIVE', NULL),
-    (2, 'manager_global', '1', '김철수', 'manager@globalsol.com', '010-5555-6666', 'MANAGER', 'ACTIVE', NULL),
-    (3, 'user_park', '1', '박성백', 'userpark@globalsol.com', '010-7777-8888', 'USER', 'INACTIVE', NULL),
-    (3, 'user_kim', '1', '김민수', 'userminsu@koreatech.com', '010-1212-3434', 'USER', 'ACTIVE', NULL),
-    (3, 'user_choi', '1', '최은지', 'userchoi@koreatech.com', '010-5656-7878', 'USER', 'ACTIVE', NULL),
-    (4, 'user_jung', '1', '정호석', 'userjung@globalsol.com', '010-9090-1010', 'USER', 'INACTIVE', NULL),
-    (4, 'manager_kang', '1', '강서준', 'managerkang@globalsol.com', '010-1122-3344', 'MANAGER', 'ACTIVE', NULL),
-    (4, 'user_han', '1', '한지원', 'userhan@koreatech.com', '010-2233-4455', 'USER', 'ACTIVE', NULL),
-    (5, 'user_song', '1', '송다현', 'usersong@globalsol.com', '010-6677-8899', 'USER', 'INACTIVE', NULL),
-    (5, 'manager_oh', '1', '오세훈', 'manageroh@koreatech.com', '010-1111-9999', 'MANAGER', 'ACTIVE', NULL),
-    (5, 'user_shin', '1', '신지우', 'usershin@globalsol.com', '010-4444-2222', 'USER', 'ACTIVE', NULL),
-    (5, 'user_yang', '1', '양도윤', 'useryang@koreatech.com', '010-5555-3333', 'USER', 'ACTIVE', NULL),
-    (6, 'user_kwon', '1', '권예진', 'userkwon@globalsol.com', '010-6666-1111', 'USER', 'INACTIVE', NULL),
-    (6, 'manager_hwang', '1', '황지민', 'managerhwang@koreatech.com', '010-7777-5555', 'MANAGER', 'ACTIVE', NULL),
-    (6, 'user_im', '1', '임채영', 'userim@globalsol.com', '010-8888-4444', 'USER', 'ACTIVE', NULL),
-    (6, 'user_baek', '1', '백현우', 'userbaek@koreatech.com', '010-9999-6666', 'USER', 'ACTIVE', NULL),
-    (6, 'user_jang', '1', '장유진', 'userjang@globalsol.com', '010-1234-9876', 'USER', 'INACTIVE', NULL),
-    (7, 'manager_yoo', '1', '유다은', 'manageryoo@koreatech.com', '010-3456-7890', 'MANAGER', 'ACTIVE', NULL),
-    (7, 'user_hong', '1', '홍서준', 'userhong@globalsol.com', '010-6543-2109', 'USER', 'ACTIVE', NULL),
-    (7, 'user_ahn', '1', '안지훈', 'userahn@koreatech.com', '010-7410-8520', 'USER', 'ACTIVE', NULL),
-    (7, 'manager_nam', '1', '남도현', 'managernam@globalsol.com', '010-9630-1470', 'MANAGER', 'ACTIVE', NULL),
-    (7, 'user_seo', '1', '서민재', 'userseo@koreatech.com', '010-8520-3690', 'USER', 'ACTIVE', NULL),
-    (7, 'user_ha', '1', '하지은', 'userha@globalsol.com', '010-1470-2580', 'USER', 'INACTIVE', NULL),
-    (7, 'user_yun', '1', '윤지호', 'useryun@koreatech.com', '010-7530-9510', 'USER', 'ACTIVE', NULL),
-    (8, 'user_go', '1', '고아람', 'usergo@globalsol.com', '010-1590-3570', 'USER', 'ACTIVE', NULL),
-    (8, 'manager_sim', '1', '심다혜', 'managersim@koreatech.com', '010-2580-6540', 'MANAGER', 'ACTIVE', NULL),
-    (8, 'user_noh', '1', '노은우', 'usernoh@globalsol.com', '010-3570-8520', 'USER', 'INACTIVE', NULL),
-    (8, 'user_jo', '1', '조현아', 'userjo@koreatech.com', '010-4560-1590', 'USER', 'ACTIVE', NULL),
-    (8, 'user_ma', '1', '마세영', 'userma@globalsol.com', '010-9510-4560', 'USER', 'ACTIVE', NULL);
+    (1, 'admin', '1', '홍길동', 'admin@koreatech.com', '010-1111-2222', 'ADMIN', 'ACTIVE', 'N', NULL),
+    (2, 'user_lee', '1', '이영희', 'userlee@koreatech.com', '010-3333-4444', 'USER', 'ACTIVE', 'N', NULL),
+    (2, 'manager_global', '1', '김철수', 'manager@globalsol.com', '010-5555-6666', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (3, 'user_park', '1', '박성백', 'userpark@globalsol.com', '010-7777-8888', 'USER', 'INACTIVE', 'N', NULL),
+    (3, 'user_kim', '1', '김민수', 'userminsu@koreatech.com', '010-1212-3434', 'USER', 'ACTIVE', 'N', NULL),
+    (3, 'user_choi', '1', '최은지', 'userchoi@koreatech.com', '010-5656-7878', 'USER', 'ACTIVE', 'N', NULL),
+    (4, 'user_jung', '1', '정호석', 'userjung@globalsol.com', '010-9090-1010', 'USER', 'INACTIVE', 'N', NULL),
+    (4, 'manager_kang', '1', '강서준', 'managerkang@globalsol.com', '010-1122-3344', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (4, 'user_han', '1', '한지원', 'userhan@koreatech.com', '010-2233-4455', 'USER', 'ACTIVE', 'N', NULL),
+    (5, 'user_song', '1', '송다현', 'usersong@globalsol.com', '010-6677-8899', 'USER', 'INACTIVE', 'N', NULL),
+    (5, 'manager_oh', '1', '오세훈', 'manageroh@koreatech.com', '010-1111-9999', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (5, 'user_shin', '1', '신지우', 'usershin@globalsol.com', '010-4444-2222', 'USER', 'ACTIVE', 'N', NULL),
+    (5, 'user_yang', '1', '양도윤', 'useryang@koreatech.com', '010-5555-3333', 'USER', 'ACTIVE', 'N', NULL),
+    (6, 'user_kwon', '1', '권예진', 'userkwon@globalsol.com', '010-6666-1111', 'USER', 'INACTIVE', 'N', NULL),
+    (6, 'manager_hwang', '1', '황지민', 'managerhwang@koreatech.com', '010-7777-5555', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (6, 'user_im', '1', '임채영', 'userim@globalsol.com', '010-8888-4444', 'USER', 'ACTIVE', 'N', NULL),
+    (6, 'user_baek', '1', '백현우', 'userbaek@koreatech.com', '010-9999-6666', 'USER', 'ACTIVE', 'N', NULL),
+    (6, 'user_jang', '1', '장유진', 'userjang@globalsol.com', '010-1234-9876', 'USER', 'INACTIVE', 'N', NULL),
+    (7, 'manager_yoo', '1', '유다은', 'manageryoo@koreatech.com', '010-3456-7890', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (7, 'user_hong', '1', '홍서준', 'userhong@globalsol.com', '010-6543-2109', 'USER', 'ACTIVE', 'N', NULL),
+    (7, 'user_ahn', '1', '안지훈', 'userahn@koreatech.com', '010-7410-8520', 'USER', 'ACTIVE', 'N', NULL),
+    (7, 'manager_nam', '1', '남도현', 'managernam@globalsol.com', '010-9630-1470', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (7, 'user_seo', '1', '서민재', 'userseo@koreatech.com', '010-8520-3690', 'USER', 'ACTIVE', 'N', NULL),
+    (7, 'user_ha', '1', '하지은', 'userha@globalsol.com', '010-1470-2580', 'USER', 'INACTIVE', 'N', NULL),
+    (7, 'user_yun', '1', '윤지호', 'useryun@koreatech.com', '010-7530-9510', 'USER', 'ACTIVE', 'N', NULL),
+    (8, 'user_go', '1', '고아람', 'usergo@globalsol.com', '010-1590-3570', 'USER', 'ACTIVE', 'N', NULL),
+    (8, 'manager_sim', '1', '심다혜', 'managersim@koreatech.com', '010-2580-6540', 'MANAGER', 'ACTIVE', 'N', NULL),
+    (8, 'user_noh', '1', '노은우', 'usernoh@globalsol.com', '010-3570-8520', 'USER', 'INACTIVE', 'N', NULL),
+    (8, 'user_jo', '1', '조현아', 'userjo@koreatech.com', '010-4560-1590', 'USER', 'ACTIVE', 'N', NULL),
+    (8, 'user_ma', '1', '마세영', 'userma@globalsol.com', '010-9510-4560', 'USER', 'ACTIVE', 'N', NULL);
 
 ALTER TABLE users
 ADD COLUMN enabled BOOLEAN NOT NULL DEFAULT TRUE,
@@ -163,7 +164,7 @@ CREATE TABLE files (
 # user_history 테이블 생성
 CREATE TABLE user_history (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id VARCHAR(100) NOT NULL COMMENT '사용자 ID',
+    username VARCHAR(100) NOT NULL COMMENT '사용자 ID',
     action_type VARCHAR(20) NOT NULL COMMENT '액션 타입 (LOGIN, LOGOUT, CREATE, READ, UPDATE, DELETE)',
     uri VARCHAR(500) NOT NULL COMMENT '요청 URI',
     http_method VARCHAR(10) NOT NULL COMMENT 'HTTP 메소드 (GET, POST, PUT, DELETE)',
@@ -174,7 +175,7 @@ CREATE TABLE user_history (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='사용자 활동 히스토리';
 
 # 인덱스 생성 (성능 최적화)
-CREATE INDEX idx_user_time ON user_history(user_id, created_at);
+CREATE INDEX idx_user_time ON user_history(username, created_at);
 CREATE INDEX idx_action_type ON user_history(action_type);
 CREATE INDEX idx_created_at ON user_history(created_at);
 

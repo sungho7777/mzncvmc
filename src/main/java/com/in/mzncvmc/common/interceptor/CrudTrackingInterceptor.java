@@ -49,8 +49,8 @@ public class CrudTrackingInterceptor implements HandlerInterceptor {
             return;
         }
 
-        String userId = extractUserId(request);
-        if ("anonymous".equals(userId)) {
+        String username = extractUsername(request);
+        if ("anonymous".equals(username)) {
             return; // 익명 사용자는 기록하지 않음
         }
 
@@ -59,7 +59,7 @@ public class CrudTrackingInterceptor implements HandlerInterceptor {
         String requestData = getRequestData(request);
 
         userHistoryService.saveCrudAction(
-                userId,
+                username,
                 actionType,
                 request.getRequestURI(),
                 request.getMethod(),
@@ -74,7 +74,7 @@ public class CrudTrackingInterceptor implements HandlerInterceptor {
         return trackingPaths.stream().anyMatch(uri::startsWith);
     }
 
-    private String extractUserId(HttpServletRequest request) {
+    private String extractUsername(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             try {

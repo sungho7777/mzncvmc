@@ -61,6 +61,11 @@ public class Users implements UserDetails {
     @Comment("계정 상태")
     private Status status = Status.ACTIVE;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Comment("접속여부")
+    private Connected connected = Connected.N;
+
     @Comment("등록일시")
     private LocalDateTime createdDate;
     @Comment("수정일시")
@@ -90,7 +95,10 @@ public class Users implements UserDetails {
         INACTIVE
     }
 
-
+    public enum Connected {
+        N,  // Not Connected
+        Y   // Connected
+    }
 
     private boolean enabled = true;
     private boolean accountNonExpired = true;

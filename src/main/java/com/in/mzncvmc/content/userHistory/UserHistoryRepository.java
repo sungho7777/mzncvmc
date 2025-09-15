@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface UserHistoryRepository extends JpaRepository<UserHistory, Long> {
 
-    List<UserHistory> findTop100ByUserIdOrderByCreatedAtDesc(String userId);
+    List<UserHistory> findTop100ByUsernameOrderByCreatedAtDesc(String username);
 
     @Query("SELECT h " +
             " FROM UserHistory h " +
@@ -18,6 +18,6 @@ public interface UserHistoryRepository extends JpaRepository<UserHistory, Long> 
     )
     List<UserHistory> findByActionTypes(@Param("actionTypes") List<String> actionTypes);
 
-    List<UserHistory> findByUserIdAndCreatedAtBetweenOrderByCreatedAtDesc(
-            String userId, LocalDateTime start, LocalDateTime end);
+    List<UserHistory> findByUsernameAndCreatedAtBetweenOrderByCreatedAtDesc(
+            String username, LocalDateTime start, LocalDateTime end);
 }

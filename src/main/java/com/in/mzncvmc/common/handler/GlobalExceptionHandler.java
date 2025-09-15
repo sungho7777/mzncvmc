@@ -1,25 +1,22 @@
-package com.in.mzncvmc.common.config;
+package com.in.mzncvmc.common.handler;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Date;
 
 @Log4j2
 @Controller
-public class ExceptionHandlingController implements ErrorController {
-    private final String ERROR_ETC_PAGE_PATH = "/error/error";
+public class GlobalExceptionHandler {
+    private final String ERROR_ETC_PAGE_PATH = "error";
 
-    @RequestMapping(value = "/error", method = {RequestMethod.GET, RequestMethod.POST})
+
+    @RequestMapping(value = "/customError")
     public String handleError(HttpServletRequest request, Model model) {
 
         // 에러 코드를 획득한다.
