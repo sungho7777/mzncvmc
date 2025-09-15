@@ -1,13 +1,13 @@
 package com.in.mzncvmc.content.company;
 
-import com.in.mzncvmc.content.common.ApiResponse;
+import com.in.mzncvmc.content.common.response.ApiResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import static com.in.mzncvmc.content.common.CommonConstants.SLASH_API;
-import static com.in.mzncvmc.content.common.CommonConstants.SLASH_ID;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_ID;
 
 @Log4j2
 @RestController

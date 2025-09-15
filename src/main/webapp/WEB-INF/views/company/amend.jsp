@@ -4,7 +4,7 @@
 <main>
     <form id="amendForm">
         <input type="text" name="mapping" value="${mapping}">
-        <input type="text" name="companyId" value="${empty company.companyId ? 0 : company.companyId}">
+
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -15,35 +15,35 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td>회사명</td><td><input type="text" name="companyName" value="${company.companyName}" /></td></tr>
-                    <tr><td>영문 회사명</td><td><input type="text" name="companyEngName" value="${company.companyEngName}" /></td></tr>
-                    <tr><td>사업자 등록번호</td><td><input type="text" name="businessNumber" value="${company.businessNumber}" /></td></tr>
-                    <tr><td>대표자명</td><td><input type="text" name="ceoName" value="${company.ceoName}" /></td></tr>
-                    <tr><td>설립일</td><td><input type="text" name="establishedDate" value="${company.establishedDate}" /></td></tr>
-                    <tr><td>회사 형태</td><td><input type="text" name="companyType" value="${company.companyType}" /></td></tr>
-                    <tr><td>업종</td><td><input type="text" name="industry" value="${company.industry}" /></td></tr>
-                    <tr><td>대표 전화번호</td><td><input type="text" name="phone" value="${company.phone}" /></td></tr>
-                    <tr><td>팩스 번호</td><td><input type="text" name="fax" value="${company.fax}" /></td></tr>
-                    <tr><td>대표 이메일</td><td><input type="text" name="email" value="${company.email}" /></td></tr>
-                    <tr><td>홈페이지</td><td><input type="text" name="website" value="${company.website}" /></td></tr>
-                    <tr><td>우편번호</td><td><input type="text" name="postalCode" value="${company.postalCode}" /></td></tr>
-                    <tr><td>주소</td><td><input type="text" name="address" value="${company.address}" /></td></tr>
-                    <tr><td>상세 주소</td><td><input type="text" name="addressDetail" value="${company.addressDetail}" /></td></tr>
-                    <tr><td>상태</td><td><input type="text" name="status" value="${company.status}" /></td></tr>
+                    <tr><td>ID</td><td><input type="text" name="companyId" id="companyId" value="0" /></td></tr>
+                    <tr><td>회사명</td><td><input type="text" name="companyName" id="companyName" /></td></tr>
+                    <tr><td>영문 회사명</td><td><input type="text" name="companyEngName" id="companyEngName" /></td></tr>
+                    <tr><td>사업자 등록번호</td><td><input type="text" name="businessNumber" id="businessNumber" /></td></tr>
+                    <tr><td>대표자명</td><td><input type="text" name="ceoName" id="ceoName" /></td></tr>
+                    <tr><td>설립일</td><td><input type="text" name="establishedDate" id="establishedDate" /></td></tr>
+                    <tr><td>회사 형태</td><td><input type="text" name="companyType" id="companyType" /></td></tr>
+                    <tr><td>업종</td><td><input type="text" name="industry" id="industry" /></td></tr>
+                    <tr><td>대표 전화번호</td><td><input type="text" name="phone" id="phone" /></td></tr>
+                    <tr><td>팩스 번호</td><td><input type="text" name="fax" id="fax" /></td></tr>
+                    <tr><td>대표 이메일</td><td><input type="text" name="email" id="email" /></td></tr>
+                    <tr><td>홈페이지</td><td><input type="text" name="website" id="website" /></td></tr>
+                    <tr><td>우편번호</td><td><input type="text" name="postalCode" id="postalCode" /></td></tr>
+                    <tr><td>주소</td><td><input type="text" name="address" id="address" /></td></tr>
+                    <tr><td>상세 주소</td><td><input type="text" name="addressDetail" id="addressDetail" /></td></tr>
+                    <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
 
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" onclick="goList('company');">목록</button>
+                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
-        <button type="button" onclick="amendData();">${empty company.companyId ? 'Create' : 'Amend'}</button>
 
     </form>
 </main>
 
-
-
-
 <script type="text/javascript">
+    const ID = ${id};
     const MENU = "company";
     const API_URL = "/api/" + MENU;
 
@@ -54,7 +54,58 @@
 
     const init = () => {
 
+        if(Number(ID) > 0) getAmend();
         console.log("amend init");
+    };
+
+    /**
+     * R.해당 데이터 단일조회 (Read One)
+     * @returns {Promise<Data>} 단일 데이터
+     */
+    const getAmend = async() => {
+        $('#loading').show();
+
+        await fetch(API_URL + "/" + ID, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
+        })
+            .then(res => res.json())
+            .then(result => {
+
+                renderTable(result.data);
+            })
+            .finally(() => {
+                setTimeout(() => $('#loading').hide(), 250);
+            })
+            .catch(err => console.error("에러:", err));
+    };
+
+    /**
+     * ETC.그리드(테이블) 생성 함수
+     * @param {number} data, tbodyId 데이터 ID
+     * @returns {Grid} Grid
+     */
+    const renderTable = (data) => {
+
+        $("#companyId").val(data.companyId);
+        $("#companyName").val(data.companyName);
+        $("#companyEngName").val(data.companyEngName);
+        $("#businessNumber").val(data.businessNumber);
+        $("#ceoName").val(data.ceoName);
+        $("#establishedDate").val(data.establishedDate);
+        $("#companyType").val(data.companyType);
+        $("#industry").val(data.industry);
+        $("#phone").val(data.phone);
+        $("#fax").val(data.fax);
+        $("#email").val(data.email);
+        $("#website").val(data.website);
+        $("#postalCode").val(data.postalCode);
+        $("#address").val(data.address);
+        $("#addressDetail").val(data.addressDetail);
+        $("#status").val(data.status);
     };
 
     /**

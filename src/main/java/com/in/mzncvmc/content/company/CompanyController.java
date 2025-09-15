@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.StringConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.StringConstants.*;
 
 @Controller
 @RequestMapping("/m/company")
@@ -36,19 +36,16 @@ public class CompanyController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
-        CompanyDto dto = companyService.findById(id);
 
-        model.addAttribute(COMPANY, dto);
+        model.addAttribute(ID, id);
         setCommonAttributes(model, MENU_VIEW_JSP);
         return MAIN;
     }
 
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
-        CompanyDto dto = (id != null && id > 0) ? companyService.findById(id) : new CompanyDto();
-        model.addAttribute(COMPANY, dto);
 
-
+        model.addAttribute(ID, id);
         model.addAttribute(MAPPING, mapping);
         setCommonAttributes(model, MENU_AMEND_JSP);
         return MAIN;

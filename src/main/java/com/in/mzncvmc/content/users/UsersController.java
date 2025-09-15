@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.StringConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.StringConstants.*;
 
 @Log4j2
 @Controller
@@ -38,20 +38,16 @@ public class UsersController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
-        log.debug("UsersController.viewPage : " + id);
 
-        UsersDto dto = usersService.findById(id);
-
-        model.addAttribute(USER, dto);
+        model.addAttribute(ID, id);
         setCommonAttributes(model, MENU_VIEW_JSP);
         return MAIN;
     }
 
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
-        UsersDto dto = (id != null && id > 0) ? usersService.findById(id) : new UsersDto();
-        model.addAttribute(USER, dto);
 
+        model.addAttribute(ID, id);
         model.addAttribute(MAPPING, mapping);
         setCommonAttributes(model, MENU_AMEND_JSP);
         return MAIN;

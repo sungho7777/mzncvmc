@@ -4,7 +4,6 @@
 <main>
     <form id="amendForm">
         <input type="text" name="mapping" value="${mapping}">
-        <input type="text" name="categoryId" value="${empty bbsCategories.categoryId ? 0 : bbsCategories.categoryId}">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -15,33 +14,33 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td>카테고리명</td><td><input type="text" name="categoryName" value="${bbsCategories.categoryName}" /></td></tr>
-                    <tr><td>카테고리 코드</td><td><input type="text" name="categoryCode" value="${bbsCategories.categoryCode}" /></td></tr>
-                    <tr><td>카테고리 설명</td><td><input type="text" name="description" value="${bbsCategories.description}" /></td></tr>
-                    <tr><td>정렬 순서</td><td><input type="text" name="sortOrder" value="${bbsCategories.sortOrder}" /></td></tr>
-                    <tr><td>활성 여부</td><td><input type="text" name="isActive" value="${bbsCategories.isActive}" /></td></tr>
-                    <tr><td>익명 게시 허용</td><td><input type="text" name="allowAnonymous" value="${bbsCategories.allowAnonymous}" /></td></tr>
-                    <tr><td>파일 업로드 허용</td><td><input type="text" name="allowFileUpload" value="${bbsCategories.allowFileUpload}" /></td></tr>
-                    <tr><td>최대 파일 개수</td><td><input type="text" name="maxFileCount" value="${bbsCategories.maxFileCount}" /></td></tr>
-                    <tr><td>읽기 권한</td><td><input type="text" name="readPermission" value="${bbsCategories.readPermission}" /></td></tr>
-                    <tr><td>쓰기 권한</td><td><input type="text" name="writePermission" value="${bbsCategories.writePermission}" /></td></tr>
-                    <tr><td>생성일</td><td><input type="text" name="createdDate" value="${bbsCategories.createdDate}" /></td></tr>
-                    <tr><td>수정일</td><td><input type="text" name="updatedDate" value="${bbsCategories.updatedDate}" /></td></tr>
-                    <tr><td>생성자 ID</td><td><input type="text" name="createdBy" value="${bbsCategories.createdBy}" /></td></tr>
+                    <tr><td>ID</td><td><input type="text" name="categoryId" id="categoryId" value="0" /></td></tr>
+                    <tr><td>카테고리명</td><td><input type="text" name="categoryName" id="categoryName" /></td></tr>
+                    <tr><td>카테고리 코드</td><td><input type="text" name="categoryCode" id="categoryCode" /></td></tr>
+                    <tr><td>카테고리 설명</td><td><input type="text" name="description" id="description" /></td></tr>
+                    <tr><td>정렬 순서</td><td><input type="text" name="sortOrder" id="sortOrder" /></td></tr>
+                    <tr><td>활성 여부</td><td><input type="text" name="isActive" id="isActive" /></td></tr>
+                    <tr><td>익명 게시 허용</td><td><input type="text" name="allowAnonymous" id="allowAnonymous" /></td></tr>
+                    <tr><td>파일 업로드 허용</td><td><input type="text" name="allowFileUpload" id="allowFileUpload" /></td></tr>
+                    <tr><td>최대 파일 개수</td><td><input type="text" name="maxFileCount" id="maxFileCount" /></td></tr>
+                    <tr><td>읽기 권한</td><td><input type="text" name="readPermission" id="readPermission" /></td></tr>
+                    <tr><td>쓰기 권한</td><td><input type="text" name="writePermission" id="writePermission" /></td></tr>
+                    <tr><td>생성일</td><td><input type="text" name="createdDate" id="createdDate" /></td></tr>
+                    <tr><td>수정일</td><td><input type="text" name="updatedDate" id="updatedDate" /></td></tr>
+                    <tr><td>생성자 ID</td><td><input type="text" name="createdBy" id="createdBy" /></td></tr>
 
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories');">목록</button>
+                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
-        <button type="button" onclick="amendData();">${empty bbsCategories.categoryId ? 'Create' : 'Amend'}</button>
 
     </form>
 </main>
 
-
-
-
 <script type="text/javascript">
+    const ID = ${id};
     const MENU = "bbs/bbsCategories";
     const API_URL = "/api/" + MENU;
 
@@ -52,7 +51,57 @@
 
     const init = () => {
 
+        if(Number(ID) > 0) getAmend();
         console.log("amend init");
+    };
+
+    /**
+     * R.해당 데이터 단일조회 (Read One)
+     * @returns {Promise<Data>} 단일 데이터
+     */
+    const getAmend = async() => {
+        $('#loading').show();
+
+        await fetch(API_URL + "/" + ID, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
+        })
+            .then(res => res.json())
+            .then(result => {
+
+                renderTable(result.data);
+            })
+            .finally(() => {
+                setTimeout(() => $('#loading').hide(), 250);
+            })
+            .catch(err => console.error("에러:", err));
+    };
+
+    /**
+     * ETC.그리드(테이블) 생성 함수
+     * @param {number} data, tbodyId 데이터 ID
+     * @returns {Grid} Grid
+     */
+    const renderTable = (data) => {
+
+        $("#categoryId").val(data.categoryId);
+        $("#categoryName").val(data.categoryName);
+        $("#categoryCode").val(data.categoryCode);
+        $("#description").val(data.description);
+        $("#sortOrder").val(data.sortOrder);
+        $("#isActive").val(data.isActive);
+        $("#allowAnonymous").val(data.allowAnonymous);
+        $("#allowFileUpload").val(data.allowFileUpload);
+        $("#maxFileCount").val(data.maxFileCount);
+        $("#readPermission").val(data.readPermission);
+        $("#writePermission").val(data.writePermission);
+        $("#createdDate").val(data.createdDate);
+        $("#updatedDate").val(data.updatedDate);
+        $("#createdBy").val(data.createdBy);
+
     };
 
     /**

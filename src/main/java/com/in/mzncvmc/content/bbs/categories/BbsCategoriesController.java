@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
 
 @Log4j2
 @Controller
@@ -37,19 +37,16 @@ public class BbsCategoriesController {
 
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
-        BbsCategoriesDto dto = bbsCategoriesService.findById(id);
 
-        model.addAttribute(BBS_CATEGORIES, dto);
+        model.addAttribute(ID, id);
         setCommonAttributes(model, MENU_VIEW_JSP);
         return MAIN;
     }
 
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
-        BbsCategoriesDto dto = (id != null && id > 0) ? bbsCategoriesService.findById(id) : new BbsCategoriesDto();
-        model.addAttribute(BBS_CATEGORIES, dto);
 
-
+        model.addAttribute(ID, id);
         model.addAttribute(MAPPING, mapping);
         setCommonAttributes(model, MENU_AMEND_JSP);
         return MAIN;

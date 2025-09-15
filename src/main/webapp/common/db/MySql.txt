@@ -5,6 +5,8 @@ use mzncvmc;
 # 테이블 삭제
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS company;
+DROP TABLE IF EXISTS files;
+DROP TABLE IF EXISTS user_history;
 
 # 테이블 생성
 CREATE TABLE company (
@@ -158,7 +160,23 @@ CREATE TABLE files (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='첨부파일 관리 테이블';
 
 
+# user_history 테이블 생성
+CREATE TABLE user_history (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(100) NOT NULL COMMENT '사용자 ID',
+    action_type VARCHAR(20) NOT NULL COMMENT '액션 타입 (LOGIN, LOGOUT, CREATE, READ, UPDATE, DELETE)',
+    uri VARCHAR(500) NOT NULL COMMENT '요청 URI',
+    http_method VARCHAR(10) NOT NULL COMMENT 'HTTP 메소드 (GET, POST, PUT, DELETE)',
+    controller_method VARCHAR(100) COMMENT '컨트롤러 메소드명 (예: UserController.getUser)',
+    request_data TEXT COMMENT '요청 파라미터 또는 중요 데이터',
+    client_ip VARCHAR(50) COMMENT '클라이언트 IP 주소',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시간'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='사용자 활동 히스토리';
 
+# 인덱스 생성 (성능 최적화)
+CREATE INDEX idx_user_time ON user_history(user_id, created_at);
+CREATE INDEX idx_action_type ON user_history(action_type);
+CREATE INDEX idx_created_at ON user_history(created_at);
 
 
 

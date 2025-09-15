@@ -5,7 +5,6 @@
 <main>
     <form id="amendForm">
         <input type="hidden" name="mapping" value="${mapping}">
-        <input type="hidden" name="userId" value="${empty user.userId ? 0 : user.userId}">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -16,23 +15,26 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td>회사</td><td><input type="text" name="companyId" value="${user.companyId}" /></td></tr>
-                    <tr><td>아이디</td><td><input type="text" name="username" value="${user.username}" /></td></tr>
-                    <tr><td>이름</td><td><input type="text" name="fullName" value="${user.fullName}" /></td></tr>
-                    <tr><td>이메일</td><td><input type="text" name="email" value="${user.email}" /></td></tr>
-                    <tr><td>전화번호</td><td><input type="text" name="phone" value="${user.phone}" /></td></tr>
-                    <tr><td>룰</td><td><input type="text" name="role" value="${user.role}" /></td></tr>
-                    <tr><td>상태</td><td><input type="text" name="status" value="${user.status}" /></td></tr>
+                    <tr><td>ID</td><td><input type="text" name="userId" id="userId" value="0" /></td></tr>
+                    <tr><td>회사</td><td><input type="text" name="companyId" id="companyId" /></td></tr>
+                    <tr><td>아이디</td><td><input type="text" name="username" id="username" /></td></tr>
+                    <tr><td>이름</td><td><input type="text" name="fullName" id="fullName" /></td></tr>
+                    <tr><td>이메일</td><td><input type="text" name="email" id="email" /></td></tr>
+                    <tr><td>전화번호</td><td><input type="text" name="phone" id="phone" /></td></tr>
+                    <tr><td>룰</td><td><input type="text" name="role" id="role" /></td></tr>
+                    <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
                     </tbody>
                 </table>
+                <button type="button" class="btn btn-primary" onclick="goList('users');">목록</button>
+                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
-        <button type="button" onclick="amendData();">${empty user.userId ? 'Create' : 'Amend'}</button>
 
     </form>
 </main>
 
 <script type="text/javascript">
+    const ID = ${id};
     const MENU = "users";
     const API_URL = "/api/" + MENU;
 
@@ -43,7 +45,50 @@
 
     const init = () => {
 
+        if(Number(ID) > 0) getAmend();
         console.log("amend init");
+    };
+
+    /**
+     * R.해당 데이터 단일조회 (Read One)
+     * @returns {Promise<Data>} 단일 데이터
+     */
+    const getAmend = async() => {
+        $('#loading').show();
+
+        await fetch(API_URL + "/" + ID, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
+        })
+            .then(res => res.json())
+            .then(result => {
+
+                renderTable(result.data);
+            })
+            .finally(() => {
+                setTimeout(() => $('#loading').hide(), 250);
+            })
+            .catch(err => console.error("에러:", err));
+    };
+
+    /**
+     * ETC.그리드(테이블) 생성 함수
+     * @param {number} data, tbodyId 데이터 ID
+     * @returns {Grid} Grid
+     */
+    const renderTable = (data) => {
+
+        $("#userId").val(data.userId);
+        $("#companyId").val(data.companyId);
+        $("#username").val(data.username);
+        $("#fullName").val(data.fullName);
+        $("#email").val(data.email);
+        $("#phone").val(data.phone);
+        $("#role").val(data.role);
+        $("#status").val(data.status);
     };
 
     /**

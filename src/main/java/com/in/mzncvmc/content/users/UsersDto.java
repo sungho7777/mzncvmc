@@ -19,5 +19,16 @@ public class UsersDto {
     private String role; // 권한
     private String status; // 계정 상태
 
-
+/*
+userId
+companyId
+companyName
+companyType
+username
+fullName
+email
+phone
+role
+status
+ */
 }

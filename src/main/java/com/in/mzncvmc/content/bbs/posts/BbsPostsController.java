@@ -6,9 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.CommonConstants.CONTENT_PAGE;
-import static com.in.mzncvmc.content.common.CommonConstants.SUB_SIDEBAR;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.CONTENT_PAGE;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SUB_SIDEBAR;
 
 @Log4j2
 @Controller

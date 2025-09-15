@@ -2,7 +2,6 @@ package com.in.mzncvmc.content.bbs;
 
 import com.in.mzncvmc.common.files.FileEntity;
 import com.in.mzncvmc.common.files.FileUploadService;
-import com.in.mzncvmc.content.users.UsersDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import static com.in.mzncvmc.content.common.CommonConstants.*;
-import static com.in.mzncvmc.content.common.CommonConstants.CONTENT_PAGE;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.CONTENT_PAGE;
 
 @Log4j2
 @Controller

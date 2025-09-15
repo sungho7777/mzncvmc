@@ -29,9 +29,15 @@ const goDelete = (menu, id) => {
 }
 // 로그아웃
 const goLogout = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    console.log("accessToken", accessToken);
 
     fetch('/api/auth/logout', {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+        }
     })
         .then(response => {
             if (response.ok) {
