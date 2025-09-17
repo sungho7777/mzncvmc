@@ -1,14 +1,13 @@
 package com.in.mzncvmc.common.handler;
 
 import com.in.mzncvmc.content.users.UsersService;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
-public class ServerShutdownHandler implements ServletContextListener {
+public class ServerShutdownHandler implements DisposableBean {
 
     private final UsersService usersService;
 
@@ -17,11 +16,10 @@ public class ServerShutdownHandler implements ServletContextListener {
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent sce) {
-        log.debug("Context closed : N");
+    public void destroy() throws Exception {
+        System.out.println("서버 종료 시점에 실행!");
 
 
-        // TODO 접속자 정보 업데이트 잘 안되고 있음... 수정 할 것.
         usersService.updateAllUsersConnected("N");
     }
 

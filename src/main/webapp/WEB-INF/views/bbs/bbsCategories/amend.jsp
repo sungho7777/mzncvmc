@@ -50,6 +50,7 @@
     };
 
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
         if(Number(ID) > 0) getAmend();
         console.log("amend init");

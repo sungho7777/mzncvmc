@@ -27,7 +27,7 @@
 </style>
 <main>
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+    <h1 id="viewTitle" class="h3 mb-2 text-gray-800">Tables</h1>
     <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
         For more information about DataTables, please visit the <a target="_blank"
                                                                    href="https://datatables.net">official DataTables documentation</a>.</p>
@@ -67,16 +67,15 @@
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th>순서</th>
-                                    <th>카테고리</th>
-                                    <th>제목</th>
+                                    <th style="width: 5%">순서</th>
+                                    <th style="width: 25%">제목</th>
                                     <th>내용</th>
-                                    <th>비고</th>
+                                    <th style="width: 10%">비고</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grid" />
                                 <tr>
-                                    <td colspan="5" class="text-center">조회된 데이터가 없습니다.</td>
+                                    <td colspan="4" class="text-center">조회된 데이터가 없습니다.</td>
                                 </tr>
                             </table>
                             <div id="pagination" class="pagination"></div>
@@ -97,10 +96,13 @@
     window.onload = function() {
 
         init();
-        getList();
     };
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
+        getList();
+
+        $("#viewTitle").text(CATEGORY_ID);
         $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', " + CATEGORY_ID + ", '0', 'POST');");
         console.log("list init");
     }
@@ -188,16 +190,12 @@
             const tr = document.createElement("tr");
             tr.innerHTML = [
                 '<td>' + (index + 1) + '</td>',
-                '<td>' + item.categoryId +  '</td>',
-                '<td>' + item.title +  '</td>',
-                '<td>' + item.bbsContent +  '</td>',
+                '<td>' + item.title.substring(0, 32) +  '</td>',
+                '<td>' + item.bbsContent.substring(0, 80) +  '</td>',
                 '<td class="text-center">' + createActionButtons(item.postId, item.categoryId) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);
         });
     };
-
-
-
 </script>

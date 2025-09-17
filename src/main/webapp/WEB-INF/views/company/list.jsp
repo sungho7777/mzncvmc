@@ -107,10 +107,11 @@
     window.onload = function() {
 
         init();
-        getList();
     };
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
+        getList();
         $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
         console.log("list init");
     }

@@ -40,7 +40,8 @@
             <div id="collapseAi" class="collapse ${sidebar eq 'ai' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item ${sub_sidebar eq 'aiOllama' ? 'active' : ''}" href="#" onclick="goList('ai/aiOllama', null)">aiOllama</a>
+                    <a class="collapse-item ${sub_sidebar eq 'ollama' ? 'active' : ''}" href="#" onclick="goList('ai/ollama', null)">ollama</a>
+
 
                 </div>
             </div>
@@ -62,6 +63,7 @@
                     <a class="collapse-item ${sub_sidebar eq 'bbsPosts3' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '3')">질문답변</a>
                     <a class="collapse-item ${sub_sidebar eq 'bbsPosts4' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '4')">자료실</a>
                     <a class="collapse-item ${sub_sidebar eq 'bbsPosts5' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '5')">건의사항</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts6' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '6')">Ai 문의답변</a>
                 </div>
             </div>
         </li>

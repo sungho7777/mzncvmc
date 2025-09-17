@@ -59,6 +59,7 @@
         init();
     };
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
 
         getView();

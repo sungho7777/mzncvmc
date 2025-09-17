@@ -45,6 +45,7 @@
         init();
     };
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
         getView();
         console.log("view init");

@@ -236,7 +236,8 @@ INSERT INTO bbs_categories (category_name, category_code, description, sort_orde
 ('자유게시판', 'FREE', '자유로운 의견 교환', 2),
 ('질문답변', 'QNA', '질문과 답변', 3),
 ('자료실', 'DATA', '각종 자료 공유', 4),
-('건의사항', 'SUGGESTION', '사이트 개선 건의', 5);
+('건의사항', 'SUGGESTION', '사이트 개선 건의', 5),
+('AI 문의답변', 'AI_QNA', '사이트 AI 문의답변', 6);
 
 # 초기 데이터 입력 bbs_posts
 INSERT INTO bbs_posts (

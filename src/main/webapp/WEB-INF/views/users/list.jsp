@@ -103,13 +103,13 @@
     const MENU = "users";
     const API_URL = "/api/" + MENU;
     window.onload = function() {
-        if(!accessTokenCheck()) return false;
 
         init();
-        getList();
     };
     const init = () => {
+        if(!accessTokenCheck()) return false;
 
+        getList();
         $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
         console.log("init");
     }
