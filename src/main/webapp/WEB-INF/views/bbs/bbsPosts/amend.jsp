@@ -14,20 +14,35 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td>ID</td><td><input type="text" name="categoryId" id="categoryId" value="0" /></td></tr>
-                    <tr><td>카테고리명</td><td><input type="text" name="categoryName" id="categoryName" /></td></tr>
-                    <tr><td>카테고리 코드</td><td><input type="text" name="categoryCode" id="categoryCode" /></td></tr>
-                    <tr><td>카테고리 설명</td><td><input type="text" name="description" id="description" /></td></tr>
-                    <tr><td>정렬 순서</td><td><input type="text" name="sortOrder" id="sortOrder" /></td></tr>
-                    <tr><td>활성 여부</td><td><input type="text" name="isActive" id="isActive" /></td></tr>
-                    <tr><td>익명 게시 허용</td><td><input type="text" name="allowAnonymous" id="allowAnonymous" /></td></tr>
-                    <tr><td>파일 업로드 허용</td><td><input type="text" name="allowFileUpload" id="allowFileUpload" /></td></tr>
-                    <tr><td>최대 파일 개수</td><td><input type="text" name="maxFileCount" id="maxFileCount" /></td></tr>
-                    <tr><td>읽기 권한</td><td><input type="text" name="readPermission" id="readPermission" /></td></tr>
-                    <tr><td>쓰기 권한</td><td><input type="text" name="writePermission" id="writePermission" /></td></tr>
-                    <tr><td>생성일</td><td><input type="text" name="createdDate" id="createdDate" /></td></tr>
-                    <tr><td>수정일</td><td><input type="text" name="updatedDate" id="updatedDate" /></td></tr>
-                    <tr><td>생성자 ID</td><td><input type="text" name="createdBy" id="createdBy" /></td></tr>
+
+
+                    <tr><td>ID</td><td><input type="text" name="postId" id="postId" value="0" /></td></tr>
+                    <tr><td>카테고리 ID</td><td><input type="text" name="categoryId" id="categoryId" /></td></tr>
+                    <tr><td>제목</td><td><input type="text" name="title" id="title" /></td></tr>
+                    <tr><td>내용</td><td><input type="text" name="bbsContent" id="bbsContent" /></td></tr>
+                    <tr><td>작성자 ID</td><td><input type="text" name="authorId" id="authorId" /></td></tr>
+                    <tr><td>작성자명</td><td><input type="text" name="authorName" id="authorName" /></td></tr>
+                    <tr><td>작성자 IP</td><td><input type="text" name="authorIp" id="authorIp" /></td></tr>
+                    <tr><td>익명 게시글 비밀번호</td><td><input type="text" name="password" id="password" /></td></tr>
+                    <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
+                    <tr><td>공지사항 여부</td><td><input type="text" name="isNotice" id="isNotice" /></td></tr>
+                    <tr><td>상단 고정 여부</td><td><input type="text" name="isTopFixed" id="isTopFixed" /></td></tr>
+                    <tr><td>비밀글 여부</td><td><input type="text" name="isSecret" id="isSecret" /></td></tr>
+                    <tr><td>조회수</td><td><input type="text" name="viewCount" id="viewCount" /></td></tr>
+                    <tr><td>좋아요 수</td><td><input type="text" name="likeCount" id="likeCount" /></td></tr>
+                    <tr><td>싫어요 수</td><td><input type="text" name="dislikeCount" id="dislikeCount" /></td></tr>
+                    <tr><td>댓글 수</td><td><input type="text" name="commentCount" id="commentCount" /></td></tr>
+                    <tr><td>첨부파일 수</td><td><input type="text" name="fileCount" id="fileCount" /></td></tr>
+                    <tr><td>부모 게시글 ID</td><td><input type="text" name="parentId" id="parentId" /></td></tr>
+                    <tr><td>답글 깊이</td><td><input type="text" name="depth" id="depth" /></td></tr>
+                    <tr><td>답글 그룹 ID</td><td><input type="text" name="groupId" id="groupId" /></td></tr>
+                    <tr><td>그룹내 순서</td><td><input type="text" name="groupOrder" id="groupOrder" /></td></tr>
+                    <tr><td>태그</td><td><input type="text" name="tags" id="tags" /></td></tr>
+                    <tr><td>추가 메타 데이터</td><td><input type="text" name="metaData" id="metaData" /></td></tr>
+                    <tr><td>생성 일시</td><td><input type="text" name="createdDate" id="createdDate" /></td></tr>
+                    <tr><td>수정 일시</td><td><input type="text" name="updatedDate" id="updatedDate" /></td></tr>
+                    <tr><td>삭제 일시</td><td><input type="text" name="deletedDate" id="deletedDate" /></td></tr>
+
 
                     </tbody>
                 </table>
@@ -41,7 +56,8 @@
 
 <script type="text/javascript">
     const ID = ${id};
-    const MENU = "bbs/bbsCategories";
+    const CATEGORY_ID = ${categoryId};
+    const MENU = "bbs/bbsPosts";
     const API_URL = "/api/" + MENU;
 
     window.onload = function() {
@@ -86,22 +102,34 @@
      * @returns {Grid} Grid
      */
     const renderTable = (data) => {
-
+        $("#postId").val(data.postId);
         $("#categoryId").val(data.categoryId);
-        $("#categoryName").val(data.categoryName);
-        $("#categoryCode").val(data.categoryCode);
-        $("#description").val(data.description);
-        $("#sortOrder").val(data.sortOrder);
-        $("#isActive").val(data.isActive);
-        $("#allowAnonymous").val(data.allowAnonymous);
-        $("#allowFileUpload").val(data.allowFileUpload);
-        $("#maxFileCount").val(data.maxFileCount);
-        $("#readPermission").val(data.readPermission);
-        $("#writePermission").val(data.writePermission);
+        $("#title").val(data.title);
+        $("#bbsContent").val(data.bbsContent);
+        $("#authorId").val(data.authorId);
+        $("#authorName").val(data.authorName);
+        $("#authorIp").val(data.authorIp);
+        $("#password").val(data.password);
+        $("#status").val(data.status);
+        $("#isNotice").val(data.isNotice);
+        $("#isTopFixed").val(data.isTopFixed);
+        $("#isSecret").val(data.isSecret);
+        $("#viewCount").val(data.viewCount);
+        $("#likeCount").val(data.likeCount);
+        $("#dislikeCount").val(data.dislikeCount);
+        $("#commentCount").val(data.commentCount);
+        $("#fileCount").val(data.fileCount);
+        $("#parentId").val(data.parentId);
+        $("#depth").val(data.depth);
+        $("#groupId").val(data.groupId);
+        $("#groupOrder").val(data.groupOrder);
+        $("#tags").val(data.tags);
+        $("#metaData").val(data.metaData);
         $("#createdDate").val(data.createdDate);
         $("#updatedDate").val(data.updatedDate);
-        $("#createdBy").val(data.createdBy);
+        $("#deletedDate").val(data.deletedDate);
 
+        $("#btnGoList").attr("onclick", "goList('bbs/bbsPosts', "+data.categoryId+");");
     };
 
     /**
@@ -127,7 +155,7 @@
         $('#loading').show(); // 로딩 표시
 
         try {
-            const res = await fetch(API_URL + `/` + data.categoryId, {
+            const res = await fetch(API_URL + `/` + data.postId, {
                 method: data.mapping,
                 headers: {
                     "Content-Type": "application/json",
@@ -145,7 +173,7 @@
             $('#successModal').modal('show');
             // 모달 안의 버튼에 id 저장
             $('#success-btn').data('id', jsonData.data);
-            $('#success-btn').data('categoryId', null);
+            $('#success-btn').data('categoryId', CATEGORY_ID);
             $('#success-btn').data('menu', MENU);
 
             //alert(mappingType + " 완료");
@@ -172,8 +200,12 @@
             errors.push("mapping 값을 입력하세요.");
         }
 
-        if (!data.categoryName || data.categoryName.trim() === "") {
-            errors.push("카테고리명을 입력하세요.");
+        if (!data.title || data.title.trim() === "") {
+            errors.push("제목을 입력하세요.");
+        }
+
+        if (!data.bbsContent || data.bbsContent.trim() === "") {
+            errors.push("내용을 입력하세요.");
         }
 
         return errors;

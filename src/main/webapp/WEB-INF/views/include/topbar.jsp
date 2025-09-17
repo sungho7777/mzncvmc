@@ -195,7 +195,7 @@
         const username = localStorage.getItem('username');
         if (userId && username) {
             $("#myUsername").text(username);
-            $("#myProfile").attr("onclick", "goView('users', " + userId + ");");
+            $("#myProfile").attr("onclick", "goView('users', null, " + userId + ");");
         }
     });
 </script>

@@ -111,7 +111,7 @@
     };
     const init = () => {
 
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', '0', 'POST');");
+        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
         console.log("list init");
     }
 
@@ -214,7 +214,7 @@
                 '<td>' + item.email +  '</td>',
                 '<td>' + item.website +  '</td>',
                 '<td>' + item.status +  '</td>',
-                '<td class="text-center">' + createActionButtons(item.companyId) + '</td>'
+                '<td class="text-center">' + createActionButtons(item.companyId, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

@@ -25,7 +25,7 @@
                     <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary" onclick="goList('users');">목록</button>
+                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('users', null);">목록</button>
                 <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
@@ -135,6 +135,7 @@
             $('#successModal').modal('show');
             // 모달 안의 버튼에 id 저장
             $('#success-btn').data('id', jsonData.data);
+            $('#success-btn').data('categoryId', null);
             $('#success-btn').data('menu', MENU);
 
             //alert(mappingType + " 완료");

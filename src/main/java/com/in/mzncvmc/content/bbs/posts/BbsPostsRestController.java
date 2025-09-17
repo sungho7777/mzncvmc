@@ -1,4 +1,4 @@
-package com.in.mzncvmc.content.bbs.categories;
+package com.in.mzncvmc.content.bbs.posts;
 
 import com.in.mzncvmc.content.common.response.ApiResponse;
 import lombok.extern.log4j.Log4j2;
@@ -6,21 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_ID;
 
 @Log4j2
 @RestController
-@RequestMapping(SLASH_API + "/bbs/bbsCategories")
-public class BbsCategoriesRestController {
-    private final BbsCategoriesService bbsCategoriesService;
+@RequestMapping(SLASH_API + "/bbs/bbsPosts")
+public class BbsPostsRestController {
+    private final BbsPostsService bbsPostsService;
 
     @Autowired
-    public BbsCategoriesRestController(BbsCategoriesService bbsCategoriesService) {
-        this.bbsCategoriesService = bbsCategoriesService;
+    public BbsPostsRestController(BbsPostsService bbsPostsService) {
+        this.bbsPostsService = bbsPostsService;
     }
 
     // Search DTO
-    public record BbsCategoriesSearchDto(String search) {}
+    public record BbsPostsSearchDto(String search) {}
 
     /**
      * C.해당 데이터 생성 (Create)
@@ -30,10 +31,10 @@ public class BbsCategoriesRestController {
      * @throws IllegalArgumentException 잘못된 입력 값
      */
     @PostMapping(SLASH_ID)
-    public ApiResponse<Long> createData(@RequestBody BbsCategoriesDto dto) {
-        log.debug("BbsCategoriesRestController.createData : " + dto);
+    public ApiResponse<Long> createData(@RequestBody BbsPostsDto dto) {
+        log.debug("BbsPostsRestController.createData : " + dto);
 
-        Long newDataId = bbsCategoriesService.insert(dto);
+        Long newDataId = bbsPostsService.insert(dto);
 
         return ApiResponse.success(newDataId, "New Data created successfully");
     }
@@ -45,13 +46,13 @@ public class BbsCategoriesRestController {
      * @since 2025-09-09
      */
     @GetMapping
-    public ApiResponse<Page<BbsCategoriesDto>> getPagedLists(
+    public ApiResponse<Page<BbsPostsDto>> getPagedLists(
             @RequestParam(defaultValue = "${app.pagination.default-page:0}") int page,
             @RequestParam(defaultValue = "${app.pagination.default-size:10}") int size,
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String status) {
+            @RequestParam(value = "categoryId", required = false) String categoryId,
+            @RequestParam(required = false) String search) {
 
-        Page<BbsCategoriesDto> result = bbsCategoriesService.getPagedLists(page, size, search);
+        Page<BbsPostsDto> result = bbsPostsService.getPagedLists(page, size, categoryId, search);
         return ApiResponse.success(result, "Data paged list retrieved successfully");
     }
 
@@ -65,10 +66,10 @@ public class BbsCategoriesRestController {
      * @since 2025-09-09
      */
     @GetMapping(SLASH_ID)
-    public ApiResponse<BbsCategoriesDto> getData(@PathVariable Long id) {
-        log.debug("BbsCategoriesRestController.getData : " + id);
+    public ApiResponse<BbsPostsDto> getData(@PathVariable Long id) {
+        log.debug("BbsPostsRestController.getData : " + id);
 
-        BbsCategoriesDto dto = bbsCategoriesService.findById(id);
+        BbsPostsDto dto = bbsPostsService.findById(id);
 
         return ApiResponse.success(dto, "Data retrieved successfully");
     }
@@ -82,14 +83,14 @@ public class BbsCategoriesRestController {
      * @throws IllegalArgumentException ID 불일치 또는 데이터 미존재
      */
     @PutMapping(SLASH_ID)
-    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody BbsCategoriesDto dto) {
-        log.debug("BbsCategoriesRestController.updateData : " + dto);
+    public ApiResponse<Long> updateData(@PathVariable Long id, @RequestBody BbsPostsDto dto) {
+        log.debug("BbsPostsRestController.updateData : " + dto);
 
-        if (!id.equals(dto.getCategoryId())) {
+        if (!id.equals(dto.getPostId())) {
             throw new IllegalArgumentException("ID 불일치");
         }
 
-        bbsCategoriesService.update(dto);
+        bbsPostsService.update(dto);
 
         return ApiResponse.success(id, "Data updated successfully");
     }
@@ -103,9 +104,9 @@ public class BbsCategoriesRestController {
      */
     @DeleteMapping(SLASH_ID)
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
-        log.debug("BbsCategoriesRestController.deleteData : " + id);
+        log.debug("BbsPostsRestController.deleteData : " + id);
 
-        bbsCategoriesService.delete(id);
+        bbsPostsService.delete(id);
 
         return ApiResponse.success(id, "Data deleted successfully");
     }

@@ -30,8 +30,8 @@
                     <tr><td>생성자 ID</td><td id="createdBy"></td></tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories');">목록</button>
-            <button type="button" class="btn btn-warning" onclick="goAmend('bbs/bbsCategories', ${id}, 'PUT');">수정</button>
+            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories', null);">목록</button>
+            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('bbs/bbsCategories', null, ${id}, 'PUT');">수정</button>
         </div>
     </div>
 </main>

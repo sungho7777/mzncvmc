@@ -37,17 +37,19 @@ CREATE TABLE bbs_categories (
 
 # BBS 게시글 테이블
 CREATE TABLE bbs_posts (
+    # 기본정보
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     category_id BIGINT NOT NULL COMMENT '카테고리 ID',
     title VARCHAR(500) NOT NULL COMMENT '제목',
-    content LONGTEXT NOT NULL COMMENT '내용',
+    bbs_content LONGTEXT NOT NULL COMMENT '내용',
     author_id BIGINT COMMENT '작성자 ID (NULL이면 익명)',
     author_name VARCHAR(100) COMMENT '작성자명 (익명 또는 닉네임)',
     author_ip VARCHAR(45) COMMENT '작성자 IP',
     password VARCHAR(100) COMMENT '익명 게시글 비밀번호 (암호화)',
 
     # 게시글 상태
-    status VARCHAR(20) DEFAULT 'ACTIVE' COMMENT '상태 (ACTIVE, HIDDEN, DELETED, BLOCKED)',
+    status ENUM('ACTIVE', 'HIDDEN', 'DELETED', 'BLOCKED') DEFAULT 'ACTIVE' COMMENT '상태 (ACTIVE, HIDDEN, DELETED, BLOCKED)',
+
     is_notice BOOLEAN DEFAULT FALSE COMMENT '공지사항 여부',
     is_top_fixed BOOLEAN DEFAULT FALSE COMMENT '상단 고정 여부',
     is_secret BOOLEAN DEFAULT FALSE COMMENT '비밀글 여부',
@@ -70,8 +72,8 @@ CREATE TABLE bbs_posts (
     meta_data JSON COMMENT '추가 메타 데이터',
 
     # 시간 정보
-    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
     deleted_date DATETIME COMMENT '삭제 일시',
 
     FOREIGN KEY (category_id) REFERENCES bbs_categories(category_id),
@@ -84,7 +86,7 @@ CREATE TABLE bbs_posts (
     INDEX idx_is_notice (is_notice, is_top_fixed),
     INDEX idx_parent_group (parent_id, group_id, group_order),
     INDEX idx_status_created (status, created_date DESC),
-    FULLTEXT INDEX ft_title_content (title, content)
+    FULLTEXT INDEX ft_title_content (title, bbs_content)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BBS 게시글';
 
 # BBS 댓글 테이블
@@ -93,7 +95,7 @@ CREATE TABLE bbs_comments (
     post_id BIGINT NOT NULL COMMENT '게시글 ID',
     parent_id BIGINT COMMENT '부모 댓글 ID (대댓글)',
     depth INT DEFAULT 0 COMMENT '댓글 깊이',
-    content TEXT NOT NULL COMMENT '댓글 내용',
+    bbs_content TEXT NOT NULL COMMENT '댓글 내용',
 
     author_id BIGINT COMMENT '작성자 ID',
     author_name VARCHAR(100) COMMENT '작성자명',
@@ -196,7 +198,7 @@ CREATE TABLE bbs_reports (
     reporter_ip VARCHAR(45) COMMENT '신고자 IP',
     reason_code VARCHAR(20) NOT NULL COMMENT '신고 사유 코드',
     reason_detail TEXT COMMENT '신고 상세 사유',
-    status VARCHAR(20) DEFAULT 'PENDING' COMMENT '처리 상태 (PENDING, PROCESSED, REJECTED)',
+    status ENUM('PENDING', 'PROCESSED', 'REJECTED') DEFAULT 'PENDING' COMMENT '처리 상태 (PENDING, PROCESSED, REJECTED)',
     admin_memo TEXT COMMENT '관리자 메모',
     processed_by BIGINT COMMENT '처리한 관리자 ID',
     processed_date DATETIME COMMENT '처리 일시',
@@ -238,7 +240,7 @@ INSERT INTO bbs_categories (category_name, category_code, description, sort_orde
 
 # 초기 데이터 입력 bbs_posts
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -261,7 +263,7 @@ INSERT INTO bbs_posts (
 '2024-01-15 09:00:00', '2024-01-15 09:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -282,7 +284,7 @@ INSERT INTO bbs_posts (
 '2024-03-10 14:30:00', '2024-03-10 14:30:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -298,7 +300,7 @@ INSERT INTO bbs_posts (
 '2024-03-12 10:15:00', '2024-03-12 10:15:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -314,7 +316,7 @@ INSERT INTO bbs_posts (
 '2024-03-13 11:20:00', '2024-03-13 11:20:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -333,7 +335,7 @@ INSERT INTO bbs_posts (
 '2024-03-13 12:00:00', '2024-03-13 12:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -354,7 +356,7 @@ application.properties에서 설정하는 방법과
 '2024-03-11 16:30:00', '2024-03-11 16:30:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -390,7 +392,7 @@ if (blocked.contains(extension.toLowerCase())) {
 '2024-03-11 17:15:00', '2024-03-11 17:15:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -427,7 +429,7 @@ INSERT INTO bbs_posts (
 '2024-03-09 14:00:00', '2024-03-09 14:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -459,7 +461,7 @@ INSERT INTO bbs_posts (
 '2024-03-08 10:30:00', '2024-03-08 10:30:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -481,7 +483,7 @@ INSERT INTO bbs_posts (
 '2024-03-12 20:00:00', '2024-03-12 20:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -500,7 +502,7 @@ INSERT INTO bbs_posts (
 '2024-03-10 15:45:00', '2024-03-10 15:45:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -513,7 +515,7 @@ INSERT INTO bbs_posts (
 '2024-03-13 18:00:00', '2024-03-13 18:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -527,7 +529,7 @@ INSERT INTO bbs_posts (
 '2024-03-13 18:30:00', '2024-03-13 18:30:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES
@@ -546,7 +548,7 @@ NULL, '익명의고민러', 'ACTIVE', FALSE, FALSE, 167, 8, 12,
 '2024-03-13 21:00:00', '2024-03-13 21:00:00');
 
 INSERT INTO bbs_posts (
-    category_id, title, content, author_id, author_name,
+    category_id, title, bbs_content, author_id, author_name,
     status, is_notice, is_top_fixed, view_count, like_count,
     comment_count, created_date, updated_date
 ) VALUES

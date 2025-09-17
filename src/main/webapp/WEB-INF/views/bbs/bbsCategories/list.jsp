@@ -103,7 +103,7 @@
     };
     const init = () => {
 
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', '0', 'POST');");
+        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
         console.log("list init");
     }
 
@@ -196,7 +196,7 @@
                 '<td>' + item.allowAnonymous +  '</td>',
                 '<td>' + item.allowFileUpload +  '</td>',
                 '<td>' + item.isActive +  '</td>',
-                '<td class="text-center">' + createActionButtons(item.categoryId) + '</td>'
+                '<td class="text-center">' + createActionButtons(item.categoryId, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

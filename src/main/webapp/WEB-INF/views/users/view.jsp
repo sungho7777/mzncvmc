@@ -32,8 +32,8 @@
                 </tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" onclick="goList('users');">목록</button>
-            <button type="button" class="btn btn-warning" onclick="goAmend('users', ${id}, 'PUT');">수정</button>
+            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('users', null);">목록</button>
+            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('users', null, ${id}, 'PUT');">수정</button>
         </div>
     </div>
 </main>
@@ -94,6 +94,6 @@
         $("#role").text(data.role);
         $("#status").text(data.status);
 
-        $("#companyView").attr("onclick", "goView('company', " + data.companyId + ");");
+        $("#companyView").attr("onclick", "goView('company', null, " + data.companyId + ");");
     };
 </script>

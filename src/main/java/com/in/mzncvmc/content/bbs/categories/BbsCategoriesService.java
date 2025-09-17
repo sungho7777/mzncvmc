@@ -50,7 +50,6 @@ public class BbsCategoriesService {
         return saved.getCategoryId();
     }
 
-
     /**
      * R.데이터 목록조회
      *
@@ -75,7 +74,6 @@ public class BbsCategoriesService {
 
         return DataPage.map(this::entityToDto);
     }
-
 
     /**
      * R.데이터 단일조회

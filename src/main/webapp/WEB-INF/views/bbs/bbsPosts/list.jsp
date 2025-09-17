@@ -46,12 +46,6 @@
                                 <span class="mr-2">Search:</span>
                                 <input type="search" id="searchBox" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" style="width: 30%;">
 
-                                <span class="mr-2">Status:</span>
-                                <select id="status" class="form-control form-control-sm" style="width: 30%;">
-                                    <option value="">-- 전체 --</option> <!-- 선택 안함일 경우 전체 조회 -->
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="INACTIVE">INACTIVE</option>
-                                </select>
                                 <a href="#" onclick="getList();" class="btn btn-primary btn-icon-split" style="margin-left: 5px;">
                                     <span class="icon text-white-50">
                                         <i class="fas fa-search fa-sm"></i>
@@ -74,18 +68,15 @@
                                 <thead>
                                 <tr>
                                     <th>순서</th>
-                                    <th>소속 회사명</th>
-                                    <th>아이디</th>
-                                    <th>이메일</th>
-                                    <th>전화번호</th>
-                                    <th>권한</th>
-                                    <th>상태</th>
+                                    <th>카테고리</th>
+                                    <th>제목</th>
+                                    <th>내용</th>
                                     <th>비고</th>
                                 </tr>
                                 </thead>
                                 <tbody id="grid" />
                                 <tr>
-                                    <td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>
+                                    <td colspan="5" class="text-center">조회된 데이터가 없습니다.</td>
                                 </tr>
                             </table>
                             <div id="pagination" class="pagination"></div>
@@ -100,18 +91,18 @@
 </main>
 
 <script type="text/javascript">
-    const MENU = "users";
+    const CATEGORY_ID = ${categoryId};
+    const MENU = "bbs/bbsPosts";
     const API_URL = "/api/" + MENU;
     window.onload = function() {
-        if(!accessTokenCheck()) return false;
 
         init();
         getList();
     };
     const init = () => {
 
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
-        console.log("init");
+        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', " + CATEGORY_ID + ", '0', 'POST');");
+        console.log("list init");
     }
 
     /**
@@ -120,40 +111,34 @@
      */
     const getList = async (page = 0, size = 10) => {
         const search = $('#searchBox').val();
-        const status = $('#status').val();
 
         // 쿼리스트링 만들기
         const query = new URLSearchParams({
             search: search || "",
-            status: status || "",
             page: page,   // 몇 번째 페이지 (0부터 시작)
             size: size    // 페이지당 데이터 개수
-            // sort: "userId,desc"  // 필요하면 정렬도 추가 가능
         });
 
         $('#loading').show();
 
-        try {
-            const res = await fetch(API_URL + "?" + query.toString(), {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-                }
-            });
-
-            if (!res.ok) throw new Error('Network response was not ok');
-
-            const result = await res.json();
-            renderGrid(result.data.content, "grid");
-            renderPagination(result.data);
-            renderSummary(result.data);
-        } catch (err) {
-            console.error("에러:", err);
-        } finally {
-            setTimeout(() => $('#loading').hide(), 250);
-        }
-
+        await fetch(API_URL + "?" + query.toString() + "&categoryId=" + CATEGORY_ID, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
+        })
+            .then(res => res.json())
+            .then(result => {
+                console.log(result.data.content);
+                renderGrid(result.data.content, "grid");   // data.content → 실제 데이터
+                renderPagination(result.data);             // 페이지네이션 UI 추가
+                renderSummary(result.data);
+            })
+            .finally(() => {
+                setTimeout(() => $('#loading').hide(), 250);
+            })
+            .catch(err => console.error("에러:", err));
     };
 
     /**
@@ -162,7 +147,7 @@
      * @returns {Promise<void>}
      */
     const deleteData = async (id) => {
-        await fetch(API_URL + `/` + id, {
+        await fetch(API_URL + `/` + id + "?categoryId=" + CATEGORY_ID, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -193,7 +178,7 @@
         if (!data || data.length === 0) {
             // 데이터 없으면 안내 메시지 표시
             const tr = document.createElement("tr");
-            tr.innerHTML = `<td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>`;
+            tr.innerHTML = `<td colspan="5" class="text-center">조회된 데이터가 없습니다.</td>`;
             tbody.appendChild(tr);
             return;
         }
@@ -203,13 +188,10 @@
             const tr = document.createElement("tr");
             tr.innerHTML = [
                 '<td>' + (index + 1) + '</td>',
-                '<td>' + item.companyType + ' ' + item.companyName + '</td>',
-                '<td>' + item.fullName + '<br/>(' + item.userId + ':' + item.username + ')</td>',
-                '<td>' + item.email + '</td>',
-                '<td>' + item.phone + '</td>',
-                '<td>' + item.role + '</td>',
-                '<td>' + item.status + '</td>',
-                '<td class="text-center">' + createActionButtons(item.userId, null) + '</td>'
+                '<td>' + item.categoryId +  '</td>',
+                '<td>' + item.title +  '</td>',
+                '<td>' + item.bbsContent +  '</td>',
+                '<td class="text-center">' + createActionButtons(item.postId, item.categoryId) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

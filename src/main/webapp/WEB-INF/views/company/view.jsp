@@ -32,8 +32,8 @@
                     <tr><td>상태</td><td id="status"></td></tr>
                 </tbody>
             </table>
-            <button type="button" class="btn btn-primary" onclick="goList('company');">목록</button>
-            <button type="button" class="btn btn-warning" onclick="goAmend('company', ${id}, 'PUT');">수정</button>
+            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('company', null);">목록</button>
+            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('company', null, ${id}, 'PUT');">수정</button>
         </div>
     </div>
 </main>

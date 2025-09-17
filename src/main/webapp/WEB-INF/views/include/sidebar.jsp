@@ -31,21 +31,20 @@
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item ${sidebar eq 'neo' ? 'active' : ''}">
-            <a class="nav-link ${sidebar eq 'neo' ? '' : 'collapsed'}" href="#" data-toggle="collapse" data-target="#collapseNeo"
-               aria-expanded="true" aria-controls="collapseNeo">
+        <li class="nav-item ${sidebar eq 'ai' ? 'active' : ''}">
+            <a class="nav-link ${sidebar eq 'ai' ? '' : 'collapsed'}" href="#" data-toggle="collapse" data-target="#collapseAi"
+               aria-expanded="true" aria-controls="collapseAi">
                 <i class="fas fa-fw fa-cog"></i>
-                <span>NStringIn</span>
+                <span>Ai</span>
             </a>
-            <div id="collapseNeo" class="collapse ${sidebar eq 'neo' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseAi" class="collapse ${sidebar eq 'ai' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom NStringIn:</h6>
-                    <a class="collapse-item ${sidebar eq 'neo' ? 'active' : ''}" href="#" onclick="goList('neo')">List</a>
-                    <a class="collapse-item" href="cards.html">Cards</a>
+                    <h6 class="collapse-header">Custom Components:</h6>
+                    <a class="collapse-item ${sub_sidebar eq 'aiOllama' ? 'active' : ''}" href="#" onclick="goList('ai/aiOllama', null)">aiOllama</a>
+
                 </div>
             </div>
         </li>
-
 
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item ${sidebar eq 'bbs' ? 'active' : ''}">
@@ -57,31 +56,16 @@
             <div id="collapseBbs" class="collapse ${sidebar eq 'bbs' ? 'show' : ''}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item ${subSidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsCategories')">categories</a>
-                    <a class="collapse-item ${subSidebar eq 'bbsPosts' ? 'active' : ''}" href="#" onclick="goList('bbs/posts')">posts</a>
-
+                    <a class="collapse-item ${sub_sidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsCategories', null)">게시판 설정</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts1' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '1')">공지사항</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts2' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '2')">자유게시판</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts3' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '3')">질문답변</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts4' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '4')">자료실</a>
+                    <a class="collapse-item ${sub_sidebar eq 'bbsPosts5' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '5')">건의사항</a>
                 </div>
             </div>
         </li>
 
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Utilities</span>
-            </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Colors</a>
-                    <a class="collapse-item" href="utilities-border.html">Borders</a>
-                    <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                    <a class="collapse-item" href="utilities-other.html">Other</a>
-                </div>
-            </div>
-        </li>
 
         <!-- Divider -->
         <hr class="sidebar-divider">
@@ -91,70 +75,19 @@
             Addons
         </div>
 
-        <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-               aria-expanded="true" aria-controls="collapsePages">
-                <i class="fas fa-fw fa-folder"></i>
-                <span>Pages</span>
-            </a>
-            <div id="collapsePages" class="collapse ${sidebar eq 'blank' ? 'show' : ''}" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-                    <a class="collapse-item" href="login.html">Login</a>
-                    <a class="collapse-item" href="register.html">Register</a>
-                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                    <div class="collapse-divider"></div>
-                    <h6 class="collapse-header">Other Pages:</h6>
-                    <a class="collapse-item" href="404.html">404 Page</a>
-                    <a class="collapse-item ${sidebar eq 'blank' ? 'active' : ''}" href="/sbadmin/blank">Blank Page</a>
-
-
-
-                </div>
-            </div>
-        </li>
-
-        <!-- Nav Item - Charts -->
-        <li class="nav-item">
-            <a class="nav-link" href="charts.html">
-                <i class="fas fa-fw fa-chart-area"></i>
-                <span>Charts</span></a>
-        </li>
 
         <!-- Nav Item - User -->
         <li class="nav-item ${sidebar eq 'users' ? 'active' : ''}">
-            <a class="nav-link" href="#" onclick="goList('users')">
+            <a class="nav-link" href="#" onclick="goList('users', null)">
                 <i class="fas fa-user fa-chart-area"></i>
                 <span>Users</span></a>
         </li>
 
         <!-- Nav Item - Company -->
         <li class="nav-item ${sidebar eq 'companys' ? 'active' : ''}">
-            <a class="nav-link" href="#" onclick="goList('company')">
+            <a class="nav-link" href="#" onclick="goList('company', null)">
                 <i class="fas fa-company fa-chart-area"></i>
                 <span>Company</span></a>
-        </li>
-
-        <!-- Nav Item - files -->
-        <li class="nav-item ${sidebar eq 'files' ? 'active' : ''}">
-            <a class="nav-link" href="#" onclick="goList('files')">
-                <i class="fas fa-company fa-chart-area"></i>
-                <span>File Upload</span></a>
-        </li>
-
-        <!-- Nav Item - bbs -->
-        <li class="nav-item ${sidebar eq 'bbs11' ? 'active' : ''}">
-            <a class="nav-link" href="#" onclick="goList('bbs11')">
-                <i class="fas fa-company fa-chart-area"></i>
-                <span>Bbs</span></a>
-        </li>
-
-        <!-- Nav Item - Tables -->
-        <li class="nav-item ${sidebar eq 'tables' ? 'active' : ''}">
-            <a class="nav-link" href="#">
-                <i class="fas fa-fw fa-table"></i>
-                <span>Tables</span></a>
         </li>
 
         <!-- Divider -->

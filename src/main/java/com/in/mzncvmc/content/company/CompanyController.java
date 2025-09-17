@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.company;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,24 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
-import static com.in.mzncvmc.content.common.constants.StringConstants.*;
+import static com.in.mzncvmc.content.common.constants.StringConstants.EMPTY;
 
 @Controller
 @RequestMapping("/m/company")
 public class CompanyController {
-    private final String COMPANY = "company";
     private final String COMPANYS = "companys";
     private final String MENU_LIST_JSP = "company/list.jsp";
     private final String MENU_VIEW_JSP = "company/view.jsp";
     private final String MENU_AMEND_JSP = "company/amend.jsp";
 
-    private final CompanyService companyService;
-
-    @Autowired
-    public CompanyController(CompanyService companyService) {
-        this.companyService = companyService;
-    }
-
+    /**
+     * L.리스트 화면이동 (list)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_LIST)
     public String listPage(Model model) {
 
@@ -34,6 +31,12 @@ public class CompanyController {
         return MAIN;
     }
 
+    /**
+     * V.상세화면 화면이동 (view)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
 
@@ -42,6 +45,12 @@ public class CompanyController {
         return MAIN;
     }
 
+    /**
+     * A.수정화면 화면이동 (amend)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
 

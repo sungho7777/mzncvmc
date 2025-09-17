@@ -5,27 +5,31 @@ const goDashboard = (menu) => {
     window.location.href = "/m/" + menu + "/dashboard";
 };
 // 목록 화면이동
-const goList = (menu) => {
+const goList = (menu, categoryId) => {
     if(!accessTokenCheck()) return false;
-    window.location.href = "/m/" + menu + "/list";
+
+    window.location.href = "/m/" + menu + "/list" + (categoryId === undefined || categoryId == null ? "" : "?categoryId=" + categoryId);
+
 };
 // 상세보기 화면이동
-const goView = (menu, id) => {
+const goView = (menu, categoryId, id) => {
     if(!accessTokenCheck()) return false;
-    window.location.href = "/m/" + menu + "/view/" + id;
+    window.location.href = "/m/" + menu + "/view/" + id + (categoryId === undefined || categoryId == null ? "" : "?categoryId=" + categoryId);
 };
 // 생성&수정 화면이동
-const goAmend = (menu, id, mapping) => {
+const goAmend = (menu, categoryId, id, mapping) => {
     if(!accessTokenCheck()) return false;
-    window.location.href = "/m/" + menu + "/amend/" + id + "?mapping=" + mapping;
+    window.location.href = "/m/" + menu + "/amend/" + id + "?mapping=" + mapping + (categoryId === undefined || categoryId == null ? "" : "&categoryId=" + categoryId);
 };
 // 삭제 모달띄우기
-const goDelete = (menu, id) => {
+const goDelete = (menu, categoryId, id) => {
     // 모달 띄우기
     $('#deleteModal').modal('show');
 
     // 모달 안의 버튼에 id 저장
     $('#delete-btn').data('id', id);
+    $('#delete-btn').data('categoryId', categoryId);
+
 }
 // 로그아웃
 const goLogout = () => {
@@ -149,11 +153,11 @@ const renderSummary = (pageData) => {
  * @param {id} 데이터 ID
  * @returns {Grid} Grid
  */
-const createActionButtons = (id) => {
+const createActionButtons = (id, categoryId) => {
     const buttons = [
-        { class: 'btn-info', icon: 'fas fa-info-circle', action: 'goView(\'' + (MENU) + '\', ' + id + ')' },
-        { class: 'btn-warning', icon: 'fas fa-exclamation-triangle', action: 'goAmend(\'' + (MENU) + '\', ' + id + ', \'PUT\')' },
-        { class: 'btn-danger', icon: 'fa fa-trash', action: 'goDelete(\'' + (MENU) + '\', ' + id + ')' }
+        { class: 'btn-info', icon: 'fas fa-info-circle', action: 'goView(\'' + (MENU) + '\', ' + categoryId + ', ' + id + ')' },
+        { class: 'btn-warning', icon: 'fas fa-exclamation-triangle', action: 'goAmend(\'' + (MENU) + '\', ' + categoryId + ', ' + id + ', \'PUT\')' },
+        { class: 'btn-danger', icon: 'fa fa-trash', action: 'goDelete(\'' + (MENU) + '\', ' + categoryId + ', ' + id + ')' }
     ];
 
     return buttons.map(btn =>

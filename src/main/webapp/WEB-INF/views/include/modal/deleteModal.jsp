@@ -32,6 +32,7 @@
             $('#deleteModal').modal('hide');
 
             const id = $(this).data('id');
+            const categoryId = $(this).data('categoryId');
 
             deleteData(id);
         });

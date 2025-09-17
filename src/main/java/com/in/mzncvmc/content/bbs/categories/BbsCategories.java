@@ -9,7 +9,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "bbs_categories")
+@Table(
+        name = "bbs_categories",
+        indexes = {
+                @Index(name = "idx_category_code", columnList = "category_code"),
+                @Index(name = "idx_sort_order", columnList = "sort_order"),
+                @Index(name = "idx_is_active", columnList = "status, is_active DESC")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor

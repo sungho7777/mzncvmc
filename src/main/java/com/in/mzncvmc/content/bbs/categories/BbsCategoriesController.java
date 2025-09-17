@@ -1,7 +1,6 @@
 package com.in.mzncvmc.content.bbs.categories;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +20,12 @@ public class BbsCategoriesController {
     private final String MENU_VIEW_JSP = "bbs/bbsCategories/view.jsp";
     private final String MENU_AMEND_JSP = "bbs/bbsCategories/amend.jsp";
 
-    private final BbsCategoriesService bbsCategoriesService;
-
-    @Autowired
-    public BbsCategoriesController(BbsCategoriesService bbsCategoriesService) {
-        this.bbsCategoriesService = bbsCategoriesService;
-    }
-
+    /**
+     * L.리스트 화면이동 (list)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_LIST)
     public String listPage(Model model) {
 
@@ -35,6 +33,12 @@ public class BbsCategoriesController {
         return MAIN;
     }
 
+    /**
+     * V.상세화면 화면이동 (view)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_VIEW_ID)
     public String viewPage(@PathVariable Long id, Model model) {
 
@@ -43,6 +47,12 @@ public class BbsCategoriesController {
         return MAIN;
     }
 
+    /**
+     * A.수정화면 화면이동 (amend)
+     *
+     * @param !model
+     * @return MAIN
+     */
     @GetMapping(SLASH_AMEND_ID)
     public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
 

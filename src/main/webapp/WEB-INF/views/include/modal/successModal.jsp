@@ -31,9 +31,10 @@
             $('#successModal').modal('hide');
 
             const id = $(this).data('id');
+            const categoryId = $(this).data('categoryId');
             const menu = $(this).data('menu');
 
-            goView(menu, id);
+            goView(menu, categoryId, id);
         });
     });
 </script>

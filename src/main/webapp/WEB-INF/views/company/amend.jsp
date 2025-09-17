@@ -34,7 +34,7 @@
 
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary" onclick="goList('company');">목록</button>
+                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('company', null);">목록</button>
                 <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
@@ -152,6 +152,7 @@
             $('#successModal').modal('show');
             // 모달 안의 버튼에 id 저장
             $('#success-btn').data('id', jsonData.data);
+            $('#success-btn').data('categoryId', null);
             $('#success-btn').data('menu', MENU);
 
             //alert(mappingType + " 완료");
