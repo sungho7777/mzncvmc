@@ -4,96 +4,93 @@
 <!DOCTYPE html>
 <html lang="ko" data-bs-theme="auto">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Login</title>
-    <!-- Custom fonts for this template-->
-    <link href="/common/sbadmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this template-->
-    <link href="/common/sbadmin/css/sb-admin-2.min.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Login - SB Admin Pro</title>
+    <link href="/common/sbadminpro/css/styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/x-icon" href="/common/sbadminpro/assets/img/favicon.png" />
+    <script data-search-pseudo-elements defer src="/common/sbadminpro/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="/common/sbadminpro/js/feather.min.js" crossorigin="anonymous"></script>
 </head>
-
-<body class="bg-gradient-primary">
-
-<div class="container">
-
-    <!-- Outer Row -->
-    <div class="row justify-content-center">
-
-        <div class="col-xl-10 col-lg-12 col-md-9">
-
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <!-- Nested Row within Card Body -->
-                    <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                </div>
-                                <form id="loginForm" class="user" action="/api/auth/login" method="post">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control form-control-user"
-                                               id="username" name="username" value="manager" aria-describedby="emailHelp"
-                                               placeholder="Enter Email Address...">
+<body class="bg-primary">
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container-xl px-4">
+                <div class="row justify-content-center">
+                    <div class="col-xl-5 col-lg-6 col-md-8 col-sm-11">
+                        <!-- Social login form-->
+                        <div class="card my-5">
+                            <div class="card-body p-5 text-center">
+                                <div class="h3 fw-light mb-3">Sign In</div>
+                                <!-- Social login links-->
+                                <a class="btn btn-icon btn-facebook mx-1" href="#!"><i class="fab fa-facebook-f fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-github mx-1" href="#!"><i class="fab fa-github fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-twitter mx-1" href="#!"><i class="fab fa-twitter fa-fw fa-sm text-white"></i></a>
+                            </div>
+                            <hr class="my-0" />
+                            <div class="card-body p-5">
+                                <!-- Login form-->
+                                <form id="loginForm" action="/api/auth/login" method="post">
+                                    <!-- Form Group (email address)-->
+                                    <div class="mb-3">
+                                        <label class="text-gray-600 small" for="emailExample">Email address</label>
+                                        <input id="username" name="username" value="manager"
+                                               class="form-control form-control-solid" type="text" placeholder="" aria-label="Email Address" aria-describedby="emailExample" />
                                     </div>
-                                    <div class="form-group">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="password" name="password" value="1212" placeholder="Password">
+                                    <!-- Form Group (password)-->
+                                    <div class="mb-3">
+                                        <label class="text-gray-600 small" for="passwordExample">Password</label>
+                                        <input id="password" name="password" value="1212"
+                                               class="form-control form-control-solid" type="password" placeholder="" aria-label="Password" aria-describedby="passwordExample" />
                                     </div>
-                                    <div class="form-group">
-                                        <div class="custom-control custom-checkbox small">
-                                            <input type="checkbox" class="custom-control-input" id="customCheck">
-                                            <label class="custom-control-label" for="customCheck">Remember
-                                                Me</label>
+                                    <!-- Form Group (forgot password link)-->
+                                    <div class="mb-3"><a class="small" href="auth-password-social.html">Forgot your password?</a></div>
+                                    <!-- Form Group (login box)-->
+                                    <div class="d-flex align-items-center justify-content-between mb-0">
+                                        <div class="form-check">
+                                            <input class="form-check-input" id="checkRememberPassword" type="checkbox" value="" />
+                                            <label class="form-check-label" for="checkRememberPassword">Remember password</label>
                                         </div>
+                                        <button class="btn btn-primary" type="submit">Login</button>
                                     </div>
-                                    <button class="btn btn-primary w-100 py-2" type="submit">
-                                        Login
-                                    </button>
-                                    <hr>
-                                    <button class="btn btn-google w-100 py-2">
-                                        <i class="fab fa-google fa-fw"></i> Login with Google
-                                    </button>
-                                    <button class="btn btn-facebook w-100 py-2">
-                                        <i class="fab fa-facebook fa-fw"></i> Login with facebook
-                                    </button>
                                 </form>
-                                <hr>
-                                <div class="text-center">
-                                    <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                </div>
-                                <div class="text-center">
-                                    <a class="small" href="register.html">Create an Account!</a>
+                            </div>
+                            <hr class="my-0" />
+                            <div class="card-body px-5 py-4">
+                                <div class="small text-center">
+                                    New user?
+                                    <a href="auth-register-social.html">Create an account!</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-        </div>
-
+        </main>
     </div>
-
+    <div id="layoutAuthentication_footer">
+        <footer class="footer-admin mt-auto footer-dark">
+            <div class="container-xl px-4">
+                <div class="row">
+                    <div class="col-md-6 small">Copyright &copy; Your Website 2021</div>
+                    <div class="col-md-6 text-md-end small">
+                        <a href="#!">Privacy Policy</a>
+                        &middot;
+                        <a href="#!">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 </div>
+<script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="/common/sbadminpro/js/scripts.js"></script>
 
-<!-- Bootstrap core JavaScript-->
-<script src="/common/sbadmin/vendor/jquery/jquery.min.js"></script>
-<script src="/common/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-<!-- Core plugin JavaScript-->
-<script src="/common/sbadmin/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-<!-- Custom scripts for all pages-->
-<script src="/common/sbadmin/js/sb-admin-2.min.js"></script>
-
-</body>
 
 <script type="text/javascript">
     window.addEventListener('load', async function() {
@@ -155,6 +152,7 @@
         }
 
         console.log('로그인 페이지 유지');
+
     });
 
     // 토큰 갱신 함수
@@ -229,4 +227,5 @@
         }
     });
 </script>
+</body>
 </html>

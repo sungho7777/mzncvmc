@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers("/common/sbadmin/**").permitAll()
+                        .requestMatchers("/common/sbadminpro/**").permitAll()
 
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()

@@ -1,6 +1,151 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="globe"></i></div>
+                        Bbs
+                    </h1>
+                </div>
+                <div class="col-12 col-xl-auto mb-3">
+                    <a id="btnGoList" class="btn btn-sm btn-light text-primary" href="#" onclick=";">
+                        <i class="me-1" data-feather="arrow-left"></i>
+                        Back to All Bbs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main page content-->
+<form id="amendForm">
+
+    <div class="container-fluid px-4">
+        <input type="text" name="mapping" value="${mapping}">
+        <input type="text" name="postId" id="postId" value="0" />
+        <input type="text" name="categoryId" id="categoryId" value="0" />
+        <input type="text" name="viewCount" id="viewCount" value="0" />
+        <input type="text" name="likeCount" id="likeCount" value="0" />
+        <input type="text" name="dislikeCount" id="dislikeCount" value="0" />
+
+        <input type="text" name="commentCount" id="commentCount" value="0" />
+        <input type="text" name="fileCount" id="fileCount" value="0" />
+        <input type="text" name="parentId" id="parentId" value="0" />
+        <input type="text" name="depth" id="depth" value="0" />
+        <input type="text" name="groupId" id="groupId" value="0" />
+        <input type="text" name="groupOrder" id="groupOrder" value="0" />
+        <input type="text" name="metaData" id="metaData" value="{}" />
+        <input type="text" name="authorIp" id="authorIp" value="192.168.144.1" />
+
+        <input type="text" name="createdDate" id="createdDate" />
+        <input type="text" name="updatedDate" id="updatedDate" />
+        <input type="text" name="deletedDate" id="deletedDate" />
+
+        <div class="row gx-4">
+            <div class="col-lg-10">
+                <div class="card mb-4">
+                    <div class="card-header">Bbs Title</div>
+                    <div class="card-body">
+                        <input name="title" id="title" class="form-control" type="text" placeholder="Enter your title title..." />
+                    </div>
+                </div>
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header">
+                        Bbs Preview
+                        <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="The Category preview text shows below the post Bbs, and is the Bbs summary on blog pages."></i>
+                    </div>
+                    <div class="card-body">
+                        <textarea name="bbsContent" id="bbsContent" class="lh-base form-control" type="text" placeholder="Enter your Category preview text..." rows="10"></textarea><br>
+                        <input name="tags" id="tags" class="form-control" type="text" placeholder="Enter your tags..." />
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">Bbs Setting</div>
+                    <div class="card-body">
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">작성자 ID</label>
+                                <input name="authorId" id="authorId"
+                                       class="form-control" type="text" placeholder="Enter your authorId..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">작성자명</label>
+                                <input name="authorName" id="authorName"
+                                       class="form-control" type="text" placeholder="Enter your authorName..." />
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">익명 게시글 비밀번호</label>
+                                <input name="password" id="password" value="1234"
+                                       class="form-control" type="text" placeholder="Enter your password..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">상태</label>
+                                <input name="status" id="status" value="ACTIVE"
+                                       class="form-control" type="text" placeholder="Enter your status..." />
+                            </div>
+                        </div>
+
+
+
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">공지사항 여부</label>
+                                <select name="isNotice" id="isNotice" class="form-select" aria-label="Default select Active">
+                                    <option value="true" selected>허용</option>
+                                    <option value="false">허용 불가</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+
+                                <label class="small mb-1">상단 고정 여부</label>
+                                <select name="isTopFixed" id="isTopFixed" class="form-select" aria-label="Default select Allow Anonymous">
+                                    <option value="true">고정</option>
+                                    <option value="false" selected>고정 하지 않음</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">비밀글 여부</label>
+                                <select name="isSecret" id="isSecret" class="form-select" aria-label="Default select Allow File Upload">
+                                    <option value="true">비밀글</option>
+                                    <option value="false" selected>공개글</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="card card-header-actions">
+                    <div class="card-header">
+                        Publish
+                        <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="After submitting, your Category will be published once it is approved by a moderator."></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid">
+                            <button class="fw-500 btn btn-primary" onclick="amendData();">Submit for Approval (${mapping eq 'POST' ? 'Create' : 'Amend'})</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<%--
 <main>
     <form id="amendForm">
         <input type="text" name="mapping" value="${mapping}">
@@ -52,7 +197,7 @@
         </div>
 
     </form>
-</main>
+</main>--%>
 
 <script type="text/javascript">
     const ID = ${id};
@@ -67,6 +212,8 @@
 
     const init = () => {
         if(!accessTokenCheck()) return false;
+
+        $("#categoryId").val(CATEGORY_ID);
 
         if(Number(ID) > 0) getAmend();
         console.log("amend init");
@@ -103,6 +250,7 @@
      * @returns {Grid} Grid
      */
     const renderTable = (data) => {
+
         $("#postId").val(data.postId);
         $("#categoryId").val(data.categoryId);
         $("#title").val(data.title);
@@ -112,9 +260,9 @@
         $("#authorIp").val(data.authorIp);
         $("#password").val(data.password);
         $("#status").val(data.status);
-        $("#isNotice").val(data.isNotice);
-        $("#isTopFixed").val(data.isTopFixed);
-        $("#isSecret").val(data.isSecret);
+        $("#isNotice").val(data.isNotice == true ? "true" : "false");
+        $("#isTopFixed").val(data.isTopFixed == true ? "true" : "false");
+        $("#isSecret").val(data.isSecret == true ? "true" : "false");
         $("#viewCount").val(data.viewCount);
         $("#likeCount").val(data.likeCount);
         $("#dislikeCount").val(data.dislikeCount);
@@ -154,7 +302,7 @@
         }
 
         $('#loading').show(); // 로딩 표시
-
+debugger;
         try {
             const res = await fetch(API_URL + `/` + data.postId, {
                 method: data.mapping,
@@ -169,17 +317,16 @@
 
             const jsonData = await res.json();
             console.log("응답 updateData JSON:", jsonData);
-
+/*
             // 모달 띄우기
             $('#successModal').modal('show');
             // 모달 안의 버튼에 id 저장
             $('#success-btn').data('id', jsonData.data);
             $('#success-btn').data('categoryId', CATEGORY_ID);
             $('#success-btn').data('menu', MENU);
+*/
 
-            //alert(mappingType + " 완료");
-
-            //goView(MENU, jsonData.data);
+            goView(MENU, CATEGORY_ID, jsonData.data);
         } catch (err) {
             console.error("에러:", err);
             alert(mappingType + " 실패: " + err.message);

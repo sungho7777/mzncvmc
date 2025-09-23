@@ -1,43 +1,139 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<main>
-    <form id="amendForm">
-        <input type="text" name="mapping" value="${mapping}">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th style="width: 15%;">Entity</th>
-                        <th>Content</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr><td>ID</td><td><input type="text" name="categoryId" id="categoryId" value="0" /></td></tr>
-                    <tr><td>카테고리명</td><td><input type="text" name="categoryName" id="categoryName" /></td></tr>
-                    <tr><td>카테고리 코드</td><td><input type="text" name="categoryCode" id="categoryCode" /></td></tr>
-                    <tr><td>카테고리 설명</td><td><input type="text" name="description" id="description" /></td></tr>
-                    <tr><td>정렬 순서</td><td><input type="text" name="sortOrder" id="sortOrder" /></td></tr>
-                    <tr><td>활성 여부</td><td><input type="text" name="isActive" id="isActive" /></td></tr>
-                    <tr><td>익명 게시 허용</td><td><input type="text" name="allowAnonymous" id="allowAnonymous" /></td></tr>
-                    <tr><td>파일 업로드 허용</td><td><input type="text" name="allowFileUpload" id="allowFileUpload" /></td></tr>
-                    <tr><td>최대 파일 개수</td><td><input type="text" name="maxFileCount" id="maxFileCount" /></td></tr>
-                    <tr><td>읽기 권한</td><td><input type="text" name="readPermission" id="readPermission" /></td></tr>
-                    <tr><td>쓰기 권한</td><td><input type="text" name="writePermission" id="writePermission" /></td></tr>
-                    <tr><td>생성일</td><td><input type="text" name="createdDate" id="createdDate" /></td></tr>
-                    <tr><td>수정일</td><td><input type="text" name="updatedDate" id="updatedDate" /></td></tr>
-                    <tr><td>생성자 ID</td><td><input type="text" name="createdBy" id="createdBy" /></td></tr>
 
-                    </tbody>
-                </table>
-                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories', null);">목록</button>
-                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="globe"></i></div>
+                        Bbs Categories
+                    </h1>
+                </div>
+                <div class="col-12 col-xl-auto mb-3">
+                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="goList('bbs/bbsCategories', null);">
+                        <i class="me-1" data-feather="arrow-left"></i>
+                        Back to All Bbs Categories
+                    </a>
+                </div>
             </div>
         </div>
+    </div>
+</header>
 
-    </form>
-</main>
+<!-- Main page content-->
+<form id="amendForm">
+
+    <div class="container-fluid px-4">
+        <input type="hidden" name="mapping" value="${mapping}">
+        <input type="hidden" name="categoryId" id="categoryId" value="0" />
+        <input type="hidden" name="createdDate" id="createdDate" />
+        <input type="hidden" name="updatedDate" id="updatedDate" />
+
+        <div class="row gx-4">
+            <div class="col-lg-10">
+                <div class="card mb-4">
+                    <div class="card-header">Category Title</div>
+                    <div class="card-body">
+                        <input name="categoryName" id="categoryName" class="form-control" type="text" placeholder="Enter your Category title..." />
+                    </div>
+                </div>
+                <div class="card card-header-actions mb-4">
+                    <div class="card-header">
+                        Category Preview
+                        <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="The Category preview text shows below the post Category, and is the Category summary on blog pages."></i>
+                    </div>
+                    <div class="card-body">
+                        <textarea name="description" id="description" class="lh-base form-control" type="text" placeholder="Enter your Category preview text..." rows="6"></textarea>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">Category Setting</div>
+                    <div class="card-body">
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">Category Code</label>
+                                <input name="categoryCode" id="categoryCode" value="CATEGORY_CODE"
+                                       class="form-control" type="text" placeholder="Enter your Category Code title..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">Sort Order</label>
+                                <input name="sortOrder" id="sortOrder" value="0"
+                                       class="form-control" type="text" placeholder="Enter your Sort Order title..." />
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">활성 여부</label>
+                                <select name="isActive" id="isActive" class="form-select" aria-label="Default select Active">
+                                    <option value="true" selected>활성</option>
+                                    <option value="false">비활성</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+
+                                <label class="small mb-1">익명 게시 허용</label>
+                                <select name="allowAnonymous" id="allowAnonymous" class="form-select" aria-label="Default select Allow Anonymous">
+                                    <option value="true">허용</option>
+                                    <option value="false" selected>허용 불가</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">readPermission</label>
+                                <input name="readPermission" id="readPermission" value="ALL"
+                                       class="form-control" type="text" placeholder="Enter your readPermission title..." />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">writePermission</label>
+                                <input name="writePermission" id="writePermission" value="USER"
+                                       class="form-control" type="text" placeholder="Enter your writePermission title..." />
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">파일 업로드 허용</label>
+                                <select name="allowFileUpload" id="allowFileUpload" class="form-select" aria-label="Default select Allow File Upload">
+                                    <option value="true" selected>허용</option>
+                                    <option value="false">허용 불가</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1">maxFileCount</label>
+                                <input name="maxFileCount" id="maxFileCount" value="3"
+                                       class="form-control" type="text" placeholder="Enter your maxFileCount title..." />
+                            </div>
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1">createdBy</label>
+                                <input name="createdBy" id="createdBy" class="form-control" type="text" placeholder="Enter your createdBy title..." />
+                            </div>
+                            <div class="col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="card card-header-actions">
+                    <div class="card-header">
+                        Publish
+                        <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="After submitting, your Category will be published once it is approved by a moderator."></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid">
+                            <button class="fw-500 btn btn-primary" onclick="amendData();">Submit for Approval (${mapping eq 'POST' ? 'Create' : 'Amend'})</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
 <script type="text/javascript">
     const ID = ${id};
@@ -51,6 +147,10 @@
 
     const init = () => {
         if(!accessTokenCheck()) return false;
+
+
+        const userId = localStorage.getItem('userId');
+        $("#createdBy").val(userId);
 
         if(Number(ID) > 0) getAmend();
         console.log("amend init");
@@ -93,9 +193,9 @@
         $("#categoryCode").val(data.categoryCode);
         $("#description").val(data.description);
         $("#sortOrder").val(data.sortOrder);
-        $("#isActive").val(data.isActive);
-        $("#allowAnonymous").val(data.allowAnonymous);
-        $("#allowFileUpload").val(data.allowFileUpload);
+        $("#isActive").val(data.isActive == true ? "true" : "false");
+        $("#allowAnonymous").val(data.allowAnonymous == true ? "true" : "false");
+        $("#allowFileUpload").val(data.allowFileUpload == true ? "true" : "false");
         $("#maxFileCount").val(data.maxFileCount);
         $("#readPermission").val(data.readPermission);
         $("#writePermission").val(data.writePermission);
@@ -141,17 +241,16 @@
 
             const jsonData = await res.json();
             console.log("응답 updateData JSON:", jsonData);
-
+/*
             // 모달 띄우기
             $('#successModal').modal('show');
             // 모달 안의 버튼에 id 저장
             $('#success-btn').data('id', jsonData.data);
             $('#success-btn').data('categoryId', null);
             $('#success-btn').data('menu', MENU);
+*/
 
-            //alert(mappingType + " 완료");
-
-            //goView(MENU, jsonData.data);
+            goView(MENU, null, jsonData.data);
         } catch (err) {
             console.error("에러:", err);
             alert(mappingType + " 실패: " + err.message);

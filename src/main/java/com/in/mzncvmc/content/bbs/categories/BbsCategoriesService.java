@@ -41,8 +41,6 @@ public class BbsCategoriesService {
         bbsCategories.setMaxFileCount(dto.getMaxFileCount());
         bbsCategories.setReadPermission(dto.getReadPermission());
         bbsCategories.setWritePermission(dto.getWritePermission());
-        bbsCategories.setCreatedDate(dto.getCreatedDate());
-        bbsCategories.setUpdatedDate(dto.getUpdatedDate());
         bbsCategories.setCreatedBy(dto.getCreatedBy());
 
         BbsCategories saved = bbsCategoriesRepository.save(bbsCategories);
@@ -93,7 +91,7 @@ public class BbsCategoriesService {
     /**
      * U.데이터 수정
      *
-     * @param !Data 수정할 데이터 엔티티 (password 제외)
+     * @param !Data 수정할 데이터 엔티티
      * @throws IllegalArgumentException 데이터 미존재
      */
     @Transactional
@@ -110,7 +108,7 @@ public class BbsCategoriesService {
         existing.setMaxFileCount(dto.getMaxFileCount());
         existing.setReadPermission(dto.getReadPermission());
         existing.setWritePermission(dto.getWritePermission());
-        existing.setUpdatedDate(dto.getUpdatedDate());
+        existing.setCreatedBy(dto.getCreatedBy());
 
         bbsCategoriesRepository.save(existing);
     }

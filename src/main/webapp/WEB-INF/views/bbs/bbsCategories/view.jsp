@@ -2,39 +2,121 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<main>
-
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Entity</th>
-                        <th>Content</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>ID</td><td id="categoryId"></td></tr>
-                    <tr><td>카테고리명</td><td id="categoryName"></td></tr>
-                    <tr><td>카테고리 코드</td><td id="categoryCode"></td></tr>
-                    <tr><td>카테고리 설명</td><td id="description"></td></tr>
-                    <tr><td>정렬 순서</td><td id="sortOrder"></td></tr>
-                    <tr><td>활성 여부</td><td id="isActive"></td></tr>
-                    <tr><td>익명 게시 허용</td><td id="allowAnonymous"></td></tr>
-                    <tr><td>파일 업로드 허용</td><td id="allowFileUpload"></td></tr>
-                    <tr><td>최대 파일 개수</td><td id="maxFileCount"></td></tr>
-                    <tr><td>읽기 권한</td><td id="readPermission"></td></tr>
-                    <tr><td>쓰기 권한</td><td id="writePermission"></td></tr>
-                    <tr><td>생성일</td><td id="createdDate"></td></tr>
-                    <tr><td>수정일</td><td id="updatedDate"></td></tr>
-                    <tr><td>생성자 ID</td><td id="createdBy"></td></tr>
-                </tbody>
-            </table>
-            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories', null);">목록</button>
-            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('bbs/bbsCategories', null, ${id}, 'PUT');">수정</button>
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="globe"></i></div>
+                        Bbs Categories
+                    </h1>
+                </div>
+                <div class="col-12 col-xl-auto mb-3">
+                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="goList('bbs/bbsCategories', null);">
+                        <i class="me-1" data-feather="arrow-left"></i>
+                        Back to All Bbs Categories
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</main>
+</header>
+
+<div class="container-fluid px-4">
+    <input type="hidden" name="categoryId" id="categoryId"  />
+    <input type="hidden" name="createdDate" id="createdDate" />
+    <input type="hidden" name="updatedDate" id="updatedDate" />
+
+    <div class="row gx-4">
+        <div class="col-lg-10">
+            <div class="card mb-4">
+                <div class="card-header">Category Title</div>
+                <div class="card-body">
+                    <div id="categoryName" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">
+                    Category Preview
+                    <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="The Category preview text shows below the post Category, and is the Category summary on blog pages."></i>
+                </div>
+                <div class="card-body">
+                    <div id="description" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">Category Setting</div>
+                <div class="card-body">
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">Category Code</label>
+                            <div id="categoryCode" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">Sort Order</label>
+                            <div id="sortOrder" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">활성 여부</label>
+                            <div id="isActive" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">익명 게시 허용</label>
+                            <div id="allowAnonymous" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">readPermission</label>
+                            <div id="readPermission" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">writePermission</label>
+                            <div id="writePermission" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">파일 업로드 허용</label>
+                            <div id="allowFileUpload" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">maxFileCount</label>
+                            <div id="maxFileCount" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">createdBy</label>
+                            <div id="createdBy" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-lg-2">
+            <div class="card card-header-actions">
+                <div class="card-header">
+                    Publish
+                    <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="After submitting, your Category will be published once it is approved by a moderator."></i>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid">
+                        <button class="fw-500 btn btn-warning" onclick="goAmend('bbs/bbsCategories', null, ${id}, 'PUT');">Amend</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     const ID = ${id};
     const MENU = "bbs/bbsCategories";
@@ -88,10 +170,10 @@
         $("#categoryCode").text(data.categoryCode);
         $("#description").text(data.description);
         $("#sortOrder").text(data.sortOrder);
-        $("#isActive").text(data.isActive);
-        $("#allowAnonymous").text(data.allowAnonymous);
-        $("#allowFileUpload").text(data.allowFileUpload);
-        $("#maxFileCount").text(data.maxFileCount);
+        $("#isActive").text(data.isActive == true ? "활성" : "비활성");
+        $("#allowAnonymous").text(data.allowAnonymous == true ? "허용" : "허용 불가");
+        $("#allowFileUpload").text(data.allowFileUpload == true ? "허용" : "허용 불가");
+        $("#maxFileCount").text(data.maxFileCount + " 건");
         $("#readPermission").text(data.readPermission);
         $("#writePermission").text(data.writePermission);
         $("#createdDate").text(data.createdDate);
