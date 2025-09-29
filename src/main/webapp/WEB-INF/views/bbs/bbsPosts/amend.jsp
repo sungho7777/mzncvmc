@@ -302,7 +302,7 @@
         }
 
         $('#loading').show(); // 로딩 표시
-debugger;
+
         try {
             const res = await fetch(API_URL + `/` + data.postId, {
                 method: data.mapping,

@@ -39,13 +39,13 @@
                                     <!-- Form Group (email address)-->
                                     <div class="mb-3">
                                         <label class="text-gray-600 small" for="emailExample">Email address</label>
-                                        <input id="username" name="username" value="manager"
+                                        <input id="username" name="username" value=""
                                                class="form-control form-control-solid" type="text" placeholder="" aria-label="Email Address" aria-describedby="emailExample" />
                                     </div>
                                     <!-- Form Group (password)-->
                                     <div class="mb-3">
                                         <label class="text-gray-600 small" for="passwordExample">Password</label>
-                                        <input id="password" name="password" value="1212"
+                                        <input id="password" name="password" value=""
                                                class="form-control form-control-solid" type="password" placeholder="" aria-label="Password" aria-describedby="passwordExample" />
                                     </div>
                                     <!-- Form Group (forgot password link)-->
@@ -53,8 +53,8 @@
                                     <!-- Form Group (login box)-->
                                     <div class="d-flex align-items-center justify-content-between mb-0">
                                         <div class="form-check">
-                                            <input class="form-check-input" id="checkRememberPassword" type="checkbox" value="" />
-                                            <label class="form-check-label" for="checkRememberPassword">Remember password</label>
+                                            <input class="form-check-input" id="checkRememberUsername" type="checkbox" value="" />
+                                            <label class="form-check-label" for="checkRememberUsername">Remember Username</label>
                                         </div>
                                         <button class="btn btn-primary" type="submit">Login</button>
                                     </div>
@@ -153,9 +153,19 @@
 
         console.log('로그인 페이지 유지');
 
+        // 로그인 아이디 기억하기.
+        const savedUsername = localStorage.getItem("savedUsername");
+        if (savedUsername) {
+            document.getElementById("username").value = savedUsername;
+            document.getElementById("checkRememberUsername").checked = true;
+        }
     });
 
-    // 토큰 갱신 함수
+    /**
+     * 토큰 갱신 함수
+     *
+     * @returns {boolean}
+     */
     async function tryRefreshToken() {
         const refreshToken = localStorage.getItem('refreshToken');
 
@@ -190,6 +200,11 @@
         }
     }
 
+    /**
+     * 로그인
+     *
+     * @returns {boolean}
+     */
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -215,6 +230,14 @@
             localStorage.setItem('refreshToken', data.refreshToken);
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('username', data.username);
+
+            // 로그인 아이디 기억하기.
+            const checkRememberUsername = document.getElementById("checkRememberUsername").checked;
+            if (checkRememberUsername) {
+                localStorage.setItem("savedUsername", username);
+            } else {
+                localStorage.removeItem("savedUsername");
+            }
 
             // 잠시 후 메인화면으로 이동
             setTimeout(() => {
