@@ -2,6 +2,95 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="user"></i></div>
+                        User - Profile
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Main page content-->
+<div class="container-fluid px-4 mt-4">
+    <!-- Account page navigation-->
+    <nav class="nav nav-borders">
+        <a class="nav-link active ms-0" href="#">Profile</a>
+        <a class="nav-link" href="#">Billing</a>
+        <a class="nav-link" href="#">Security</a>
+        <a class="nav-link" href="#">Notifications</a>
+    </nav>
+    <hr class="mt-0 mb-4" />
+    <div class="row">
+        <div class="col-xl-4">
+            <!-- Profile picture card-->
+            <div class="card mb-4 mb-xl-0">
+                <div class="card-header">Profile Picture</div>
+                <div class="card-body text-center">
+                    <!-- Profile picture image-->
+                    <img class="img-account-profile rounded-circle mb-2" src="/common/sbadminpro/assets/img/illustrations/profiles/profile-1.png" alt="" />
+                    <!-- Profile picture help block-->
+                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                    <!-- Profile picture upload button-->
+                    <button class="btn btn-primary" type="button">Upload new image</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <!-- Account details card-->
+            <div class="card mb-4">
+                <div class="card-header">Account Details</div>
+                <div class="card-body">
+                    <form id="amendForm">
+                        <input type="hidden" name="mapping" value="${mapping}">
+                        <input type="hidden" name="userId" id="userId" value="0" />
+                        <input type="hidden" name="status" id="status" value="ACTIVE" />
+
+                        <div class="mb-3">
+                            <label class="small mb-1" for="username">Username (how your name will appear to other users on the site)</label>
+                            <input class="form-control" id="username" name="username" type="text" placeholder="Enter your username" value="username" />
+                        </div>
+                        <!-- Form Row-->
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="companyId">Company</label>
+                                <input class="form-control" id="companyId" name="companyId" type="text" placeholder="Enter your first name" value="1" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="fullName">Full Name</label>
+                                <input class="form-control" id="fullName" name="fullName" type="text" placeholder="Enter your organization name" value="Hong Gill Dong" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small mb-1" for="email">Email address</label>
+                            <input class="form-control" id="email" name="email" type="email" placeholder="Enter your email address" value="username@example.com" />
+                        </div>
+                        <div class="row gx-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="phone">Phone number</label>
+                                <input class="form-control" id="phone" name="phone" type="tel" placeholder="Enter your phone number" value="010-1234-5678" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="role">Role</label>
+                                <input class="form-control" id="role" name="role" type="text" name="birthday" placeholder="Enter your birthday" value="USER" />
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<%--
 <main>
     <form id="amendForm">
         <input type="hidden" name="mapping" value="${mapping}">
@@ -31,7 +120,7 @@
         </div>
 
     </form>
-</main>
+</main>--%>
 
 <script type="text/javascript">
     const ID = ${id};

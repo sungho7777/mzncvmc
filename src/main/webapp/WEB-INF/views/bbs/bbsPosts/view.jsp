@@ -2,6 +2,119 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<header class="page-header page-header-compact page-header-light border-bottom bg-white mb-4">
+    <div class="container-fluid px-4">
+        <div class="page-header-content">
+            <div class="row align-items-center justify-content-between pt-3">
+                <div class="col-auto mb-3">
+                    <h1 class="page-header-title">
+                        <div class="page-header-icon"><i data-feather="globe"></i></div>
+                        Bbs Posts
+                    </h1>
+                </div>
+                <div class="col-12 col-xl-auto mb-3">
+                    <a id="btnGoList" class="btn btn-sm btn-light text-primary" href="#" onclick="goList('bbs/bbsPosts', null);">
+                        <i class="me-1" data-feather="arrow-left"></i>
+                        Back to All Bbs Posts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container-fluid px-4">
+    <input type="hidden" name="postId" id="postId"  />
+
+    <div class="row gx-4">
+        <div class="col-lg-10">
+            <div class="card mb-4">
+                <div class="card-header">Bbs Title</div>
+                <div class="card-body">
+                    <div id="title" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+            <div class="card card-header-actions mb-4">
+                <div class="card-header">
+                    Bbs Preview
+                    <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="The Category preview text shows below the post Category, and is the Category summary on blog pages."></i>
+                </div>
+                <div class="card-body">
+                    <div id="bbsContent" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Category Setting</div>
+                <div class="card-body">
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">작성자 ID</label>
+                            <div id="authorId" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">작성자명</label>
+                            <div id="authorName" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">익명 게시글 비밀번호</label>
+                            <div id="password" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">상태</label>
+                            <div id="status" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">공지사항 여부</label>
+                            <div id="isNotice" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small mb-1">상단 고정 여부</label>
+                            <div id="isTopFixed" class="bg-light p-4 small"></div>
+                        </div>
+                    </div>
+                    <div class="row gx-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="small mb-1">비밀글 여부</label>
+                            <div id="isSecret" class="bg-light p-4 small"></div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="card card-header-actions">
+                <div class="card-header">
+                    Publish
+                    <i class="text-muted" data-feather="info" data-bs-toggle="tooltip" data-bs-placement="left" title="After submitting, your Category will be published once it is approved by a moderator."></i>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid">
+                        <button id="btnGoAmend" class="fw-500 btn btn-warning" onclick="goAmend('bbs/bbsPosts', null, ${id}, 'PUT');">Amend</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<%--
 <main>
 
     <div class="card-body">
@@ -15,10 +128,10 @@
                 </thead>
                 <tbody>
 
-                    <tr><td>고유 ID</td><td id="postId"></td></tr>
+                        <tr><td>고유 ID</td><td id="postId"></td></tr>
                     <tr><td>카테고리 ID</td><td id="categoryId"></td></tr>
-                    <tr><td>제목</td><td id="title"></td></tr>
-                    <tr><td>내용</td><td id="bbsContent"></td></tr>
+                        <tr><td>제목</td><td id="title"></td></tr>
+                        <tr><td>내용</td><td id="bbsContent"></td></tr>
                     <tr><td>작성자 ID</td><td id="authorId"></td></tr>
                     <tr><td>작성자명</td><td id="authorName"></td></tr>
                     <tr><td>작성자 IP</td><td id="authorIp"></td></tr>
@@ -48,6 +161,12 @@
         </div>
     </div>
 </main>
+--%>
+
+
+
+
+
 <script type="text/javascript">
     const ID = ${id};
     const CATEGORY_ID = ${categoryId};
@@ -55,6 +174,7 @@
     const API_URL = "/api/" + MENU;
 
     window.onload = function() {
+        if(!accessTokenCheck()) return false;
 
         init();
     };

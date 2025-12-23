@@ -142,13 +142,15 @@
                     </nav>
                 </div>
                 <!-- Nested Sidenav Accordion (Apps -> User Management)-->
-                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#appsCollapseUserManagement" aria-expanded="false" aria-controls="appsCollapseUserManagement">
+                <a class="nav-link active" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#appsCollapseUserManagement" aria-expanded="false" aria-controls="appsCollapseUserManagement">
                     User Management
                     <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse" id="appsCollapseUserManagement" data-bs-parent="#accordionSidenavAppsMenu">
+                <div class="collapse show" id="appsCollapseUserManagement" data-bs-parent="#accordionSidenavAppsMenu">
                     <nav class="sidenav-menu-nested nav">
-                        <a class="nav-link" href="user-management-list.html">Users List</a>
+                        <a class="nav-link" href="#" onclick="goList('users', null)">Users List</a>
+                        <a class="nav-link active" href="#" onclick="goList('company', null)">Company List</a>
+                        <a class="nav-link" href="#" onclick="goList('ai/ollama', null)">Ollama AI</a>
                         <a class="nav-link" href="user-management-edit-user.html">Edit User</a>
                         <a class="nav-link" href="user-management-add-user.html">Add User</a>
                         <a class="nav-link" href="user-management-groups-list.html">Groups List</a>
@@ -156,11 +158,11 @@
                     </nav>
                 </div>
                 <!-- Nested Sidenav Accordion (Apps -> Posts Management)-->
-                <a class="nav-link active" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#appsCollapsePostsManagement" aria-expanded="false" aria-controls="appsCollapsePostsManagement">
+                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#appsCollapsePostsManagement" aria-expanded="false" aria-controls="appsCollapsePostsManagement">
                     Posts Management
                     <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                 </a>
-                <div class="collapse show" id="appsCollapsePostsManagement" data-bs-parent="#accordionSidenavAppsMenu">
+                <div class="collapse" id="appsCollapsePostsManagement" data-bs-parent="#accordionSidenavAppsMenu">
                     <nav class="sidenav-menu-nested nav">
                         <a class="nav-link ${sub_sidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsCategories', null)">Category</a>
                         <a class="nav-link ${sub_sidebar eq 'bbsPosts1' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '1')">Announcement </a>
