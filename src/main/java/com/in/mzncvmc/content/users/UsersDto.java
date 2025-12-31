@@ -19,6 +19,7 @@ public class UsersDto {
     private String role; // 권한
     private String status; // 계정 상태
     private String connected; // 접속여부
+    private String pwNotifyDuration; // 비밀번호 알림기간
 
 /*
 userId
@@ -32,5 +33,6 @@ phone
 role
 status
 connected
+pwNotifyDuration
  */
 }

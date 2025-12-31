@@ -148,8 +148,8 @@
                 </a>
                 <div class="collapse show" id="appsCollapseUserManagement" data-bs-parent="#accordionSidenavAppsMenu">
                     <nav class="sidenav-menu-nested nav">
-                        <a class="nav-link" href="#" onclick="goList('users', null)">Users List</a>
-                        <a class="nav-link active" href="#" onclick="goList('company', null)">Company List</a>
+                        <a class="nav-link active" href="#" onclick="goList('users', null)">Users List</a>
+                        <a class="nav-link" href="#" onclick="goList('company', null)">Company List</a>
                         <a class="nav-link" href="#" onclick="goList('ai/ollama', null)">Ollama AI</a>
                         <a class="nav-link" href="user-management-edit-user.html">Edit User</a>
                         <a class="nav-link" href="user-management-add-user.html">Add User</a>

@@ -4,6 +4,7 @@ import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,10 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class UsersService{
+
+    @Value("${user.first.password}")
+    private String userFirstPassword;
+
     private PasswordEncoder passwordEncoder;
     private UsersRepository usersRepository;
     private CompanyRepository companyRepository;
@@ -93,11 +98,12 @@ public class UsersService{
         user.setEmail(dto.getEmail());
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
+        user.setPwNotifyDuration("999");
         user.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
         //user.setConnected(Users.Connected.valueOf("N"));
 
         // 비밀번호 기본값 설정 (암호화 적용)
-        user.setPassword(passwordEncoder.encode(dto.getUsername()));
+        user.setPassword(passwordEncoder.encode(userFirstPassword));
 
         Users saved = usersRepository.save(user);
 
@@ -207,6 +213,7 @@ public class UsersService{
             .phone(entity.getPhone())
             .role(entity.getRole().name())
             .status(entity.getStatus().name())
+            .pwNotifyDuration((entity.getPwNotifyDuration()))
             .connected(entity.getConnected().name())
 
             .companyId(entity.getCompanyId() != null ? entity.getCompanyId().getCompanyId() : null)

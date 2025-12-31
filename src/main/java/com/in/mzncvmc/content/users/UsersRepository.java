@@ -52,10 +52,30 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     );
 
     @Modifying
-    @Query("UPDATE Users u SET u.connected = :connected WHERE u.username = :username")
+    @Query("""
+        UPDATE Users u
+           SET u.connected = :connected
+               , u.lastLogin = CASE WHEN :connected = 'Y' THEN CURRENT_TIMESTAMP
+                             ELSE u.lastLogin
+                              END
+         WHERE u.username = :username
+    """)
     int updateUsersConnected(String username, Users.Connected connected);
 
     @Modifying
     @Query("UPDATE Users u SET u.connected = :connected")
     int updateAllUsersConnected(Users.Connected connected);
+
+    @Modifying
+    @Query("""
+        UPDATE Users u
+           SET u.password = :password
+               , u.pwNotifyDuration = '10'
+         WHERE u.username = :username
+    """)
+    int updatePassword(
+            @Param("username") String username,
+            @Param("password") String password
+    );
+
 }

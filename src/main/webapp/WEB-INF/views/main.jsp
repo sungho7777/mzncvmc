@@ -67,6 +67,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <script type="text/javascript">
+                            console.log('aaaaaaaaaaaaa');
+                        </script>
                     </c:if>
                 </main>
 

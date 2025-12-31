@@ -61,6 +61,10 @@ public class Users implements UserDetails {
     @Comment("계정 상태")
     private Status status = Status.ACTIVE;
 
+    @Column(length = 3)
+    @Comment("비밀번호 알림기간")
+    private String pwNotifyDuration;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("접속여부")

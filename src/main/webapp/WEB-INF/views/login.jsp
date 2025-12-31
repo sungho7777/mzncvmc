@@ -64,7 +64,7 @@
                             <div class="card-body px-5 py-4">
                                 <div class="small text-center">
                                     New user?
-                                    <a href="auth-register-social.html">Create an account!</a>
+                                    <a href="#" onclick="resetPassword();">Reset Password an account!</a>
                                 </div>
                             </div>
                         </div>
@@ -87,6 +87,50 @@
             </div>
         </footer>
     </div>
+
+
+    <!-- Button trigger modal -->
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#passwordChangeModal">Launch Demo Modal</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="passwordChangeModalLabel">Password Change Plz</h5>
+                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form>
+                        <!-- Form Group (current password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="currentPassword">Current Password</label>
+                            <input class="form-control" id="currentPassword" type="password" placeholder="Enter current password" />
+                        </div>
+                        <!-- Form Group (new password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="newPassword">New Password</label>
+                            <input class="form-control" id="newPassword" type="password" placeholder="Enter new password" />
+                        </div>
+                        <!-- Form Group (confirm password)-->
+                        <div class="mb-3">
+                            <label class="small mb-1" for="confirmPassword">Confirm Password</label>
+                            <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="button" onclick="passwordChange();">Password Change</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </div>
 <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/common/sbadminpro/js/scripts.js"></script>
@@ -136,18 +180,14 @@
                     } else {
                         console.log('토큰 갱신 실패, 로컬 스토리지 정리');
                         // 갱신 실패 시 토큰 정리
-                        localStorage.removeItem('accessToken');
-                        localStorage.removeItem('refreshToken');
-                        localStorage.removeItem('username');
+                        removeLocalStorage();
                     }
                 }
 
             } catch (error) {
                 console.error('토큰 검증 중 오류:', error);
                 // 네트워크 오류 등의 경우 토큰 제거
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('username');
+                removeLocalStorage();
             }
         }
 
@@ -160,6 +200,15 @@
             document.getElementById("checkRememberUsername").checked = true;
         }
     });
+
+    const removeLocalStorage = () =>{
+        // 네트워크 오류 등의 경우 토큰 제거
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        localStorage.removeItem('pwNotifyDuration');
+    };
 
     /**
      * 토큰 갱신 함수
@@ -230,6 +279,7 @@
             localStorage.setItem('refreshToken', data.refreshToken);
             localStorage.setItem('userId', data.userId);
             localStorage.setItem('username', data.username);
+            localStorage.setItem('pwNotifyDuration', data.pwNotifyDuration);
 
             // 로그인 아이디 기억하기.
             const checkRememberUsername = document.getElementById("checkRememberUsername").checked;
@@ -249,6 +299,30 @@
             alert(data.error || '로그인에 실패했습니다.');
         }
     });
+
+    const resetPassword = async() => {
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch('/api/auth/resetPassword', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        if (response.ok) {
+            alert('비밀번호 초기화 성공했습니다.');
+        } else {
+            const data = await response.json();
+            alert(data.error || '비밀번호 초기화 실패했습니다.');
+        }
+    };
 </script>
 </body>
 </html>

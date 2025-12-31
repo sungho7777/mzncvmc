@@ -14,9 +14,15 @@
                     </h1>
                 </div>
                 <div class="col-12 col-xl-auto mb-3">
-                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="goList('users', null);">
-                        <i class="me-1" data-feather="arrow-left"></i>
-                        Back to All User List
+                    <a id="goListBtn" class="btn btn-sm btn-light text-primary" href="#">
+                        <i className="me-1" data-feather="arrow-left"></i>
+                        <label id="goListBtnLabel">-</label>
+                    </a>
+                    <a id="goAmendBtn" class="btn btn-sm btn-light text-warning" href="#">
+                        <label id="goAmendBtnLabel">-</label>
+                    </a>
+                    <a id="goDeleteBtn" class="btn btn-sm btn-light text-danger" href="#">
+                        <label id="goDeleteBtnLabel">-</label>
                     </a>
                 </div>
             </div>
@@ -27,115 +33,146 @@
 <!-- Main page content-->
 <div class="container-fluid px-4 mt-4">
     <!-- Account page navigation-->
-    <nav class="nav nav-borders">
-        <a class="nav-link active ms-0" href="#">Profile</a>
-        <a class="nav-link" href="#">Billing</a>
-        <a class="nav-link" href="#">Security</a>
-        <a class="nav-link" href="#">Notifications</a>
+    <nav class="nav nav-borders" id="accountTab" role="tablist">
+        <a class="nav-link active ms-0"
+           data-bs-toggle="tab"
+           href="#tab-profile"
+           role="tab">Profile</a>
+
+        <a class="nav-link"
+           data-bs-toggle="tab"
+           href="#tab-security"
+           role="tab">Security</a>
+
+        <a class="nav-link"
+           data-bs-toggle="tab"
+           href="#tab-notifications"
+           role="tab">Notifications</a>
     </nav>
     <hr class="mt-0 mb-4" />
-    <div class="row">
-        <div class="col-xl-4">
-            <!-- Profile picture card-->
-            <div class="card mb-4 mb-xl-0">
-                <div class="card-header">Profile Picture</div>
-                <div class="card-body text-center">
-                    <!-- Profile picture image-->
-                    <img class="img-account-profile rounded-circle mb-2" src="/common/sbadminpro/assets/img/illustrations/profiles/profile-1.png" alt="" />
-                    <!-- Profile picture help block-->
-                    <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                    <!-- Profile picture upload button-->
-                    <button class="btn btn-primary" type="button">Upload new image</button>
+
+    <div class="tab-content mt-4">
+        <!-- Profile -->
+        <div class="tab-pane fade show active" id="tab-profile" role="tabpanel">
+            <div class="row">
+                <div class="col-xl-4">
+                    <!-- Profile picture card-->
+                    <div class="card mb-4 mb-xl-0">
+                        <div class="card-header">Profile Picture</div>
+                        <div class="card-body text-center">
+                            <!-- Profile picture image-->
+                            <img class="img-account-profile rounded-circle mb-2" src="/common/sbadminpro/assets/img/illustrations/profiles/profile-1.png" alt="" />
+                            <!-- Profile picture help block-->
+                            <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+                            <!-- Profile picture upload button-->
+                            <button class="btn btn-primary" type="button">Upload new image</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-8">
+                    <!-- Account details card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Account Details</div>
+                        <div class="card-body">
+                            <form id="amendForm">
+                                <input type="hidden" name="mapping" value="${mapping}">
+                                <input type="hidden" name="userId" id="userId" value="0" />
+                                <input type="hidden" name="companyId" id="companyId" value="0" />
+                                <input type="hidden" name="status" id="status" value="ACTIVE" />
+
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="username">Username (how your name will appear to other users on the site)</label>
+                                    <div id="username" class="bg-light p-4 small"></div>
+                                </div>
+                                <!-- Form Row-->
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="companyId">Company</label>
+                                        <div id="companyName" class="bg-light p-4 small"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="fullName">Full Name</label>
+                                        <div id="fullName" class="bg-light p-4 small"></div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="email">Email address</label>
+                                    <div id="email" class="bg-light p-4 small"></div>
+                                </div>
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="phone">Phone number</label>
+                                        <div id="phone" class="bg-light p-4 small"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="role">Role</label>
+                                        <div id="role" class="bg-light p-4 small"></div>
+                                    </div>
+                                </div>
+
+                                <button type="button" class="btn btn-warning" onclick="goAmend('users', null, ${id}, 'PUT');">Amend</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-8">
-            <!-- Account details card-->
-            <div class="card mb-4">
-                <div class="card-header">Account Details</div>
+        <!-- Security -->
+        <div class="tab-pane fade" id="tab-security" role="tabpanel">
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Change password card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Change Password</div>
+                        <div class="card-body">
+                            <form>
+                                <!-- Form Group (current password)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="currentPassword">Current Password</label>
+                                    <input class="form-control" id="currentPassword" type="password" placeholder="Enter current password" />
+                                </div>
+                                <!-- Form Group (new password)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="newPassword">New Password</label>
+                                    <input class="form-control" id="newPassword" type="password" placeholder="Enter new password" />
+                                </div>
+                                <!-- Form Group (confirm password)-->
+                                <div class="mb-3">
+                                    <label class="small mb-1" for="confirmPassword">Confirm Password</label>
+                                    <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password" />
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="changePassword();">Password Change</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <!-- Delete account card-->
+                    <div class="card mb-4">
+                        <div class="card-header">Delete Account</div>
+                        <div class="card-body">
+                            <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
+                            <button class="btn btn-danger-soft text-danger" type="button">I understand, delete my account</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="tab-pane fade" id="tab-notifications" role="tabpanel">
+            <div class="card">
+                <div class="card-header">Notifications</div>
                 <div class="card-body">
-                    <form id="amendForm">
-                        <input type="hidden" name="mapping" value="${mapping}">
-                        <input type="hidden" name="userId" id="userId" value="0" />
-                        <input type="hidden" name="companyId" id="companyId" value="0" />
-                        <input type="hidden" name="status" id="status" value="ACTIVE" />
-
-                        <div class="mb-3">
-                            <label class="small mb-1" for="username">Username (how your name will appear to other users on the site)</label>
-                            <div id="username" class="bg-light p-4 small"></div>
-                        </div>
-                        <!-- Form Row-->
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="companyId">Company</label>
-                                <div id="companyName" class="bg-light p-4 small"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="fullName">Full Name</label>
-                                <div id="fullName" class="bg-light p-4 small"></div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="small mb-1" for="email">Email address</label>
-                            <div id="email" class="bg-light p-4 small"></div>
-                        </div>
-                        <div class="row gx-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="phone">Phone number</label>
-                                <div id="phone" class="bg-light p-4 small"></div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="small mb-1" for="role">Role</label>
-                                <div id="role" class="bg-light p-4 small"></div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-warning" onclick="goAmend('users', null, ${id}, 'PUT');">Amend</button>
-                    </form>
+                    Notifications 설정 화면
                 </div>
             </div>
         </div>
+
     </div>
+
 </div>
-
-<%--
-
-<main>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                <tr>
-                    <th style="width: 15%;">Entity</th>
-                    <th>Content</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr><td>ID</td><td id="userId"></td></tr>
-                <tr><td>회사</td><td id="companyName"></td></tr>
-                <tr><td>아이디</td><td id="username"></td></tr>
-                <tr><td>이름</td><td id="fullName"></td></tr>
-                <tr><td>이메일</td><td id="email"></td></tr>
-                <tr><td>전화번호</td><td id="phone"></td></tr>
-                <tr><td>룰</td><td id="role"></td></tr>
-                <tr><td>상태</td><td id="status"></td></tr>
-                <tr>
-                    <td>바로가기</td>
-                    <td>
-
-                        <a id="companyView" href="#" class="btn btn-info" style="margin-right: 5px;" >
-                            <i class="fas fa-info-circle"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('users', null);">목록</button>
-            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('users', null, ${id}, 'PUT');">수정</button>
-        </div>
-    </div>
-</main>
---%>
 
 <script type="text/javascript">
     const ID = ${id};
@@ -147,10 +184,20 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if (!accessTokenCheck()) return false;
 
 
         getView();
+
+        $("#goListBtnLabel").text("Back to All User List");
+        $("#goAmendBtnLabel").text("Amend User");
+        $("#goDeleteBtnLabel").text("Delete User");
+
+        $("#goListBtn").attr("onclick", "goList('users', null);");
+        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '"+ID+"', 'POST');");
+        $("#goDeleteBtn").attr("onclick", "goDelete('"+MENU+"', null, '"+ID+"');");
+
+
         console.log("view init");
     }
 
@@ -158,7 +205,7 @@
      * R.해당 데이터 단일조회 (Read One)
      * @returns {Promise<Data>} 단일 데이터
      */
-    const getView = async() => {
+    const getView = async () => {
         $('#loading').show();
 
         await fetch(API_URL + "/" + ID, {
@@ -197,4 +244,38 @@
 
         $("#companyView").attr("onclick", "goView('company', null, " + data.companyId + ");");
     };
+
+    const changePassword = async () => {
+        $('#loading').show();
+
+        await fetch("/api/account/changePassword", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            },
+            body: JSON.stringify({
+                currentPassword: document.getElementById('currentPassword').value,
+                newPassword: document.getElementById('newPassword').value,
+                confirmPassword: document.getElementById('confirmPassword').value
+            })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error('비밀번호 변경 실패');
+
+                localStorage.setItem('pwNotifyDuration', '10');
+                alert('비밀번호가 변경되었습니다.');
+            })
+            .then(result => {
+
+                //renderTable(result.data);
+            })
+            .finally(() => {
+                setTimeout(() => $('#loading').hide(), 250);
+            })
+            .catch(err => console.error("에러:", err));
+
+    };
+
+
 </script>

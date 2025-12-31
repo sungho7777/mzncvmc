@@ -1,7 +1,16 @@
+//setInterval(() => {
+    //if(!accessTokenCheck()) return false;
+
+
+
+//}, "3000");
+
+
 
 // dashboard 화면이동
 const goDashboard = (menu) => {
     if(!accessTokenCheck()) return false;
+
     window.location.href = "/m/" + menu + "/dashboard";
 };
 // 목록 화면이동
@@ -9,27 +18,29 @@ const goList = (menu, categoryId) => {
     if(!accessTokenCheck()) return false;
 
     window.location.href = "/m/" + menu + "/list" + (categoryId === undefined || categoryId == null ? "" : "?categoryId=" + categoryId);
-
 };
 // 상세보기 화면이동
-const goView = (menu, categoryId, id) => {
+const goView = (menu, categoryId, id, tab) => {
     if(!accessTokenCheck()) return false;
+
     window.location.href = "/m/" + menu + "/view/" + id + (categoryId === undefined || categoryId == null ? "" : "?categoryId=" + categoryId);
 };
 // 생성&수정 화면이동
 const goAmend = (menu, categoryId, id, mapping) => {
     if(!accessTokenCheck()) return false;
+
     window.location.href = "/m/" + menu + "/amend/" + id + "?mapping=" + mapping + (categoryId === undefined || categoryId == null ? "" : "&categoryId=" + categoryId);
 };
 // 삭제 모달띄우기
 const goDelete = (menu, categoryId, id) => {
+    if(!accessTokenCheck()) return false;
+
     // 모달 띄우기
     $('#deleteModal').modal('show');
 
     // 모달 안의 버튼에 id 저장
     $('#delete-btn').data('id', id);
     $('#delete-btn').data('categoryId', categoryId);
-
 }
 // 로그아웃
 const goLogout = () => {
@@ -46,9 +57,7 @@ const goLogout = () => {
         .then(response => {
             if (response.ok) {
                 // 로컬 스토리지에서 토큰 제거
-                localStorage.removeItem('accessToken');
-                localStorage.removeItem('refreshToken');
-                localStorage.removeItem('username');
+                removeLocalStorage();
 
                 window.location.href = '/login';
             } else {
@@ -62,9 +71,18 @@ const goLogout = () => {
         });
 }
 
+const removeLocalStorage = () =>{
+    // 네트워크 오류 등의 경우 토큰 제거
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('username');
+    localStorage.removeItem('pwNotifyDuration');
+};
+
 const accessTokenCheck = async () => {
     const accessToken = localStorage.getItem("accessToken");
-    console.log("accessToken", accessToken);
+    const pwNotifyDuration = localStorage.getItem("pwNotifyDuration");
 
     if (accessToken) {
         // 토큰 유효성 검증을 위해 보호된 API 호출
@@ -76,6 +94,12 @@ const accessTokenCheck = async () => {
             }
         });
         if (response.ok) {
+            console.log(response);
+
+            if(pwNotifyDuration == '999'){
+                alert('비밀번호를 변경하세요.');
+            }
+
             return true;
         }
     }

@@ -56,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/main").permitAll()
                         .requestMatchers("/m/**").permitAll()
 
-                        .requestMatchers("/login", "/register").permitAll()
+                        .requestMatchers("/login", "/register", "/resetPassword").permitAll()
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers("/common/sbadmin/**").permitAll()

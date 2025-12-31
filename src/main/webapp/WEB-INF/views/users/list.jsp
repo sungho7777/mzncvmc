@@ -112,7 +112,7 @@
         getList();
 
         $("#page-header-title").text("Users list");
-        $("#goAmendBtn").text("Add New User");
+        $("#goAmendBtnLabel").text("Add New User");
         $("#goExcelBtnLabel").text("Excel Download");
         $("#goCsvBtnLabel").text("CSV Download");
 
