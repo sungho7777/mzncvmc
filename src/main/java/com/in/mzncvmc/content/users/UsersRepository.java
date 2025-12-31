@@ -78,4 +78,15 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
             @Param("password") String password
     );
 
+    @Modifying
+    @Query("""
+        UPDATE Users u
+           SET u.password = :password
+               , u.pwNotifyDuration = '999'
+         WHERE u.username = :username
+    """)
+    int resetPassword(
+            @Param("username") String username,
+            @Param("password") String password
+    );
 }

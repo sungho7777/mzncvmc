@@ -56,12 +56,13 @@ public class SecurityConfig {
                         .requestMatchers("/main").permitAll()
                         .requestMatchers("/m/**").permitAll()
 
-                        .requestMatchers("/login", "/register", "/resetPassword").permitAll()
+                        .requestMatchers("/login", "/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/error").permitAll()
                         .requestMatchers("/common/sbadmin/**").permitAll()
                         .requestMatchers("/common/sbadminpro/**").permitAll()
 
+                        .requestMatchers("/api/account/resetPassword").permitAll() // 비밀번호 초기화 인증 없이 허용
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
 

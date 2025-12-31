@@ -7,12 +7,16 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Log4j2
 @Service
 public class AccountService {
+    @Value("${user.first.password}")
+    private String userFirstPassword;
+
     private PasswordEncoder passwordEncoder;
     private UsersRepository usersRepository;
 
@@ -51,4 +55,20 @@ public class AccountService {
         }
     }
 
+    @Transactional
+    public void resetPassword(String username) {
+
+        // 0. 사용자 조회
+        Users user = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 1. 비밀번호 초기화 후 저장
+        String encoded = passwordEncoder.encode(userFirstPassword);
+        int updated = usersRepository.resetPassword(username, encoded);
+
+        if (updated == 0) {
+            throw new IllegalStateException("비밀번호 초기화 실패");
+        }
+
+    }
 }

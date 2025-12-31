@@ -305,7 +305,7 @@
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        const response = await fetch('/api/auth/resetPassword', {
+        const response = await fetch('/api/account/resetPassword', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

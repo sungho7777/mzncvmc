@@ -6,15 +6,12 @@ import com.in.mzncvmc.common.auth.dto.RegisterRequest;
 import com.in.mzncvmc.common.auth.util.JwtUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.users.Users;
-import com.in.mzncvmc.content.users.UsersDto;
-import com.in.mzncvmc.content.users.UsersRepository;
 import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,17 +28,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
+
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping(SLASH_API + "/auth")
 public class AuthController {
     private final UserHistoryService userHistoryService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -54,9 +51,6 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @Value("${user.first.password}")
-    private String userFirstPassword;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
@@ -168,14 +162,6 @@ public class AuthController {
         response.put("message", "Logged out successfully");
 
         return ResponseEntity.ok(response);
-    }
-    @PostMapping("/resetPassword")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        log.debug("resetPassword. : " + loginRequest.getUsername());
-
-        authService.resetPassword(loginRequest.getUsername(), userFirstPassword);
-
-        return ResponseEntity.ok().build();
     }
 
     private String getClientIp(HttpServletRequest request) {
