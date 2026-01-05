@@ -1,10 +1,12 @@
 package com.in.mzncvmc.common.auth.controller;
 
 import com.in.mzncvmc.common.auth.dto.LoginRequest;
-import com.in.mzncvmc.common.auth.dto.LoginResponse;
 import com.in.mzncvmc.common.auth.dto.RegisterRequest;
+import com.in.mzncvmc.common.auth.service.AuthService;
 import com.in.mzncvmc.common.auth.util.JwtUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
+import com.in.mzncvmc.content.userOtp.UserOtpService;
+import com.in.mzncvmc.content.userOtp.UserOtpVerifyDto;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +22,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,11 +37,15 @@ import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
 @RequiredArgsConstructor
 @RequestMapping(SLASH_API + "/auth")
 public class AuthController {
-    private final UserHistoryService userHistoryService;
+    @Value("${user.otp.use}")
+    private String userOtpUse;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
+    private UserHistoryService userHistoryService;
+    @Autowired
+    private UserOtpService userOtpService;
+    @Autowired
+    private AuthService authService;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -52,49 +58,60 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * 사용자 로그인 시도
+     *
+     * @param request 사용자 아이디, 패스워드
+     *        request
+     * @return 로그인 LoginResponse
+     */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        // 1. 사용자 엔티티 조회
-        Users users = usersService.findByUsername(loginRequest.getUsername())
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+
+        Users users = usersService.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
-        // 2. 접속 상태 확인
+
         if (users.getConnected() == Users.Connected.Y) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "이미 다른 곳에서 접속 중입니다.");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(error); // 409 Conflict
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(Map.of("error", "이미 다른 곳에서 접속 중입니다."));
         }
-        // 3. 인증 시도
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
-                            loginRequest.getPassword()
+                            request.getUsername(),
+                            request.getPassword()
                     )
             );
         } catch (BadCredentialsException e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid username or password");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid username or password"));
         }
-        // 4. 토큰 생성
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
-        final String accessToken = jwtUtil.generateToken(userDetails);
-        final String refreshToken = jwtUtil.generateRefreshToken(userDetails);
-        // 5. 로그인 성공 → 상태 Y 로 변경
-        usersService.updateUsersConnected(loginRequest.getUsername(), "Y");
-        // 6. 히스토리 저장
-        userHistoryService.saveLogin(loginRequest.getUsername(), getClientIp(request));
-        // 7. 응답 리턴
-        LoginResponse response = new LoginResponse(
-                accessToken,
-                refreshToken,
-                users.getUserId(),
-                userDetails.getUsername(),
-                users.getPwNotifyDuration(), // 사용자 최초 접속 여부
-                "Bearer"
-        );
 
-        return ResponseEntity.ok(response);
+        if(userOtpUse.equals("Y")){
+            // OTP 생성 + 저장
+            return authService.returnUserOtpMail(users, httpRequest);
+        }else{
+            // 사용자 로그인 성공 및 토큰 처리
+            return authService.returnSuccessLogin(users, httpRequest);
+        }
+    }
+    /**
+     * 사용자 로그인 이메일 OTP 코드 확인 후 로그인 처리
+     *
+     * @param request 사용자 아이디, Otp Code
+     *        request
+     * @return 로그인 LoginResponse
+     */
+    @PostMapping("/login/verifyUserOtp")
+    public ResponseEntity<?> verifyUserOtp(@RequestBody UserOtpVerifyDto request, HttpServletRequest httpRequest) {
+        Users users = usersService.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+        // OTP 검증
+        userOtpService.verifyUserOtp(users.getUserId(), request.getOtp());
+
+        return authService.returnSuccessLogin(users, httpRequest);
     }
 
     @PostMapping("/register")
@@ -148,7 +165,7 @@ public class AuthController {
             String actualToken = token.substring(7);
             try {
                 String username = jwtUtil.extractUsername(actualToken);
-                userHistoryService.saveLogout(username, getClientIp(request));
+                userHistoryService.saveLogout(username, authService.getClientIp(request));
 
                 // 로그인 접속상태 Y 으로 업데이트
                 usersService.updateUsersConnected(username, "N");
@@ -162,13 +179,5 @@ public class AuthController {
         response.put("message", "Logged out successfully");
 
         return ResponseEntity.ok(response);
-    }
-
-    private String getClientIp(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-            return xForwardedFor.split(",")[0].trim();
-        }
-        return request.getRemoteAddr();
     }
 }

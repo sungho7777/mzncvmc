@@ -14,6 +14,9 @@
     <link rel="icon" type="image/x-icon" href="/common/sbadminpro/assets/img/favicon.png" />
     <script data-search-pseudo-elements defer src="/common/sbadminpro/js/all.min.js" crossorigin="anonymous"></script>
     <script src="/common/sbadminpro/js/feather.min.js" crossorigin="anonymous"></script>
+
+    <script src="/common/sbadminpro/js/jquery-3.7.1.min.js"></script>
+
 </head>
 <body class="bg-primary">
 <div id="layoutAuthentication">
@@ -90,43 +93,10 @@
 
 
     <!-- Button trigger modal -->
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#passwordChangeModal">Launch Demo Modal</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userOtpModal">Launch Demo Modal</button>
 
     <!-- Modal -->
-    <div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="passwordChangeModalLabel">Password Change Plz</h5>
-                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <form>
-                        <!-- Form Group (current password)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="currentPassword">Current Password</label>
-                            <input class="form-control" id="currentPassword" type="password" placeholder="Enter current password" />
-                        </div>
-                        <!-- Form Group (new password)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="newPassword">New Password</label>
-                            <input class="form-control" id="newPassword" type="password" placeholder="Enter new password" />
-                        </div>
-                        <!-- Form Group (confirm password)-->
-                        <div class="mb-3">
-                            <label class="small mb-1" for="confirmPassword">Confirm Password</label>
-                            <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password" />
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="button" onclick="passwordChange();">Password Change</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <%@ include file="userOtpModal.jsp" %>
 
 
 
@@ -137,6 +107,7 @@
 
 
 <script type="text/javascript">
+    document.getElementById("username").focus();
     window.addEventListener('load', async function() {
 
         const token = localStorage.getItem('accessToken');
@@ -201,6 +172,11 @@
         }
     });
 
+    /**
+     * localStorage 초기화
+     *
+     * @returns {boolean}
+     */
     const removeLocalStorage = () =>{
         // 네트워크 오류 등의 경우 토큰 제거
         localStorage.removeItem('accessToken');
@@ -250,7 +226,7 @@
     }
 
     /**
-     * 로그인
+     * 로그인 시도
      *
      * @returns {boolean}
      */
@@ -274,25 +250,18 @@
         const data = await response.json();
 
         if (response.ok) {
-            // 로그인 성공 - 토큰을 localStorage에 저장
-            localStorage.setItem('accessToken', data.accessToken);
-            localStorage.setItem('refreshToken', data.refreshToken);
-            localStorage.setItem('userId', data.userId);
-            localStorage.setItem('username', data.username);
-            localStorage.setItem('pwNotifyDuration', data.pwNotifyDuration);
 
-            // 로그인 아이디 기억하기.
-            const checkRememberUsername = document.getElementById("checkRememberUsername").checked;
-            if (checkRememberUsername) {
-                localStorage.setItem("savedUsername", username);
-            } else {
-                localStorage.removeItem("savedUsername");
+            if(data.statusLogin == 'sendUserOtpMail'){
+                // 모달 띄우기
+                document.getElementById("otpUsername").value = username;
+                const modal = new bootstrap.Modal(document.getElementById('userOtpModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                modal.show();
+            }else if(data.statusLogin == 'success'){
+                successLogin(data);
             }
-
-            // 잠시 후 메인화면으로 이동
-            setTimeout(() => {
-                window.location.href = '/main';
-            }, 150);
 
         } else {
             // 로그인 실패
@@ -300,6 +269,43 @@
         }
     });
 
+
+    /**
+     * 로그인 처리
+     *
+     * @returns {boolean}
+     */
+    const successLogin = (data) => {
+        if(data == null){
+            alert('잘못된 접근입니다.');
+            return;
+        }
+
+        // 로그인 성공 - 토큰을 localStorage에 저장
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        localStorage.setItem('userId', data.userId);
+        localStorage.setItem('username', data.username);
+        localStorage.setItem('pwNotifyDuration', data.pwNotifyDuration);
+
+        // 로그인 아이디 기억하기.
+        const checkRememberUsername = document.getElementById("checkRememberUsername").checked;
+        if (checkRememberUsername) {
+            localStorage.setItem("savedUsername", username);
+        } else {
+            localStorage.removeItem("savedUsername");
+        }
+
+        // 잠시 후 메인화면으로 이동
+        setTimeout(() => {
+            window.location.href = '/main';
+        }, 150);
+    };
+    /**
+     * 패스워드 초기화
+     *
+     * @returns {boolean}
+     */
     const resetPassword = async() => {
 
         const username = document.getElementById("username").value;

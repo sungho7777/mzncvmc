@@ -182,27 +182,39 @@ CREATE INDEX idx_action_type ON user_history(action_type);
 CREATE INDEX idx_created_at ON user_history(created_at);
 
 
+# 로그인 2단계 인증(OTP) 관리 테이블
+CREATE TABLE user_otp (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'OTP 이력 고유 ID',
+    user_id BIGINT NOT NULL COMMENT '사용자 ID (users.user_id)',
+    otp_code VARCHAR(6) NOT NULL COMMENT '로그인용 1회성 인증 코드',
+    expired_at DATETIME NOT NULL COMMENT 'OTP 만료 시각',
+    used_yn CHAR(1) DEFAULT 'N' COMMENT 'OTP 사용 여부 (Y: 사용됨, N: 미사용)',
+    fail_count INT DEFAULT 0 COMMENT 'OTP 인증 실패 횟수',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'OTP 생성 시각',
+    INDEX idx_user_id (user_id) COMMENT '사용자별 OTP 조회용 인덱스'
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COMMENT='로그인 2단계 인증(OTP) 관리 테이블';
 
 
-# OTP 인증 정보 테이블
-CREATE TABLE otp_verification (
-    otp_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'OTP 고유 ID',
-    user_id INT NOT NULL COMMENT '사용자 ID (FK: users.user_id)',
-    otp_code VARCHAR(6) NOT NULL COMMENT '6자리 OTP 코드',
-    otp_type ENUM('EMAIL', 'SMS') DEFAULT 'EMAIL' COMMENT 'OTP 유형',
-    attempt_count TINYINT DEFAULT 0 COMMENT '시도 횟수',
-    max_attempts TINYINT DEFAULT 3 COMMENT '최대 시도 횟수',
-    is_verified BOOLEAN DEFAULT FALSE COMMENT '인증 완료 여부',
-    is_expired BOOLEAN DEFAULT FALSE COMMENT '만료 여부',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성 시각',
-    expires_at TIMESTAMP NOT NULL COMMENT '만료 시각',
-    verified_at TIMESTAMP NULL COMMENT '인증 완료 시각',
-    ip_address VARCHAR(45) COMMENT '요청 IP 주소',
-    user_agent TEXT COMMENT '사용자 에이전트',
-    CONSTRAINT fk_otp_user FOREIGN KEY (user_id) REFERENCES users(user_id)
-        ON DELETE CASCADE,
-    INDEX idx_user_created (user_id, created_at),
-    INDEX idx_expires (expires_at),
-    INDEX idx_verification (user_id, is_verified, is_expired)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='OTP 인증 정보 테이블';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

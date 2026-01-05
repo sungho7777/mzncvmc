@@ -246,6 +246,8 @@
     };
 
     const changePassword = async () => {
+        const _pwNotifyDuration = localStorage.getItem('pwNotifyDuration');
+
         $('#loading').show();
 
         await fetch("/api/account/changePassword", {
@@ -264,6 +266,10 @@
                 if (!res.ok) throw new Error('비밀번호 변경 실패');
 
                 localStorage.setItem('pwNotifyDuration', '10');
+                if(_pwNotifyDuration == '999'){
+                    alert('비밀번호가 변경되었습니다. 다시 로그인하세요.');
+                    goLogout();
+                }
                 alert('비밀번호가 변경되었습니다.');
             })
             .then(result => {
