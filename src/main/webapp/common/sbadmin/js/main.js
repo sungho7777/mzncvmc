@@ -270,6 +270,4 @@ const createActionButtons = (id, categoryId) => {
         '       </span> ' +
         '   </a>'
     ).join('');
-
-
 };

@@ -93,10 +93,12 @@
 
 
     <!-- Button trigger modal -->
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userOtpModal">Launch Demo Modal</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userOtpModal">User Otp Modal</button>
+    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userMfaModal">User Mfa Modal</button>
 
     <!-- Modal -->
-    <%@ include file="userOtpModal.jsp" %>
+    <%@ include file="include/modal/userOtpModal.jsp" %>
+    <%@ include file="include/modal/userMfaModal.jsp" %>
 
 
 
@@ -251,18 +253,31 @@
 
         if (response.ok) {
 
-            if(data.statusLogin == 'sendUserOtpMail'){
+            if(data.statusLogin == 'sendUserOtpMail') {
                 // 모달 띄우기
                 document.getElementById("otpUsername").value = username;
-                const modal = new bootstrap.Modal(document.getElementById('userOtpModal'), {
+                const userOtpModal = new bootstrap.Modal(document.getElementById('userOtpModal'), {
                     backdrop: 'static',
                     keyboard: false
                 });
-                modal.show();
+                userOtpModal.show();
+            } else if(data.statusLogin == 'generateQRCode'){
+                document.getElementById("mfaUsername").value = username;
+                const userMfaModal = new bootstrap.Modal(document.getElementById('userMfaModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                userMfaModal.show();
+
+                // 만약 mfa 가 등록 되어 있다면 mfaCode 입력 값만 받는다.
+                // 만약 mfa 가 등록 되어 있지 않다면 QR 코드 이미지를 만들고 mfa_secret 값을 설정 한다.
+                generateQRCode();
+
             }else if(data.statusLogin == 'success'){
                 successLogin(data);
+            }else{
+                alert('fall');
             }
-
         } else {
             // 로그인 실패
             alert(data.error || '로그인에 실패했습니다.');

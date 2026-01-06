@@ -60,12 +60,37 @@ public class AuthService {
                         users.getUserId(),
                         users.getUsername(),
                         users.getPwNotifyDuration(),
-                        "Bearer",
+                        "",
                         "인증 코드가 이메일로 전송되었습니다."
                 )
         );
     }
 
+    /**
+     * 사용자 QR 코드 이미지 생성
+     *
+     * @param users 사용자 정보
+     *        httpRequest
+     * @return 로그인 LoginResponse
+     */
+    public ResponseEntity<?> returnGenerateQRCode(
+            Users users,
+            HttpServletRequest httpRequest) {
+
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        "generateQRCode",
+                        "",
+                        "",
+                        users.getUserId(),
+                        users.getUsername(),
+                        users.getPwNotifyDuration(),
+                        "",
+                        "QR 코드 생성 API."
+                )
+        );
+    }
     /**
      * 사용자 로그인 성공 및 토큰 처리
      *
@@ -102,6 +127,30 @@ public class AuthService {
                 )
         );
     }
+    /**
+     * 사용자 로그인 실패처리
+     *
+     * @param users 사용자 정보
+     *        httpRequest
+     * @return 로그인 LoginResponse
+     */
+    public ResponseEntity<?> returnFallLogin(
+            Users users,
+            HttpServletRequest httpRequest) {
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        "fall",
+                        "",
+                        "",
+                        users.getUserId(),
+                        users.getUsername(),
+                        users.getPwNotifyDuration(),
+                        "",
+                        "로그인 실패"
+                )
+        );
+    }
 
     /**
      * 사용자 클라이언트 IP 가져온다.
@@ -116,4 +165,5 @@ public class AuthService {
         }
         return request.getRemoteAddr();
     }
+
 }

@@ -72,7 +72,7 @@
 
                                 <div class="mb-3">
                                     <label class="small mb-1" for="username">Username (how your name will appear to other users on the site)</label>
-                                    <input class="form-control" id="username" name="username" type="text" placeholder="Enter your username" value="username" />
+                                    <input class="form-control" id="username" name="username" type="text" placeholder="Enter your username" value="mzncvmc" />
                                 </div>
                                 <!-- Form Row-->
                                 <div class="row gx-3 mb-3">

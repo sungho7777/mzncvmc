@@ -3,8 +3,11 @@ package com.in.mzncvmc.common.auth.controller;
 import com.in.mzncvmc.common.auth.dto.LoginRequest;
 import com.in.mzncvmc.common.auth.dto.RegisterRequest;
 import com.in.mzncvmc.common.auth.service.AuthService;
+import com.in.mzncvmc.common.auth.service.MfaService;
 import com.in.mzncvmc.common.auth.util.JwtUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
+import com.in.mzncvmc.content.userMfa.UserMfaService;
+import com.in.mzncvmc.content.userMfa.UserMfaVerifyDto;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.userOtp.UserOtpVerifyDto;
 import com.in.mzncvmc.content.users.Users;
@@ -36,14 +39,20 @@ import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(SLASH_API + "/auth")
-public class AuthController {
+public class AuthRestController {
     @Value("${user.otp.use}")
     private String userOtpUse;
+    @Value("${user.mfa.use}")
+    private String userMfaUse;
 
     @Autowired
     private UserHistoryService userHistoryService;
     @Autowired
     private UserOtpService userOtpService;
+    @Autowired
+    private UserMfaService userMfaService;
+    @Autowired
+    private MfaService mfaService;
     @Autowired
     private AuthService authService;
     @Autowired
@@ -88,9 +97,12 @@ public class AuthController {
                     .body(Map.of("error", "Invalid username or password"));
         }
 
-        if(userOtpUse.equals("Y")){
+        if(userOtpUse.equals("Y")) {
             // OTP 생성 + 저장
             return authService.returnUserOtpMail(users, httpRequest);
+        }else if(userMfaUse.equals("Y")){
+
+            return authService.returnGenerateQRCode(users, httpRequest);
         }else{
             // 사용자 로그인 성공 및 토큰 처리
             return authService.returnSuccessLogin(users, httpRequest);
@@ -103,7 +115,7 @@ public class AuthController {
      *        request
      * @return 로그인 LoginResponse
      */
-    @PostMapping("/login/verifyUserOtp")
+    @PostMapping("/verifyUserOtp")
     public ResponseEntity<?> verifyUserOtp(@RequestBody UserOtpVerifyDto request, HttpServletRequest httpRequest) {
         Users users = usersService.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
@@ -113,6 +125,62 @@ public class AuthController {
 
         return authService.returnSuccessLogin(users, httpRequest);
     }
+
+    /**
+     * 사용자 로그인 구글 TOTP 설정을 위한 QR 코드 전송
+     *
+     * @param request 사용자 Username
+     *        request
+     * @return response
+     */
+    @PostMapping("/generateQR")
+    public ResponseEntity<Map<String, Object>> generateQR(@RequestBody UserMfaVerifyDto request) throws Exception {
+        Users users = usersService.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+        Long userId = users.getUserId();
+        String username = users.getUsername();
+
+        String secret = userMfaService.initiateAndStoreMFASecret(userId);
+        String qrCodeBase64 = mfaService.generateQRCodeBase64(username, secret);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("qrCode", "data:image/png;base64," + qrCodeBase64);
+        //response.put("secret", secret); // 수동 입력용
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 사용자 로그인 구글 TOTP 코드 확인 후 로그인 처리
+     *
+     * @param request 사용자 아이디, Mfa Code
+     *        request
+     * @return 로그인 LoginResponse
+     */
+    @PostMapping("/verifyUserMfa")
+    public ResponseEntity<?> verifyUserMfa(@RequestBody UserMfaVerifyDto request, HttpServletRequest httpRequest) throws Exception {
+        Users users = usersService.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+
+        Long userId = users.getUserId();
+        String email = users.getEmail();
+        String mfaCode =request.getMfaCode();
+
+
+        boolean isValid = userMfaService.verifyAndEnableMFA(userId, mfaCode, email);
+
+        return (isValid) ? authService.returnSuccessLogin(users, httpRequest):
+                            authService.returnFallLogin(users, httpRequest);
+    }
+
+
+
+
+
+
+
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -157,6 +225,12 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * 사용자 로그아웃 처리
+     *
+     * @param request 사용자 token
+     * @return 로그아웃 response message
+     */
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
