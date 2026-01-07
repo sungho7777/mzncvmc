@@ -144,61 +144,6 @@
 </form>
 
 
-
-<%--
-<main>
-    <form id="amendForm">
-        <input type="text" name="mapping" value="${mapping}">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th style="width: 15%;">Entity</th>
-                        <th>Content</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-
-                    <tr><td>ID</td><td><input type="text" name="postId" id="postId" value="0" /></td></tr>
-                    <tr><td>카테고리 ID</td><td><input type="text" name="categoryId" id="categoryId" /></td></tr>
-                    <tr><td>제목</td><td><input type="text" name="title" id="title" /></td></tr>
-                    <tr><td>내용</td><td><input type="text" name="bbsContent" id="bbsContent" /></td></tr>
-                    <tr><td>작성자 ID</td><td><input type="text" name="authorId" id="authorId" /></td></tr>
-                    <tr><td>작성자명</td><td><input type="text" name="authorName" id="authorName" /></td></tr>
-                    <tr><td>작성자 IP</td><td><input type="text" name="authorIp" id="authorIp" /></td></tr>
-                    <tr><td>익명 게시글 비밀번호</td><td><input type="text" name="password" id="password" /></td></tr>
-                    <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
-                    <tr><td>공지사항 여부</td><td><input type="text" name="isNotice" id="isNotice" /></td></tr>
-                    <tr><td>상단 고정 여부</td><td><input type="text" name="isTopFixed" id="isTopFixed" /></td></tr>
-                    <tr><td>비밀글 여부</td><td><input type="text" name="isSecret" id="isSecret" /></td></tr>
-                    <tr><td>조회수</td><td><input type="text" name="viewCount" id="viewCount" /></td></tr>
-                    <tr><td>좋아요 수</td><td><input type="text" name="likeCount" id="likeCount" /></td></tr>
-                    <tr><td>싫어요 수</td><td><input type="text" name="dislikeCount" id="dislikeCount" /></td></tr>
-                    <tr><td>댓글 수</td><td><input type="text" name="commentCount" id="commentCount" /></td></tr>
-                    <tr><td>첨부파일 수</td><td><input type="text" name="fileCount" id="fileCount" /></td></tr>
-                    <tr><td>부모 게시글 ID</td><td><input type="text" name="parentId" id="parentId" /></td></tr>
-                    <tr><td>답글 깊이</td><td><input type="text" name="depth" id="depth" /></td></tr>
-                    <tr><td>답글 그룹 ID</td><td><input type="text" name="groupId" id="groupId" /></td></tr>
-                    <tr><td>그룹내 순서</td><td><input type="text" name="groupOrder" id="groupOrder" /></td></tr>
-                    <tr><td>태그</td><td><input type="text" name="tags" id="tags" /></td></tr>
-                    <tr><td>추가 메타 데이터</td><td><input type="text" name="metaData" id="metaData" /></td></tr>
-                    <tr><td>생성 일시</td><td><input type="text" name="createdDate" id="createdDate" /></td></tr>
-                    <tr><td>수정 일시</td><td><input type="text" name="updatedDate" id="updatedDate" /></td></tr>
-                    <tr><td>삭제 일시</td><td><input type="text" name="deletedDate" id="deletedDate" /></td></tr>
-
-
-                    </tbody>
-                </table>
-                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('bbs/bbsCategories', null);">목록</button>
-                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
-            </div>
-        </div>
-
-    </form>
-</main>--%>
-
 <script type="text/javascript">
     const ID = ${id};
     const CATEGORY_ID = ${categoryId};
@@ -211,7 +156,7 @@
     };
 
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         $("#categoryId").val(CATEGORY_ID);
 
@@ -278,7 +223,7 @@
         $("#updatedDate").val(data.updatedDate);
         $("#deletedDate").val(data.deletedDate);
 
-        $("#btnGoList").attr("onclick", "goList('bbs/bbsPosts', "+data.categoryId+");");
+        $("#btnGoList").attr("onclick", "main.goList('bbs/bbsPosts', "+data.categoryId+");");
     };
 
     /**
@@ -326,7 +271,7 @@
             $('#success-btn').data('menu', MENU);
 */
 
-            goView(MENU, CATEGORY_ID, jsonData.data);
+            main.goView(MENU, CATEGORY_ID, jsonData.data);
         } catch (err) {
             console.error("에러:", err);
             alert(mappingType + " 실패: " + err.message);

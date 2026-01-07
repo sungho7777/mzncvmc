@@ -211,7 +211,7 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         getList();
 
@@ -220,7 +220,7 @@
         $("#goExcelBtnLabel").text("Excel Download");
         $("#goCsvBtnLabel").text("CSV Download");
 
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '0', 'POST');");
+        $("#goAmendBtn").attr("onclick", "main.goAmend('"+MENU+"', null, '0', 'POST');");
         console.log("list init");
     }
 
@@ -254,8 +254,8 @@
             .then(result => {
                 console.log(result.data.content);
                 renderGrid(result.data.content, "grid");   // data.content → 실제 데이터
-                renderPagination(result.data);             // 페이지네이션 UI 추가
-                renderSummary(result.data);
+                board.renderPagination(result.data);             // 페이지네이션 UI 추가
+                board.renderSummary(result.data);
             })
             .finally(() => {
                 setTimeout(() => $('#loading').hide(), 250);
@@ -324,7 +324,7 @@
                 '<td>' + item.email +  '</td>',
                 '<td>' + item.website +  '</td>',
                 '<td>' + item.status +  '</td>',
-                '<td class="text-center">' + createActionButtons(item.companyId, null) + '</td>'
+                '<td class="text-center">' + board.createActionButtons(item.companyId, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

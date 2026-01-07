@@ -93,7 +93,7 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         getList();
 
@@ -132,8 +132,8 @@
             .then(res => res.json())
             .then(result => {
                 renderGrid(result.data.content, "grid");    // data.content → 실제 데이터
-                renderPagination(result.data);              // 페이지네이션 UI 추가
-                renderSummary(result.data);                 // Total Count
+                board.renderPagination(result.data);              // 페이지네이션 UI 추가
+                board.renderSummary(result.data);                 // Total Count
             })
             .finally(() => {
                 setTimeout(() => $('#loading').hide(), 250);
@@ -192,7 +192,7 @@
                 '<td>' + item.mfaEnabled + '</td>',
                 '<td>' + item.mfaSecret + '</td>',
                 '<td>' + item.mfaVerified + '</td>',
-                '<td class="text-center">' + createActionButtons(item.id, null) + '</td>'
+                '<td class="text-center">' + board.createActionButtons(item.id, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

@@ -30,7 +30,7 @@
         if (userId && username) {
             $("#user-dropdown-username").text(username);
             $("#user-dropdown-email").text("mzncvmc@gmail.com");
-            $("#user-dropdown-profile").attr("onclick", "goView('users', null, " + userId + ");");
+            $("#user-dropdown-profile").attr("onclick", "main.goView('users', null, " + userId + ");");
         }
     });
 </script>

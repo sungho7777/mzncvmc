@@ -13,7 +13,7 @@
                     </h1>
                 </div>
                 <div class="col-12 col-xl-auto mb-3">
-                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="goList('bbs/bbsCategories', null);">
+                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="main.goList('bbs/bbsCategories', null);">
                         <i class="me-1" data-feather="arrow-left"></i>
                         Back to All Bbs Categories
                     </a>
@@ -146,7 +146,7 @@
     };
 
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
 
         const userId = localStorage.getItem('userId');
@@ -241,14 +241,6 @@
 
             const jsonData = await res.json();
             console.log("응답 updateData JSON:", jsonData);
-/*
-            // 모달 띄우기
-            $('#successModal').modal('show');
-            // 모달 안의 버튼에 id 저장
-            $('#success-btn').data('id', jsonData.data);
-            $('#success-btn').data('categoryId', null);
-            $('#success-btn').data('menu', MENU);
-*/
 
             goView(MENU, null, jsonData.data);
         } catch (err) {

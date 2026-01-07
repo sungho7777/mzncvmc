@@ -27,7 +27,7 @@
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 동작을 막음
 
-            goLogout();
+            main.goLogout();
         });
     });
 </script>

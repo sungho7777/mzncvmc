@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-<!--
+
 <main>
     <form id="amendForm">
         <input type="text" name="mapping" value="${mapping}">
@@ -37,14 +37,14 @@
 
                     </tbody>
                 </table>
-                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('company', null);">목록</button>
+                <button id="btnGoList" type="button" class="btn btn-primary" onclick="main.goList('company', null);">목록</button>
                 <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
             </div>
         </div>
 
     </form>
 </main>
--->
+
 <script type="text/javascript">
     const ID = ${id};
     const MENU = "company";
@@ -56,7 +56,7 @@
     };
 
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         if(Number(ID) > 0) getAmend();
         console.log("amend init");
@@ -158,10 +158,6 @@
             $('#success-btn').data('id', jsonData.data);
             $('#success-btn').data('categoryId', null);
             $('#success-btn').data('menu', MENU);
-
-            //alert(mappingType + " 완료");
-
-            //goView(MENU, jsonData.data);
         } catch (err) {
             console.error("에러:", err);
             alert(mappingType + " 실패: " + err.message);

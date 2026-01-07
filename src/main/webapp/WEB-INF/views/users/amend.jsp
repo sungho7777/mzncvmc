@@ -163,39 +163,6 @@
     </div>
 </div>
 
-
-<%--
-<main>
-    <form id="amendForm">
-        <input type="hidden" name="mapping" value="${mapping}">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th style="width: 15%;">Entity</th>
-                        <th>Content</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr><td>ID</td><td><input type="text" name="userId" id="userId" value="0" /></td></tr>
-                    <tr><td>회사</td><td><input type="text" name="companyId" id="companyId" /></td></tr>
-                    <tr><td>아이디</td><td><input type="text" name="username" id="username" /></td></tr>
-                    <tr><td>이름</td><td><input type="text" name="fullName" id="fullName" /></td></tr>
-                    <tr><td>이메일</td><td><input type="text" name="email" id="email" /></td></tr>
-                    <tr><td>전화번호</td><td><input type="text" name="phone" id="phone" /></td></tr>
-                    <tr><td>룰</td><td><input type="text" name="role" id="role" /></td></tr>
-                    <tr><td>상태</td><td><input type="text" name="status" id="status" /></td></tr>
-                    </tbody>
-                </table>
-                <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('users', null);">목록</button>
-                <button type="button" class="btn btn-info" onclick="amendData();">${mapping eq 'POST' ? 'Create' : 'Amend'}</button>
-            </div>
-        </div>
-
-    </form>
-</main>--%>
-
 <script type="text/javascript">
     const ID = ${id};
     const MENU = "users";
@@ -207,13 +174,13 @@
     };
 
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         if(Number(ID) > 0) getAmend();
 
         $("#goListBtnLabel").text("Back to All User List");
 
-        $("#goListBtn").attr("onclick", "goList('users', null);");
+        $("#goListBtn").attr("onclick", "main.goList('users', null);");
 
         console.log("amend init");
     };
@@ -306,10 +273,6 @@
             $('#success-btn').data('id', jsonData.data);
             $('#success-btn').data('categoryId', null);
             $('#success-btn').data('menu', MENU);
-
-            //alert(mappingType + " 완료");
-
-            //goView(MENU, jsonData.data);
         } catch (err) {
             console.error("에러:", err);
             alert(mappingType + " 실패: " + err.message);

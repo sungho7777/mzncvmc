@@ -13,7 +13,7 @@
                     </h1>
                 </div>
                 <div class="col-12 col-xl-auto mb-3">
-                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="goList('bbs/bbsCategories', null);">
+                    <a class="btn btn-sm btn-light text-primary" href="#" onclick="main.goList('bbs/bbsCategories', null);">
                         <i class="me-1" data-feather="arrow-left"></i>
                         Back to All Bbs Categories
                     </a>
@@ -109,7 +109,7 @@
                 </div>
                 <div class="card-body">
                     <div class="d-grid">
-                        <button class="fw-500 btn btn-warning" onclick="goAmend('bbs/bbsCategories', null, ${id}, 'PUT');">Amend</button>
+                        <button class="fw-500 btn btn-warning" onclick="main.goAmend('bbs/bbsCategories', null, ${id}, 'PUT');">Amend</button>
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         getView();
         console.log("view init");

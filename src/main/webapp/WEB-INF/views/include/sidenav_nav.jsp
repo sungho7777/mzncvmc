@@ -148,10 +148,10 @@
                 </a>
                 <div class="collapse show" id="appsCollapseUserManagement" data-bs-parent="#accordionSidenavAppsMenu">
                     <nav class="sidenav-menu-nested nav">
-                        <a class="nav-link active" href="#" onclick="goList('userMfa', null)">User Mfa</a>
-                        <a class="nav-link" href="#" onclick="goList('users', null)">Users List</a>
-                        <a class="nav-link" href="#" onclick="goList('company', null)">Company List</a>
-                        <a class="nav-link" href="#" onclick="goList('ai/ollama', null)">Ollama AI</a>
+                        <a class="nav-link active" href="#" onclick="main.goList('userMfa', null)">User Mfa</a>
+                        <a class="nav-link" href="#" onclick="main.goList('users', null)">Users List</a>
+                        <a class="nav-link" href="#" onclick="main.goList('company', null)">Company List</a>
+                        <a class="nav-link" href="#" onclick="main.goList('ai/ollama', null)">Ollama AI</a>
                         <a class="nav-link" href="user-management-edit-user.html">Edit User</a>
                         <a class="nav-link" href="user-management-add-user.html">Add User</a>
                         <a class="nav-link" href="user-management-groups-list.html">Groups List</a>
@@ -165,13 +165,13 @@
                 </a>
                 <div class="collapse" id="appsCollapsePostsManagement" data-bs-parent="#accordionSidenavAppsMenu">
                     <nav class="sidenav-menu-nested nav">
-                        <a class="nav-link ${sub_sidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsCategories', null)">Category</a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts1' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '1')">Announcement </a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts2' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '2')">Free Board</a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts3' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '3')">QNA</a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts4' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '4')">Data Room</a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts5' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '5')">Suggestions</a>
-                        <a class="nav-link ${sub_sidebar eq 'bbsPosts6' ? 'active' : ''}" href="#" onclick="goList('bbs/bbsPosts', '6')">Ai Inquiry &<br>Answer</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsCategories' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsCategories', null)">Category</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts1' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '1')">Announcement </a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts2' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '2')">Free Board</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts3' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '3')">QNA</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts4' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '4')">Data Room</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts5' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '5')">Suggestions</a>
+                        <a class="nav-link ${sub_sidebar eq 'bbsPosts6' ? 'active' : ''}" href="#" onclick="main.goList('bbs/bbsPosts', '6')">Ai Inquiry &<br>Answer</a>
                     </nav>
                 </div>
             </nav>

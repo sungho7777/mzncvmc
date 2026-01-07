@@ -95,13 +95,20 @@ public class AuthRestController {
                     .body(Map.of("error", "Invalid username or password"));
         }
 
-        if(userOtpUse.equals("Y")) {
-            // OTP 생성 + 저장
-            return authService.returnUserOtpMail(users, httpRequest);
-        }else if(userMfaUse.equals("Y")){
-
-            return authService.returnGenerateQRCode(users, httpRequest);
+        if(users.getPwNotifyDuration().equals("999")){
+            // 신규 사용자 일단 로그인 시켜서 비밀번호변경 하도록 한다.
+            // 사용자 로그인 성공 및 토큰 처리
+            return authService.returnSuccessLogin(users, httpRequest);
         }else{
+            if(userOtpUse.equals("Y")) {
+                // OTP 생성 + 저장
+                return authService.returnUserOtpMail(users, httpRequest);
+            }else if(userMfaUse.equals("Y")){
+
+                return authService.returnGenerateQRCode(users, httpRequest);
+            }
+
+
             // 사용자 로그인 성공 및 토큰 처리
             return authService.returnSuccessLogin(users, httpRequest);
         }

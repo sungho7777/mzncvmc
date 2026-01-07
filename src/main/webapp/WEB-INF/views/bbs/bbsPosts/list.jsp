@@ -92,7 +92,7 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         getList();
 
@@ -102,7 +102,7 @@
         $("#goCsvBtnLabel").text("CSV Download");
 
         $("#viewTitle").text(CATEGORY_ID);
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', " + CATEGORY_ID + ", '0', 'POST');");
+        $("#goAmendBtn").attr("onclick", "main.goAmend('"+MENU+"', " + CATEGORY_ID + ", '0', 'POST');");
         console.log("list init");
     }
 
@@ -134,8 +134,8 @@
             .then(result => {
                 console.log(result.data.content);
                 renderGrid(result.data.content, "grid");   // data.content → 실제 데이터
-                renderPagination(result.data);             // 페이지네이션 UI 추가
-                renderSummary(result.data);
+                board.renderPagination(result.data);             // 페이지네이션 UI 추가
+                board.renderSummary(result.data);
             })
             .finally(() => {
                 setTimeout(() => $('#loading').hide(), 250);
@@ -191,7 +191,7 @@
             tr.innerHTML = [
                 '<td>' + item.title.substring(0, 32) +  '</td>',
                 '<td>' + item.bbsContent.substring(0, 80) +  '</td>',
-                '<td class="text-center">' + createActionButtons(item.postId, item.categoryId) + '</td>'
+                '<td class="text-center">' + board.createActionButtons(item.postId, item.categoryId) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

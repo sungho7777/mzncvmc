@@ -110,7 +110,7 @@
                                     </div>
                                 </div>
 
-                                <button type="button" class="btn btn-warning" onclick="goAmend('users', null, ${id}, 'PUT');">Amend</button>
+                                <button type="button" class="btn btn-warning" onclick="main.goAmend('users', null, ${id}, 'PUT');">Amend</button>
                             </form>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
         init();
     };
     const init = () => {
-        if (!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
 
         getView();
@@ -193,9 +193,9 @@
         $("#goAmendBtnLabel").text("Amend User");
         $("#goDeleteBtnLabel").text("Delete User");
 
-        $("#goListBtn").attr("onclick", "goList('users', null);");
-        $("#goAmendBtn").attr("onclick", "goAmend('"+MENU+"', null, '"+ID+"', 'POST');");
-        $("#goDeleteBtn").attr("onclick", "goDelete('"+MENU+"', null, '"+ID+"');");
+        $("#goListBtn").attr("onclick", "main.goList('users', null);");
+        $("#goAmendBtn").attr("onclick", "main.goAmend('"+MENU+"', null, '"+ID+"', 'POST');");
+        $("#goDeleteBtn").attr("onclick", "main.goDelete('"+MENU+"', null, '"+ID+"');");
 
 
         console.log("view init");
@@ -242,7 +242,7 @@
         $("#role").text(data.role);
         $("#status").text(data.status);
 
-        $("#companyView").attr("onclick", "goView('company', null, " + data.companyId + ");");
+        $("#companyView").attr("onclick", "main.goView('company', null, " + data.companyId + ");");
     };
 
     const changePassword = async () => {
@@ -268,7 +268,7 @@
                 localStorage.setItem('pwNotifyDuration', '10');
                 if(_pwNotifyDuration == '999'){
                     alert('비밀번호가 변경되었습니다. 다시 로그인하세요.');
-                    goLogout();
+                    main.goLogout();
                 }
                 alert('비밀번호가 변경되었습니다.');
             })

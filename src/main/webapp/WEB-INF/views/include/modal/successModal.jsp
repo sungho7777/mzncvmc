@@ -55,7 +55,7 @@
             const categoryId = $(this).data('categoryId');
             const menu = $(this).data('menu');
 
-            goView(menu, categoryId, id);
+            main.goView(menu, categoryId, id);
         });
     });
 </script>

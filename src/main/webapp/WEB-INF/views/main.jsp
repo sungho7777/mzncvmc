@@ -69,8 +69,10 @@
                         </div>
 
                         <script type="text/javascript">
-                            console.log('aaaaaaaaaaaaa');
+
                         </script>
+
+
                     </c:if>
                 </main>
 
@@ -81,11 +83,16 @@
             <%@ include file="include/modal/logoutModal.jsp" %>
             <%@ include file="include/modal/successModal.jsp" %>
             <%@ include file="include/modal/deleteModal.jsp" %>
+            <%@ include file="include/modal/changePasswordModal.jsp" %>
         </div>
 
         <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="/common/sbadminpro/js/scripts.js"></script>
-        <script src="/common/sbadmin/js/main.js"></script>
+
+        <!-- common.script -->
+        <script src="/common/sbadmin/js/domain/auth.js"></script>
+        <script src="/common/sbadmin/js/domain/main.js"></script>
+        <script src="/common/sbadmin/js/domain/board.js"></script>
 
     </body>
 </html>

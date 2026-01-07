@@ -58,7 +58,7 @@
         init();
     };
     const init = () => {
-        if (!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
 
         getView();
@@ -66,8 +66,8 @@
         $("#goListBtnLabel").text("Back to All UserMfa List");
         $("#goDeleteBtnLabel").text("Delete UserMfa");
 
-        $("#goListBtn").attr("onclick", "goList('userMfa', null);");
-        $("#goDeleteBtn").attr("onclick", "goDelete('"+MENU+"', null, '"+ID+"');");
+        $("#goListBtn").attr("onclick", "main.goList('userMfa', null);");
+        $("#goDeleteBtn").attr("onclick", "main.goDelete('"+MENU+"', null, '"+ID+"');");
 
 
         console.log("view init");

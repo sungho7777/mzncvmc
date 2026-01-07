@@ -125,7 +125,7 @@
     const MENU = "ai/ollama";
     const API_URL = "/api/" + MENU;
     $(document).ready(function() {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         // AI 서비스 상태 확인
         checkAIStatus();

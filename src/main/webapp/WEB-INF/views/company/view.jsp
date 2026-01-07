@@ -32,8 +32,8 @@
                     <tr><td>상태</td><td id="status"></td></tr>
                 </tbody>
             </table>
-            <button id="btnGoList" type="button" class="btn btn-primary" onclick="goList('company', null);">목록</button>
-            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="goAmend('company', null, ${id}, 'PUT');">수정</button>
+            <button id="btnGoList" type="button" class="btn btn-primary" onclick="main.goList('company', null);">목록</button>
+            <button id="btnGoAmend" type="button" class="btn btn-warning" onclick="main.goAmend('company', null, ${id}, 'PUT');">수정</button>
         </div>
     </div>
 </main>
@@ -47,7 +47,7 @@
         init();
     };
     const init = () => {
-        if(!accessTokenCheck()) return false;
+        if(!auth.accessTokenCheck()) return false;
 
         getView();
         console.log("view init");
