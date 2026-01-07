@@ -1,14 +1,14 @@
 package com.in.mzncvmc.content.userMfa;
 
-import com.in.mzncvmc.content.common.response.ApiResponse;
+import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.content.users.UsersDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
-import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_ID;
+import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_ID;
 
 @Log4j2
 @RestController
@@ -37,6 +37,24 @@ public class UserMfaRestController {
 
         Page<UserMfaDto> result = userMfaService.getPagedLists(page, size, search, status);
         return ApiResponse.success(result, "Data paged list retrieved successfully");
+    }
+
+    /**
+     * R.해당 데이터 단일조회 (Read One)
+     *
+     * @param id 조회할 데이터 ID
+     * @return ApiResponse<DataDto> 조회된 데이터 정보
+     * @throws IllegalArgumentException 데이터 ID가 존재하지 않을 경우
+     * @author Park Sung Ho
+     * @since 2025-09-09
+     */
+    @GetMapping(SLASH_ID)
+    public ApiResponse<UserMfaDto> getData(@PathVariable Long id) {
+        log.debug("UsersRestcontroller.getData : " + id);
+
+        UserMfaDto dto = userMfaService.findById(id);
+
+        return ApiResponse.success(dto, "Data retrieved successfully");
     }
 
     /**

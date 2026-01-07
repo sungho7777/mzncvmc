@@ -1,7 +1,7 @@
 package com.in.mzncvmc.content.userMfa;
 
-import com.in.mzncvmc.common.auth.service.MfaService;
-import com.in.mzncvmc.content.mail.MailService;
+import com.in.mzncvmc.common.system.service.MfaService;
+import com.in.mzncvmc.common.system.mail.MailService;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersDto;
 import dev.samstevens.totp.time.SystemTimeProvider;
@@ -65,6 +65,20 @@ public class UserMfaService {
 
         return DataPage.map(this::entityToDto);
     }
+    /**
+     * R.데이터 단일조회
+     *
+     * @param id 조회할 단일 데이터 ID
+     * @return DataDto 조회된 단일 데이터
+     * @throws IllegalArgumentException 데이터 미존재
+     */
+    @Transactional(readOnly = true)
+    public UserMfaDto findById(Long id) {
+        UserMfa userMfa = userMfaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
+
+        return entityToDto(userMfa); // 엔티티 → DTO 변환 메서드
+    }
 
     /**
      * D.데이터 삭제
@@ -73,8 +87,8 @@ public class UserMfaService {
      * @throws IllegalArgumentException 데이터 미존재
      */
     @Transactional
-    public void delete(Long userId) {
-        userMfaRepository.findByUserId(userId).ifPresent(userMfa -> {
+    public void delete(Long id) {
+        userMfaRepository.findById(id).ifPresent(userMfa -> {
             userMfa.setMfaEnabled(false);
             userMfa.setMfaVerified(false);
             userMfa.setMfaSecret(null);
@@ -89,12 +103,15 @@ public class UserMfaService {
      */
     private UserMfaDto entityToDto(UserMfa entity) {
         UserMfaDto dto = UserMfaDto.builder()
+                .id(entity.getId())
                 .userId(entity.getUserId())
                 .mfaEnabled("mfaEnabled")
                 .mfaSecret(entity.getMfaSecret())
                 .mfaVerified("mfaVerified")
 
                 .build();
+
+        System.out.println(dto);
 
         return dto;
     }

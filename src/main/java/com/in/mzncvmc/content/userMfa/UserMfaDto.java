@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserMfaDto {
+    private Long id;
     private Long userId;
     private String mfaEnabled;
     private String mfaSecret;

@@ -192,7 +192,7 @@
                 '<td>' + item.mfaEnabled + '</td>',
                 '<td>' + item.mfaSecret + '</td>',
                 '<td>' + item.mfaVerified + '</td>',
-                '<td class="text-center">' + createActionButtons(item.userId, null) + '</td>'
+                '<td class="text-center">' + createActionButtons(item.id, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

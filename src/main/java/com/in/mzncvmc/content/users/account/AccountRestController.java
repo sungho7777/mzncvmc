@@ -1,6 +1,6 @@
 package com.in.mzncvmc.content.users.account;
 
-import com.in.mzncvmc.common.auth.dto.LoginRequest;
+import com.in.mzncvmc.common.login.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.in.mzncvmc.content.common.constants.CommonConstants.SLASH_API;
+import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_API;
 
 @Log4j2
 @RestController

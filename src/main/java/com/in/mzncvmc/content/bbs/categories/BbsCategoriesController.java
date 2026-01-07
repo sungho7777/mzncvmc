@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static com.in.mzncvmc.content.common.constants.CommonConstants.*;
+import static com.in.mzncvmc.common.system.constants.CommonConstants.*;
 
 @Log4j2
 @Controller

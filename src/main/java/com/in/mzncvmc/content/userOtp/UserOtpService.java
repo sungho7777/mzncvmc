@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.userOtp;
 
-import com.in.mzncvmc.common.auth.service.AuthService;
 import com.in.mzncvmc.content.users.UsersRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
