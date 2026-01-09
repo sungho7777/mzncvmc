@@ -72,12 +72,17 @@
         const data = await response.json();
 
         if (response.ok) {
-            // 모달 닫기
             $("#otpCode").val('');
-            $("#otpUsername").val('');
-            $('#userOtpModal').modal('hide');
 
-            successLogin(data);
+            if(data.statusLogin == 'success'){
+                // 모달 닫기
+                $("#otpUsername").val('');
+                $('#userOtpModal').modal('hide');
+
+                successLogin(data);
+            }else if(data.statusLogin == 'fall'){
+                alert(data.message);
+            }
         } else {
             // 로그인 실패
             alert(data.error || '실패. 다시 작성해보시요!!');

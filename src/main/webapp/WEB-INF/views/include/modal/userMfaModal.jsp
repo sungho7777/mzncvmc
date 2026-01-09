@@ -112,7 +112,7 @@
 
                 successLogin(data);
             }else if(data.statusLogin == 'fall'){
-                alert('코드 검증에 실패하였습니다. 다시 작성해보시요!!');
+                alert(data.message);
             }
         } else {
             // 로그인 실패

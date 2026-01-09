@@ -3,7 +3,9 @@ package com.in.mzncvmc.common.system.service;
 import com.in.mzncvmc.common.login.LoginResponse;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.mail.MailService;
+import com.in.mzncvmc.common.system.response.VerificationResponse;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
+import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Log4j2
 @Service
@@ -100,7 +104,8 @@ public class AuthService {
      */
     public ResponseEntity<?> returnSuccessLogin(
             Users users,
-            HttpServletRequest httpRequest) {
+            HttpServletRequest httpRequest,
+            String message) {
 
         UserDetails userDetails =
                 userDetailsService.loadUserByUsername(users.getUsername());
@@ -123,7 +128,7 @@ public class AuthService {
                         users.getUsername(),
                         users.getPwNotifyDuration(),
                         "Bearer",
-                        "로그인 성공"
+                        message // << VerificationResponse
                 )
         );
     }
@@ -136,7 +141,8 @@ public class AuthService {
      */
     public ResponseEntity<?> returnFallLogin(
             Users users,
-            HttpServletRequest httpRequest) {
+            HttpServletRequest httpRequest,
+            String message) {
 
         return ResponseEntity.ok(
                 new LoginResponse(
@@ -147,7 +153,7 @@ public class AuthService {
                         users.getUsername(),
                         users.getPwNotifyDuration(),
                         "",
-                        "로그인 실패"
+                        message // << VerificationResponse
                 )
         );
     }
@@ -165,5 +171,4 @@ public class AuthService {
         }
         return request.getRemoteAddr();
     }
-
 }

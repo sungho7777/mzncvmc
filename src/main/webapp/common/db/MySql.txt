@@ -206,6 +206,8 @@ CREATE TABLE user_mfa (
     mfa_secret TEXT COMMENT 'MFA 비밀키 (AES 암호화 저장)',
     mfa_verified BOOLEAN NOT NULL DEFAULT FALSE COMMENT 'MFA 최초 인증 완료 여부',
     backup_codes TEXT COMMENT 'MFA 백업 코드 (JSON 또는 암호화 저장)',
+    failed_attempts BIGINT NOT NULL COMMENT '실패 횟수',
+    locked_until DATETIME COMMENT '잠금 해제 시간',
     created_at DATETIME COMMENT '생성 일시',
     updated_at DATETIME COMMENT '수정 일시',
     last_verified_at DATETIME COMMENT '마지막 MFA 인증 일시',

@@ -1,10 +1,12 @@
 package com.in.mzncvmc.common.auth;
 
+import com.in.mzncvmc.common.system.response.VerificationResponse;
 import com.in.mzncvmc.common.system.service.AuthService;
 import com.in.mzncvmc.common.system.service.MfaService;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.login.LoginRequest;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
+import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userMfa.UserMfaService;
 import com.in.mzncvmc.content.userMfa.UserMfaVerifyDto;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_API;
 
@@ -74,13 +77,15 @@ public class AuthRestController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
-
-        Users users = usersService.findByUsername(request.getUsername())
-                .orElseThrow(() -> new RuntimeException("사용자 없음"));
+        Optional<Users> optional = usersService.findByUsername(request.getUsername());
+        if (optional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "The user does not exist."));
+        }
+        Users users = optional.get();
 
         if (users.getConnected() == Users.Connected.Y) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "이미 다른 곳에서 접속 중입니다."));
+            return authService.returnFallLogin(users, httpRequest, "The user is already logged in elsewhere.");
         }
 
         try {
@@ -91,14 +96,13 @@ public class AuthRestController {
                     )
             );
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid username or password"));
+            return authService.returnFallLogin(users, httpRequest, "Invalid username or password");
         }
 
         if(users.getPwNotifyDuration().equals("999")){
             // 신규 사용자 일단 로그인 시켜서 비밀번호변경 하도록 한다.
             // 사용자 로그인 성공 및 토큰 처리
-            return authService.returnSuccessLogin(users, httpRequest);
+            return authService.returnSuccessLogin(users, httpRequest, "Login successful. You are a new member. Please change your password.");
         }else{
             if(userOtpUse.equals("Y")) {
                 // OTP 생성 + 저장
@@ -110,7 +114,7 @@ public class AuthRestController {
 
 
             // 사용자 로그인 성공 및 토큰 처리
-            return authService.returnSuccessLogin(users, httpRequest);
+            return authService.returnSuccessLogin(users, httpRequest, "Login successful");
         }
     }
     /**
@@ -126,9 +130,11 @@ public class AuthRestController {
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         // OTP 검증
-        userOtpService.verifyUserOtp(users.getUserId(), request.getOtp());
+        VerificationResponse verificationResponse = userOtpService.verifyUserOtp(users.getUserId(), request.getOtp());
 
-        return authService.returnSuccessLogin(users, httpRequest);
+        return (verificationResponse.isSuccess()) ?
+                authService.returnSuccessLogin(users, httpRequest, verificationResponse.getMessage()):
+                authService.returnFallLogin(users, httpRequest, verificationResponse.getMessage());
     }
 
     /**
@@ -173,21 +179,20 @@ public class AuthRestController {
         String email = users.getEmail();
         String mfaCode =request.getMfaCode();
 
+        // TOTP 코드 검증 및 MFA 활성화
+        VerificationResponse verificationResponse = userMfaService.verifyAndEnableMFA(userId, mfaCode, email);
 
-        boolean isValid = userMfaService.verifyAndEnableMFA(userId, mfaCode, email);
-
-        return (isValid) ? authService.returnSuccessLogin(users, httpRequest):
-                            authService.returnFallLogin(users, httpRequest);
+        return (verificationResponse.isSuccess()) ?
+                    authService.returnSuccessLogin(users, httpRequest, verificationResponse.getMessage()):
+                    authService.returnFallLogin(users, httpRequest, verificationResponse.getMessage());
     }
 
-
-
-
-
-
-
-
-
+    /**
+     * 사용자 토큰 refresh
+     *
+     * @param request 사용자 token
+     * @return 로그아웃 response message
+     */
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
         String refreshToken = request.get("refreshToken");

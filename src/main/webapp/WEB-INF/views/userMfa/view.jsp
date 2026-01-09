@@ -54,6 +54,12 @@
                     <div id="mfaVerified" class="bg-light p-4 small"></div>
                 </div>
             </div>
+            <div class="card mb-4">
+                <div class="card-header">Failed Attempts</div>
+                <div class="card-body">
+                    <div id="failedAttempts" class="bg-light p-4 small"></div>
+                </div>
+            </div>
 
 
         </div>
@@ -122,6 +128,7 @@
         $("#mfaEnabled").text(data.mfaEnabled);
         $("#mfaSecret").text(data.mfaSecret);
         $("#mfaVerified").text(data.mfaVerified);
+        $("#failedAttempts").text(data.failedAttempts);
 
     };
 </script>

@@ -1,0 +1,6 @@
+
+    public boolean isMfaEnabled(Long userId) {
+        return userMfaRepository.findByUserId(userId)
+                .map(UserMfa::isMfaEnabled)
+                .orElse(false);
+    }

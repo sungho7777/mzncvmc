@@ -1,12 +1,6 @@
 package com.in.mzncvmc.content.userMfa;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,4 +13,5 @@ public class UserMfaDto {
     private boolean mfaEnabled;
     private String mfaSecret;
     private boolean mfaVerified;
+    private int failedAttempts;
 }

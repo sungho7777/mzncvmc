@@ -12,4 +12,11 @@ public class MailService {
         log.info("MailService.sendOtpMail.otp : " + otp);
         log.info("MailService.sendOtpMail.email : " + email);
     }
+
+    // MFA 확인 이메일 발송
+    public void sendMFAConfirmationEmail(String email) {
+
+
+        log.info("MailService.sendMFAConfirmationEmail.email : " + email);
+    }
 }

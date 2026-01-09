@@ -37,6 +37,7 @@ public class MfaService {
      * Base32 인코딩된 비밀 키 생성
      */
     public String generateSecret() {
+
         DefaultSecretGenerator secretGenerator = new DefaultSecretGenerator();
         return secretGenerator.generate();
     }
@@ -68,6 +69,8 @@ public class MfaService {
      * TOTP 코드 검증
      */
     public boolean verifyCode(String secret, String code) {
+
+
         return verifier.isValidCode(secret, code);
     }
 
@@ -79,6 +82,7 @@ public class MfaService {
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+
         byte[] encrypted = cipher.doFinal(secret.getBytes());
         return Base64.getEncoder().encodeToString(encrypted);
     }
@@ -91,6 +95,7 @@ public class MfaService {
         SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, keySpec);
+
         byte[] decrypted = cipher.doFinal(Base64.getDecoder().decode(encryptedSecret));
         return new String(decrypted);
     }

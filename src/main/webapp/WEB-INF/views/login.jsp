@@ -275,12 +275,12 @@
 
             }else if(data.statusLogin == 'success'){
                 successLogin(data);
-            }else{
-                alert('fall');
+            }else if(data.statusLogin == 'fall'){
+                alert('로그인에 실패했습니다.\n' + data.message);
             }
         } else {
-            // 로그인 실패
-            alert(data.error || '로그인에 실패했습니다.');
+            // 로그인 실패(없는 사용자.)
+            alert('로그인에 실패했습니다.\n' + data.error);
         }
     });
 

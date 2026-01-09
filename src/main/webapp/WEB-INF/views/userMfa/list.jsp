@@ -63,12 +63,13 @@
                             <th>mfa_enabled</th>
                             <th>mfa_secret</th>
                             <th>mfa_verified</th>
+                            <th>failed_Attempts</th>
                             <th>비고</th>
                         </tr>
                         </thead>
                         <tbody id="grid" />
                         <tr>
-                            <td colspan="6" class="text-center">The data you searched for does not exist.</td>
+                            <td colspan="7" class="text-center">The data you searched for does not exist.</td>
                         </tr>
                         </tbody>
                     </table>
@@ -192,6 +193,8 @@
                 '<td>' + item.mfaEnabled + '</td>',
                 '<td>' + item.mfaSecret + '</td>',
                 '<td>' + item.mfaVerified + '</td>',
+                '<td>' + item.failedAttempts + '</td>',
+
                 '<td class="text-center">' + board.createActionButtons(item.id, null) + '</td>'
             ].join('');
 

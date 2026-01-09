@@ -30,6 +30,12 @@ public class UserMfa {
     @Column(name = "backup_codes", columnDefinition = "TEXT")
     private String backupCodes; // 선택사항: 백업 코드 (JSON 또는 암호화)
 
+    @Column(name = "failed_attempts", nullable = false)
+    private int failedAttempts = 0; // 실패 횟수
+
+    @Column(name = "locked_until")
+    private LocalDateTime lockedUntil; // 잠금 해제 시간
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
