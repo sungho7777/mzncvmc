@@ -68,7 +68,7 @@ public class UserMfaRestController {
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
         log.debug("UserMfaRestcontroller.deleteData : " + id);
 
-        userMfaService.delete(id);
+        userMfaService.resetData(id);
 
         return ApiResponse.success(id, "Data deleted successfully");
     }

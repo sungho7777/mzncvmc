@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class UserMfaDto {
     private Long id;
     private Long userId;
-    private String mfaEnabled;
+    private boolean mfaEnabled;
     private String mfaSecret;
-    private String mfaVerified;
+    private boolean mfaVerified;
 }

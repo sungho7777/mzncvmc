@@ -37,9 +37,21 @@
                 </div>
             </div>
             <div class="card mb-4">
+                <div class="card-header">Mfa Enabled</div>
+                <div class="card-body">
+                    <div id="mfaEnabled" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+            <div class="card mb-4">
                 <div class="card-header">Mfa Secret</div>
                 <div class="card-body">
                     <div id="mfaSecret" class="bg-light p-4 small"></div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">Mfa Verified</div>
+                <div class="card-body">
+                    <div id="mfaVerified" class="bg-light p-4 small"></div>
                 </div>
             </div>
 
@@ -107,7 +119,9 @@
 
         $("#id").val(data.id);
         $("#userId").text(data.userId);
+        $("#mfaEnabled").text(data.mfaEnabled);
         $("#mfaSecret").text(data.mfaSecret);
+        $("#mfaVerified").text(data.mfaVerified);
 
     };
 </script>

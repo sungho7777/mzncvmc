@@ -83,6 +83,7 @@
             <%@ include file="include/modal/logoutModal.jsp" %>
             <%@ include file="include/modal/successModal.jsp" %>
             <%@ include file="include/modal/deleteModal.jsp" %>
+            <%@ include file="include/modal/loginDetailsModal.jsp" %>
             <%@ include file="include/modal/changePasswordModal.jsp" %>
         </div>
 

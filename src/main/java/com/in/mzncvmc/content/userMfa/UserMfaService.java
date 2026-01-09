@@ -81,6 +81,20 @@ public class UserMfaService {
     }
 
     /**
+     * U.데이터 초기화 처리한다.
+     *
+     * @param id 초기화 할 데이터 ID
+     */
+    @Transactional
+    public void resetData(Long id) {
+        userMfaRepository.findById(id).ifPresent(userMfa -> {
+            userMfa.setMfaEnabled(false);
+            userMfa.setMfaVerified(false);
+            userMfa.setMfaSecret(null);
+            userMfaRepository.save(userMfa);
+        });
+    }
+    /**
      * D.데이터 삭제
      *
      * @param id 삭제할 데이터 ID
@@ -88,12 +102,10 @@ public class UserMfaService {
      */
     @Transactional
     public void delete(Long id) {
-        userMfaRepository.findById(id).ifPresent(userMfa -> {
-            userMfa.setMfaEnabled(false);
-            userMfa.setMfaVerified(false);
-            userMfa.setMfaSecret(null);
-            userMfaRepository.save(userMfa);
-        });
+        UserMfa userMfa = userMfaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
+
+        userMfaRepository.delete(userMfa);
     }
 
     /**
@@ -105,9 +117,9 @@ public class UserMfaService {
         UserMfaDto dto = UserMfaDto.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())
-                .mfaEnabled("mfaEnabled")
+                .mfaEnabled(entity.isMfaEnabled())
                 .mfaSecret(entity.getMfaSecret())
-                .mfaVerified("mfaVerified")
+                .mfaVerified(entity.isMfaVerified())
 
                 .build();
 

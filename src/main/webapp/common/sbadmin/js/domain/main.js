@@ -78,14 +78,21 @@ window.main = {
 setTimeout(() => {
 
     const pwNotifyDuration = localStorage.getItem("pwNotifyDuration");
+
     if(pwNotifyDuration == '999'){
+        // 신규 사용자는 비밀번호를 변경하도록 유도한다.
         const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'), {
             backdrop: 'static',
             keyboard: false
         });
         changePasswordModal.show();
     }else{
-        console.log('Welcome..');
+/*
+        const loginDetailsModal = new bootstrap.Modal(document.getElementById('loginDetailsModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        loginDetailsModal.show();*/
     }
 }, "3000");
 

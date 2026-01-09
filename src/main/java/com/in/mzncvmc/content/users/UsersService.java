@@ -2,6 +2,8 @@ package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
+import com.in.mzncvmc.content.userMfa.UserMfa;
+import com.in.mzncvmc.content.userMfa.UserMfaRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,12 +27,18 @@ public class UsersService{
 
     private PasswordEncoder passwordEncoder;
     private UsersRepository usersRepository;
+    private UserMfaRepository userMfaRepository;
     private CompanyRepository companyRepository;
 
     @Autowired
-    public UsersService(PasswordEncoder passwordEncoder, UsersRepository usersRepository, CompanyRepository companyRepository) {
+    public UsersService(
+            PasswordEncoder passwordEncoder,
+            UsersRepository usersRepository,
+            UserMfaRepository userMfaRepository,
+            CompanyRepository companyRepository) {
         this.passwordEncoder = passwordEncoder;
         this.usersRepository = usersRepository;
+        this.userMfaRepository = userMfaRepository;
         this.companyRepository = companyRepository;
     }
 
@@ -194,7 +202,10 @@ public class UsersService{
     @Transactional
     public void delete(Long id) {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
+                .orElseThrow(() -> new IllegalArgumentException("user Data not found"));
+
+        // 사용자 mfa 정보도 삭제한다.
+        userMfaRepository.deleteByUserId(user.getUserId());
 
         usersRepository.delete(user);
     }
