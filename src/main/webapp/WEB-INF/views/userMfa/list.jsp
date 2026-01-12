@@ -195,7 +195,7 @@
                 '<td>' + item.mfaVerified + '</td>',
                 '<td>' + item.failedAttempts + '</td>',
 
-                '<td class="text-center">' + board.createActionButtons(item.id, null) + '</td>'
+                '<td class="text-center">' + board.createActionButtons(item.userId, null) + '</td>'
             ].join('');
 
             tbody.appendChild(tr);

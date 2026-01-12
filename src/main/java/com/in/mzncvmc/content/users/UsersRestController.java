@@ -1,6 +1,7 @@
 package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.common.system.response.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,17 +12,11 @@ import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_ID;
 
 @Log4j2
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(SLASH_API + "/users")
 public class UsersRestController {
-    private final UsersService usersService;
-
     @Autowired
-    public UsersRestController(UsersService usersService) {
-        this.usersService = usersService;
-    }
-
-    // Search DTO
-    public record UsersSearchDto(String search, String status) {}
+    private final UsersService usersService;
 
     /**
      * C.해당 데이터 생성 (Create)

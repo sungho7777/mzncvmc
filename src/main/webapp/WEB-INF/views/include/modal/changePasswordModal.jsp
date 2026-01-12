@@ -54,8 +54,8 @@
 
         $('#loading').show();
 
-        await fetch("/api/account/changePassword", {
-            method: "POST",
+        const response = await fetch('/api/account/changePassword', {
+            method: 'POST',
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
@@ -65,25 +65,18 @@
                 newPassword: document.getElementById('newPassword').value,
                 confirmPassword: document.getElementById('confirmPassword').value
             })
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('비밀번호 변경 실패');
+        });
+        $('#loading').hide();
 
-                localStorage.setItem('pwNotifyDuration', '10');
-                if(_pwNotifyDuration == '999'){
-                    alert('비밀번호가 변경되었습니다. 다시 로그인하세요.');
-                    main.goLogout();
-                }
-                alert('비밀번호가 변경되었습니다.');
-            })
-            .then(result => {
+        const data = await response.json();
 
-                //renderTable(result.data);
-            })
-            .finally(() => {
-                setTimeout(() => $('#loading').hide(), 250);
-            })
-            .catch(err => console.error("에러:", err));
+        alert(data.message);
+        if(data.status == 'success'){
+            if(_pwNotifyDuration == '999'){
+                alert('신규 사용자입니다. 다시 로그인하세요.');
+                main.goLogout();
+            }
+        }
 
     };
 </script>

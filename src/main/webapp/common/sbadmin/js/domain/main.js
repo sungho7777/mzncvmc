@@ -94,7 +94,7 @@ setTimeout(() => {
         });
         loginDetailsModal.show();*/
     }
-}, "3000");
+}, "1000");
 
 
 

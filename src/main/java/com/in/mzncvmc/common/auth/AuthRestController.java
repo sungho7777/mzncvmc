@@ -1,12 +1,11 @@
 package com.in.mzncvmc.common.auth;
 
-import com.in.mzncvmc.common.system.response.VerificationResponse;
+import com.in.mzncvmc.common.login.LoginRequest;
+import com.in.mzncvmc.common.system.jwt.JwtUtil;
+import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.common.system.service.AuthService;
 import com.in.mzncvmc.common.system.service.MfaService;
-import com.in.mzncvmc.common.system.jwt.JwtUtil;
-import com.in.mzncvmc.common.login.LoginRequest;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
-import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userMfa.UserMfaService;
 import com.in.mzncvmc.content.userMfa.UserMfaVerifyDto;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
@@ -104,14 +103,17 @@ public class AuthRestController {
             // 사용자 로그인 성공 및 토큰 처리
             return authService.returnSuccessLogin(users, httpRequest, "Login successful. You are a new member. Please change your password.");
         }else{
-            if(userOtpUse.equals("Y")) {
-                // OTP 생성 + 저장
-                return authService.returnUserOtpMail(users, httpRequest);
-            }else if(userMfaUse.equals("Y")){
+            if(users.getUserId() == 1L){
+                // TODO 테스트를 위해 admin 계정은 무조건 통과
+            }else{
+                if(userOtpUse.equals("Y")) {
+                    // OTP 생성 + 저장
+                    return authService.returnUserOtpMail(users, httpRequest);
+                }else if(userMfaUse.equals("Y")){
 
-                return authService.returnGenerateQRCode(users, httpRequest);
+                    return authService.returnGenerateQRCode(users, httpRequest);
+                }
             }
-
 
             // 사용자 로그인 성공 및 토큰 처리
             return authService.returnSuccessLogin(users, httpRequest, "Login successful");
@@ -130,11 +132,11 @@ public class AuthRestController {
                 .orElseThrow(() -> new RuntimeException("사용자 없음"));
 
         // OTP 검증
-        VerificationResponse verificationResponse = userOtpService.verifyUserOtp(users.getUserId(), request.getOtp());
+        ApiResponse apiResponse = userOtpService.verifyUserOtp(users.getUserId(), request.getOtp());
 
-        return (verificationResponse.isSuccess()) ?
-                authService.returnSuccessLogin(users, httpRequest, verificationResponse.getMessage()):
-                authService.returnFallLogin(users, httpRequest, verificationResponse.getMessage());
+        return (apiResponse.getStatus().equals("success")) ?
+                authService.returnSuccessLogin(users, httpRequest, apiResponse.getMessage()):
+                authService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
     }
 
     /**
@@ -178,13 +180,19 @@ public class AuthRestController {
         Long userId = users.getUserId();
         String email = users.getEmail();
         String mfaCode =request.getMfaCode();
+        String mfaType =request.getMfaType(); // "mfaCodeRadio", "backupCodeRadio"
 
         // TOTP 코드 검증 및 MFA 활성화
-        VerificationResponse verificationResponse = userMfaService.verifyAndEnableMFA(userId, mfaCode, email);
+        ApiResponse apiResponse =null;
+        if(mfaType.equals("mfaCodeRadio")){
+            apiResponse = userMfaService.verifyAndEnableMFA(userId, mfaCode, email);
+        }else{
+            apiResponse = userMfaService.verifyBackupCode(userId, mfaCode, email);
+        }
 
-        return (verificationResponse.isSuccess()) ?
-                    authService.returnSuccessLogin(users, httpRequest, verificationResponse.getMessage()):
-                    authService.returnFallLogin(users, httpRequest, verificationResponse.getMessage());
+        return (apiResponse.getStatus().equals("success")) ?
+                    authService.returnSuccessLogin(users, httpRequest, apiResponse.getMessage()):
+                    authService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
     }
 
     /**

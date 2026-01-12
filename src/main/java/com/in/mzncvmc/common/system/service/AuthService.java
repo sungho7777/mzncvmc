@@ -3,9 +3,7 @@ package com.in.mzncvmc.common.system.service;
 import com.in.mzncvmc.common.login.LoginResponse;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.mail.MailService;
-import com.in.mzncvmc.common.system.response.VerificationResponse;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
-import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
@@ -17,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 
 @Log4j2
 @Service

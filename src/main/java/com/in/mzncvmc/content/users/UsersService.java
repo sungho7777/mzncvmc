@@ -4,6 +4,7 @@ import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
 import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userMfa.UserMfaRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,28 +20,22 @@ import java.util.Optional;
 
 @Log4j2
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UsersService{
 
     @Value("${user.first.password}")
     private String userFirstPassword;
 
-    private PasswordEncoder passwordEncoder;
-    private UsersRepository usersRepository;
-    private UserMfaRepository userMfaRepository;
-    private CompanyRepository companyRepository;
-
     @Autowired
-    public UsersService(
-            PasswordEncoder passwordEncoder,
-            UsersRepository usersRepository,
-            UserMfaRepository userMfaRepository,
-            CompanyRepository companyRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.usersRepository = usersRepository;
-        this.userMfaRepository = userMfaRepository;
-        this.companyRepository = companyRepository;
-    }
+    private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final UsersRepository usersRepository;
+    @Autowired
+    private final UserMfaRepository userMfaRepository;
+    @Autowired
+    private final CompanyRepository companyRepository;
+/*
 
     public Users createUser(String username, String email, String password) {
         if (usersRepository.existsByUsername(username)) {
@@ -58,34 +53,33 @@ public class UsersService{
 
         return usersRepository.save(user);
     }
+*/
 
-    public Optional<Users> findByUsername(String username) {
-        return usersRepository.findByUsername(username);
-    }
+/*
 
     public boolean existsByUsername(String username) {
+
         return usersRepository.existsByUsername(username);
     }
 
     public boolean existsByEmail(String email) {
+
         return usersRepository.existsByEmail(email);
     }
+*/
 
 
 
+    /**
+     * R.데이터 단일조회
+     *
+     * @param username
+     * @return Optional Entity
+     */
+    public Optional<Users> findByUsername(String username) {
 
-
-
-
-
-
-
-
-
-
-
-
-
+        return usersRepository.findByUsername(username);
+    }
 
     /**
      * C.데이터 생성
@@ -204,7 +198,7 @@ public class UsersService{
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("user Data not found"));
 
-        // 사용자 mfa 정보도 삭제한다.
+        // 사용자 mfa 정보도 완전 삭제한다.
         userMfaRepository.deleteByUserId(user.getUserId());
 
         usersRepository.delete(user);

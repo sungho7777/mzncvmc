@@ -142,7 +142,7 @@
                                     <label class="small mb-1" for="confirmPassword">Confirm Password</label>
                                     <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password" />
                                 </div>
-                                <button type="button" class="btn btn-primary" onclick="changePassword();">Password Change</button>
+                                <button type="button" class="btn btn-primary" onclick="_changePassword();">Password Change</button>
                             </form>
                         </div>
                     </div>
@@ -245,10 +245,35 @@
         $("#companyView").attr("onclick", "main.goView('company', null, " + data.companyId + ");");
     };
 
-    const changePassword = async () => {
+    const _changePassword = async () => {
         const _pwNotifyDuration = localStorage.getItem('pwNotifyDuration');
 
         $('#loading').show();
+
+        const response = await fetch('/api/account/changePassword', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            },
+            body: JSON.stringify({
+                currentPassword: document.getElementById('currentPassword').value,
+                newPassword: document.getElementById('newPassword').value,
+                confirmPassword: document.getElementById('confirmPassword').value
+            })
+        });
+        $('#loading').hide();
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        if(data.status == 'success'){
+
+            
+        }
+
+/*
 
         await fetch("/api/account/changePassword", {
             method: "POST",
@@ -280,6 +305,7 @@
                 setTimeout(() => $('#loading').hide(), 250);
             })
             .catch(err => console.error("에러:", err));
+*/
 
     };
 

@@ -14,4 +14,5 @@ public class UserMfaDto {
     private String mfaSecret;
     private boolean mfaVerified;
     private int failedAttempts;
+    private String backupCodes;
 }

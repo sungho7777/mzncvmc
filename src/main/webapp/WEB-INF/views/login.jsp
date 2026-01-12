@@ -337,12 +337,16 @@
             })
         });
 
+        const data = await response.json();
+
+        alert(data.message);
+        /*
         if (response.ok) {
             alert('비밀번호 초기화 성공했습니다.');
         } else {
             const data = await response.json();
             alert(data.error || '비밀번호 초기화 실패했습니다.');
-        }
+        }*/
     };
 </script>
 </body>

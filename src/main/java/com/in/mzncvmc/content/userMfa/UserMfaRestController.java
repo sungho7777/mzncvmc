@@ -50,9 +50,9 @@ public class UserMfaRestController {
      */
     @GetMapping(SLASH_ID)
     public ApiResponse<UserMfaDto> getData(@PathVariable Long id) {
-        log.debug("UsersRestcontroller.getData : " + id);
+        log.debug("UserMfaRestcontroller.getData : " + id);
 
-        UserMfaDto dto = userMfaService.findById(id);
+        UserMfaDto dto = userMfaService.findByUserId(id);
 
         return ApiResponse.success(dto, "Data retrieved successfully");
     }
@@ -68,7 +68,7 @@ public class UserMfaRestController {
     public ApiResponse<Long> deleteData(@PathVariable Long id) {
         log.debug("UserMfaRestcontroller.deleteData : " + id);
 
-        userMfaService.resetData(id);
+        userMfaService.resetUserMfa(id);
 
         return ApiResponse.success(id, "Data deleted successfully");
     }

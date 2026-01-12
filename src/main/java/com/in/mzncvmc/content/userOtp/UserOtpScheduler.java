@@ -12,15 +12,11 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @Component
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UserOtpScheduler {
-    private UserOtpRepository userOtpRepository;
 
     @Autowired
-    public UserOtpScheduler(UserOtpRepository userOtpRepository){
-        this.userOtpRepository = userOtpRepository;
-    }
-
+    private final UserOtpRepository userOtpRepository;
 
     /**
      * 1분마다 실행
