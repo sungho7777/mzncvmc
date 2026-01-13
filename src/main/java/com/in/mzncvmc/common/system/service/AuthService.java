@@ -35,14 +35,39 @@ public class AuthService {
     private JwtUtil jwtUtil;
 
 
+    public ResponseEntity<?> returnGenerateUserOtp(
+            Users users,
+            HttpServletRequest httpRequest) {
+
+        String otp = userOtpService.generateUserOtp();
+        userOtpService.createUserOtp(users.getUserId(), otp);
+
+        // 이메일 발송
+        mailService.sendGenerateUserOtp(users.getEmail(), otp);
+
+        return ResponseEntity.ok(
+                new LoginResponse(
+                        "generateUserOtp",
+                        "",
+                        "",
+                        users.getUserId(),
+                        users.getUsername(),
+                        users.getPwNotifyDuration(),
+                        "",
+                        "설정을 위한 인증 코드가 이메일로 전송되었습니다."
+                )
+        );
+    }
+
+
     /**
-     * 사용자 OTP 생성 + 저장 > 팝업
+     * 사용자 이메일 OTP 생성 + 저장 > 팝업
      *
      * @param users 사용자 정보
      *        httpRequest
      * @return 로그인 LoginResponse
      */
-    public ResponseEntity<?> returnUserOtpMail(
+    public ResponseEntity<?> returnLoginUserOtp(
             Users users,
             HttpServletRequest httpRequest) {
 
@@ -54,7 +79,7 @@ public class AuthService {
 
         return ResponseEntity.ok(
                 new LoginResponse(
-                        "sendUserOtpMail",
+                        "loginUserOtp",
                         "",
                         "",
                         users.getUserId(),
@@ -65,29 +90,27 @@ public class AuthService {
                 )
         );
     }
-
     /**
-     * 사용자 QR 코드 이미지 생성
+     * 사용자 구글 TOTP 생성 + 저장 > 팝업
      *
      * @param users 사용자 정보
      *        httpRequest
      * @return 로그인 LoginResponse
      */
-    public ResponseEntity<?> returnGenerateQRCode(
+    public ResponseEntity<?> returnLoginUserMfa(
             Users users,
             HttpServletRequest httpRequest) {
 
-
         return ResponseEntity.ok(
                 new LoginResponse(
-                        "generateQRCode",
+                        "loginUserMfa",
                         "",
                         "",
                         users.getUserId(),
                         users.getUsername(),
                         users.getPwNotifyDuration(),
                         "",
-                        "QR 코드 생성 API."
+                        "loginUserMfa"
                 )
         );
     }

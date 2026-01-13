@@ -91,6 +91,7 @@
         <script src="/common/sbadminpro/js/scripts.js"></script>
 
         <!-- common.script -->
+        <script src="/common/sbadmin/js/domain/valided.js"></script>
         <script src="/common/sbadmin/js/domain/auth.js"></script>
         <script src="/common/sbadmin/js/domain/main.js"></script>
         <script src="/common/sbadmin/js/domain/board.js"></script>

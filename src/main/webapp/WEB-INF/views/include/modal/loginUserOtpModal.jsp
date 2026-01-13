@@ -3,26 +3,26 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!-- Modal -->
-<div class="modal fade" id="userOtpModal" tabindex="-1" role="dialog" aria-labelledby="userOtpModalLabel" aria-hidden="true">
+<div class="modal fade" id="loginUserOtpModal" tabindex="-1" role="dialog" aria-labelledby="loginUserOtpModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userOtpModalLabel">Otp Code Plz</h5>
+                <h5 class="modal-title" id="loginUserOtpModalLabel">Otp Code Plz</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input id="otpUsername" type="hidden" />
+                    <input id="loginUserOtp_username" type="hidden" />
 
                     <div class="mb-3">
-                        <label class="small mb-1" for="otpCode">Otp Code</label>
-                        <input class="form-control" id="otpCode" type="text" placeholder="Enter current Otp Code" />
+                        <label class="small mb-1" for="loginUserOtp_otpCode">Otp Code</label>
+                        <input class="form-control" id="loginUserOtp_otpCode" type="text" placeholder="Enter current Otp Code" />
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                <button id="verifyUserOtp-btn" class="btn btn-primary" type="button">verifyUserOtp</button>
+                <button id="verifyLoginUserOtp-btn" class="btn btn-primary" type="button">OTP Login</button>
             </div>
         </div>
     </div>
@@ -31,14 +31,14 @@
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        const verifyUserOtpBtn = document.getElementById('verifyUserOtp-btn');
+        const verifyLoginUserOtpBtn = document.getElementById('verifyLoginUserOtp-btn');
 
-        verifyUserOtpBtn.addEventListener('click', function(e) {
+        verifyLoginUserOtpBtn.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 동작을 막음
 
-            const otpCode = $("#otpCode").val();
+            const otpCode = $("#loginUserOtp_otpCode").val();
 
-            if(isValidUserOtp(otpCode)){
+            if(isValidUserOtp_(otpCode)){
                 verifyUserOtp();
             }else{
                 alert('다시 작성하시요..');
@@ -47,7 +47,7 @@
         });
     });
 
-    const isValidUserOtp = (otpCode) => {
+    const isValidUserOtp_ = (otpCode) => {
         // 문자열로 처리 (앞자리 0 보존)
         const otpRegex = /^\d{6}$/;
         return otpRegex.test(otpCode);
@@ -55,8 +55,8 @@
 
 
     const verifyUserOtp = async() => {
-        const otpUsername = document.getElementById("otpUsername").value;
-        const otpCode = document.getElementById("otpCode").value;
+        const username = document.getElementById("loginUserOtp_username").value;
+        const otpCode = document.getElementById("loginUserOtp_otpCode").value;
 
         const response = await fetch('/api/auth/verifyUserOtp', {
             method: 'POST',
@@ -64,29 +64,23 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                username: otpUsername,
-                otp: otpCode
+                username: username,
+                otpCode: otpCode
             })
         });
 
         const data = await response.json();
 
-        if (response.ok) {
-            $("#otpCode").val('');
+        $("#loginUserOtp_otpCode").val('');
+        if(data.statusLogin == 'success'){
+            // 성공
+            $("#loginUserOtp_username").val('');
+            $('#loginUserOtpModal').modal('hide');
 
-            if(data.statusLogin == 'success'){
-                // 모달 닫기
-                $("#otpUsername").val('');
-                $('#userOtpModal').modal('hide');
-
-                successLogin(data);
-            }else if(data.statusLogin == 'fall'){
-                alert(data.message);
-            }
-        } else {
-            // 로그인 실패
-            alert(data.error || '실패. 다시 작성해보시요!!');
-            $("#otpCode").val('');
+            successLogin(data);
+        }else if(data.statusLogin == 'fall'){
+            // 실패
+            alert(data.message);
         }
     };
 </script>

@@ -97,8 +97,11 @@
     <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userMfaModal">User Mfa Modal</button>
 
     <!-- Modal -->
-    <%@ include file="include/modal/userOtpModal.jsp" %>
-    <%@ include file="include/modal/userMfaModal.jsp" %>
+    <%@ include file="include/modal/generateUserOtpModal.jsp" %>
+    <%@ include file="include/modal/generateUserMfaModal.jsp" %>
+
+    <%@ include file="include/modal/loginUserOtpModal.jsp" %>
+    <%@ include file="include/modal/loginUserMfaModal.jsp" %>
 
 
 
@@ -107,6 +110,8 @@
 <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/common/sbadminpro/js/scripts.js"></script>
 
+<!-- common.script -->
+<script src="/common/sbadmin/js/domain/valided.js"></script>
 
 <script type="text/javascript">
     document.getElementById("username").focus();
@@ -251,39 +256,73 @@
 
         const data = await response.json();
 
-        if (response.ok) {
 
-            if(data.statusLogin == 'sendUserOtpMail') {
+        if(data.statusLogin == 'success'){
+            // 무조건 로그인.
+            successLogin(data);
+        }else{
+
+            if(data.statusLogin == 'generateUserOtp'){
+                // false → MFA 비활성화 또는 설정 정보 없음 -> 설정 시작(이메일 OTP, 구글 TOTP)
                 // 모달 띄우기
-                document.getElementById("otpUsername").value = username;
-                const userOtpModal = new bootstrap.Modal(document.getElementById('userOtpModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                userOtpModal.show();
-            } else if(data.statusLogin == 'generateQRCode'){
-                document.getElementById("mfaUsername").value = username;
-                const userMfaModal = new bootstrap.Modal(document.getElementById('userMfaModal'), {
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                userMfaModal.show();
-
-                // 만약 mfa 가 등록 되어 있다면 mfaCode 입력 값만 받는다.
-                // 만약 mfa 가 등록 되어 있지 않다면 QR 코드 이미지를 만들고 mfa_secret 값을 설정 한다.
-                generateQRCode();
-
-            }else if(data.statusLogin == 'success'){
-                successLogin(data);
-            }else if(data.statusLogin == 'fall'){
-                alert('로그인에 실패했습니다.\n' + data.message);
+                generateUserOtpModal();
+            }else if(data.statusLogin == 'loginUserOtp'){
+                // 메일을 통한 OTP 로그인 모달 띄우기.
+                loginUserOtpModal();
+            }else if(data.statusLogin == 'loginUserMfa'){
+                // 구글 TOTP을 통한 OTP 로그인 모달 띄우기.
+                loginUserMfaModal();
             }
-        } else {
-            // 로그인 실패(없는 사용자.)
-            alert('로그인에 실패했습니다.\n' + data.error);
         }
     });
 
+    // MFA 설정을 위한 메일 OTP 입력 모달 띄우기
+    const generateUserOtpModal = () => {
+        const username = document.getElementById("username").value;
+
+        document.getElementById("generateUserOtp_username").value = username;
+        const _modal = new bootstrap.Modal(document.getElementById('generateUserOtpModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        _modal.show();
+    };
+
+    // MFA 설정을 위한 구글 TOTP 입력 모달 띄우기
+    const generateUserMfaModal = () => {
+        const username = document.getElementById("username").value;
+
+        document.getElementById("generateUserMfa_username").value = username;
+        const _modal = new bootstrap.Modal(document.getElementById('generateUserMfaModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        _modal.show();
+
+        generateQRCode();
+    }
+    // 메일 OTP 로그인 모달 띄우기.
+    const loginUserOtpModal = () => {
+        const username = document.getElementById("username").value;
+
+        document.getElementById("loginUserOtp_username").value = username;
+        const _modal = new bootstrap.Modal(document.getElementById('loginUserOtpModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        _modal.show();
+    };
+    // 구글 TOTP을 통한 OTP 로그인 모달 띄우기.
+    const loginUserMfaModal = () => {
+        const username = document.getElementById("username").value;
+
+        document.getElementById("loginUserMfa_username").value = username;
+        const _modal = new bootstrap.Modal(document.getElementById('loginUserMfaModal'), {
+            backdrop: 'static',
+            keyboard: false
+        });
+        _modal.show();
+    };
 
     /**
      * 로그인 처리
@@ -340,13 +379,6 @@
         const data = await response.json();
 
         alert(data.message);
-        /*
-        if (response.ok) {
-            alert('비밀번호 초기화 성공했습니다.');
-        } else {
-            const data = await response.json();
-            alert(data.error || '비밀번호 초기화 실패했습니다.');
-        }*/
     };
 </script>
 </body>

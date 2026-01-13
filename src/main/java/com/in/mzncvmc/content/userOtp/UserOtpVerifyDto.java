@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class UserOtpVerifyDto{
     private String username;
-    private String otp;
+    private String otpCode;
 }
