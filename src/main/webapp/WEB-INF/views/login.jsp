@@ -30,10 +30,16 @@
                             <div class="card-body p-5 text-center">
                                 <div class="h3 fw-light mb-3">Sign In</div>
                                 <!-- Social login links-->
+                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
+                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
+                                <%--
                                 <a class="btn btn-icon btn-facebook mx-1" href="#!"><i class="fab fa-facebook-f fa-fw fa-sm"></i></a>
                                 <a class="btn btn-icon btn-github mx-1" href="#!"><i class="fab fa-github fa-fw fa-sm"></i></a>
                                 <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
                                 <a class="btn btn-icon btn-twitter mx-1" href="#!"><i class="fab fa-twitter fa-fw fa-sm text-white"></i></a>
+                                --%>
                             </div>
                             <hr class="my-0" />
                             <div class="card-body p-5">
@@ -41,15 +47,15 @@
                                 <form id="loginForm" action="/api/auth/login" method="post">
                                     <!-- Form Group (email address)-->
                                     <div class="mb-3">
-                                        <label class="text-gray-600 small" for="emailExample">Email address</label>
+                                        <label class="text-gray-600 small" for="username">User Name</label>
                                         <input id="username" name="username" value=""
-                                               class="form-control form-control-solid" type="text" placeholder="" aria-label="Email Address" aria-describedby="emailExample" />
+                                               class="form-control form-control-solid" type="text" placeholder="" aria-label="User Name" aria-describedby="username" />
                                     </div>
                                     <!-- Form Group (password)-->
                                     <div class="mb-3">
                                         <label class="text-gray-600 small" for="passwordExample">Password</label>
                                         <input id="password" name="password" value=""
-                                               class="form-control form-control-solid" type="password" placeholder="" aria-label="Password" aria-describedby="passwordExample" />
+                                               class="form-control form-control-solid" type="password" placeholder="" aria-label="Password" aria-describedby="password" />
                                     </div>
                                     <!-- Form Group (forgot password link)-->
                                     <div class="mb-3"><a class="small" href="auth-password-social.html">Forgot your password?</a></div>
@@ -172,10 +178,11 @@
         console.log('로그인 페이지 유지');
 
         // 로그인 아이디 기억하기.
-        const savedUsername = localStorage.getItem("savedUsername");
-        if (savedUsername) {
-            document.getElementById("username").value = savedUsername;
-            document.getElementById("checkRememberUsername").checked = true;
+        const rememberUsername = localStorage.getItem('rememberUsername');
+        if (rememberUsername.length > 0) {
+            $('#username').val(rememberUsername);
+            $('#checkRememberUsername').prop('checked',true);
+            document.getElementById("password").focus();
         }
     });
 
@@ -336,19 +343,12 @@
         }
 
         // 로그인 성공 - 토큰을 localStorage에 저장
+        localStorage.setItem('rememberUsername', $('#checkRememberUsername').is(':checked') ? data.username : "");
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('username', data.username);
         localStorage.setItem('pwNotifyDuration', data.pwNotifyDuration);
-
-        // 로그인 아이디 기억하기.
-        const checkRememberUsername = document.getElementById("checkRememberUsername").checked;
-        if (checkRememberUsername) {
-            localStorage.setItem("savedUsername", username);
-        } else {
-            localStorage.removeItem("savedUsername");
-        }
 
         // 잠시 후 메인화면으로 이동
         setTimeout(() => {
