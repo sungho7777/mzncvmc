@@ -1,6 +1,5 @@
 package com.in.mzncvmc.content.userMfa;
 
-import com.in.mzncvmc.content.users.Users;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

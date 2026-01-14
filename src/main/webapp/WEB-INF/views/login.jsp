@@ -243,6 +243,7 @@
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
+        //$('#loading').show();
         const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
@@ -257,6 +258,7 @@
         const data = await response.json();
         if(response.ok){
 
+            //$('#loading').hide();
             if(data.statusLogin == 'success') {
                 // 무조건 로그인.
                 successLogin(data);
