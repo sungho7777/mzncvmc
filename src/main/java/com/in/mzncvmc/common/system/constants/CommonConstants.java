@@ -7,11 +7,13 @@ public final class CommonConstants {
 
     public static final String MAIN = "main";
     public static final String LOGIN = "login";
+    public static final String RECOVERY = "recovery";
     public static final String MAPPING = "mapping";
     public static final String SLASH_ID = "/{id}";
     public static final String SLASH_API = "/api";
     public static final String SLASH_MAIN = "/main";
     public static final String SLASH_LOGIN = "/login";
+    public static final String SLASH_RECOVERY = "/recovery";
     public static final String SLASH_LIST = "/list";
     public static final String SLASH_VIEW_ID = "/view/{id}";
     public static final String SLASH_AMEND_ID = "/amend/{id}";

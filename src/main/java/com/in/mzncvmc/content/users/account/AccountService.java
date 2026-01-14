@@ -1,11 +1,14 @@
 package com.in.mzncvmc.content.users.account;
 
+import com.in.mzncvmc.common.auth.login.LoginRequest;
 import com.in.mzncvmc.common.system.mail.MailService;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.content.userMfa.UserMfaService;
+import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.Optional;
 
 @Log4j2
@@ -29,6 +33,8 @@ public class AccountService {
     @Autowired
     private final UserMfaService userMfaService;
     @Autowired
+    private UserOtpService userOtpService;
+    @Autowired
     private final MailService mailService;
 /*
     @Autowired
@@ -40,8 +46,15 @@ public class AccountService {
     }
 */
 
+    /**
+     * 사용자 비밀번호 변경
+     *
+     * @param username 사용자 이름
+     *        ChangePasswordDto
+     * @return ApiResponse
+     */
     @Transactional
-    public ApiResponse changePassword(String username, PasswordChangeDto request) {
+    public ApiResponse changePassword(String username, ChangePasswordDto request) {
         Optional<Users> optional = usersRepository.findByUsername(username);
         if (optional.isEmpty()) {
             // 해당 사용자를 찾을 수 없습니다.
@@ -81,9 +94,40 @@ public class AccountService {
         }
     }
 
+    /**
+     * 사용자 이메일 복구 코드 전송 후 저장.
+     *
+     * @param recoveryPasswordDto
+     * @return ApiResponse
+     */
+    public ApiResponse<?> recoveryPassword(@Valid RecoveryPasswordDto recoveryPasswordDto) {
+        Optional<Users> optional = usersRepository.findByUsername(recoveryPasswordDto.getUsername());
+        if (optional.isEmpty()) {
+            // 해당 사용자를 찾을 수 없습니다.
+            return ApiResponse.fail("User not found.");
+        }
+        // 0. 사용자 조회
+        Users user = optional.get();
+        // 1. 복구 코드 설정 후 저장(메일 OTP 사용함)
+        String recoveryCode = userOtpService.generateUserOtp();
+        userOtpService.createUserOtp(user.getUserId(), recoveryCode);
+
+        // 이메일 발송
+        mailService.sendUserOtpMail(user.getEmail(), recoveryCode);
+
+        // "입력하신 이메일으로 비밀번호 복구 코드를 보냈습니다."
+        return ApiResponse.success(true,"A password recovery code has been sent to the email address you entered.");
+    }
+
+    /**
+     * 사용자 비밀번호 초기화.
+     *
+     * @param recoveryPasswordDto
+     * @return ApiResponse
+     */
     @Transactional
-    public ApiResponse resetPassword(String username) {
-        Optional<Users> optional = usersRepository.findByUsername(username);
+    public ApiResponse resetPassword(@Valid RecoveryPasswordDto recoveryPasswordDto) {
+        Optional<Users> optional = usersRepository.findByUsername(recoveryPasswordDto.getUsername());
         if (optional.isEmpty()) {
             // 해당 사용자를 찾을 수 없습니다.
             return ApiResponse.fail("User not found.");
@@ -93,7 +137,7 @@ public class AccountService {
 
         // 1. 비밀번호 초기화 후 저장
         String encoded = passwordEncoder.encode(userFirstPassword);
-        int updated = usersRepository.resetPassword(username, encoded);
+        int updated = usersRepository.resetPassword(recoveryPasswordDto.getUsername(), encoded);
 
         if (updated == 0) {
             // 비밀번호 초기화 실패

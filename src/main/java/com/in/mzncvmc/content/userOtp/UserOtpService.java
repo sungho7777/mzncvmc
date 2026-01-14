@@ -1,12 +1,15 @@
 package com.in.mzncvmc.content.userOtp;
 
 import com.in.mzncvmc.common.system.response.ApiResponse;
+import com.in.mzncvmc.content.users.Users;
+import com.in.mzncvmc.content.users.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -21,6 +24,8 @@ public class UserOtpService {
 
     @Autowired
     private final UserOtpRepository userOtpRepository;
+    @Autowired
+    private UsersService usersService;
 
     /**
      * Otp 번호를 생성한다.
@@ -55,18 +60,24 @@ public class UserOtpService {
     /**
      * Mail OTP 코드 검증
      *
-     * @param userId, mfaCode, otpCode
+     * @param userOtpVerifyDto
      * @return VerificationResponse
      */
     @Transactional
-    public ApiResponse verifyUserOtp(Long userId, String otpCode) {
-        Optional<UserOtp> optional = userOtpRepository.findTopByUserIdOrderByCreatedAtDescLimit1(userId);
-        if (optional.isEmpty()) {
-            return ApiResponse.fail(
-                    // "OTP가 설정되지 않았습니다. 먼저 OTP 코드를 설정해 주세요."
-                    "OTP has not been set up. Please set up an OTP code first.");
+    public ApiResponse verifyUserOtp(@RequestBody UserOtpVerifyDto userOtpVerifyDto) {
+        Optional<Users> optionalUsers = usersService.findByUsername(userOtpVerifyDto.getUsername());
+        if (optionalUsers.isEmpty()) {
+            // "사용자가 존재하지 않습니다."
+            return ApiResponse.fail("The user does not exist.");
         }
-        UserOtp userOtp = optional.get();
+        Users users = optionalUsers.get();
+
+        Optional<UserOtp> optionalUserOtp = userOtpRepository.findTopByUserIdOrderByCreatedAtDescLimit1(users.getUserId());
+        if (optionalUserOtp.isEmpty()) {
+            // "OTP가 설정되지 않았습니다. 먼저 OTP 코드를 설정해 주세요."
+            return ApiResponse.fail("OTP has not been set up. Please set up an OTP code first.");
+        }
+        UserOtp userOtp = optionalUserOtp.get();
 
         // 이미 사용됨
         if ("Y".equals(userOtp.getUsedYn())) {
@@ -90,7 +101,7 @@ public class UserOtpService {
         }
 
         // OTP 불일치
-        if (!userOtp.getOtpCode().equals(otpCode)) {
+        if (!userOtp.getOtpCode().equals(userOtpVerifyDto.getOtpCode())) {
             userOtp.setFailCount(userOtp.getFailCount() + 1);
             return ApiResponse.fail(
                     // "입력하신 OTP 코드가 일치하지 않습니다."

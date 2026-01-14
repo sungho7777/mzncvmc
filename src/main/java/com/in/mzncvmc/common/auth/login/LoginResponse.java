@@ -1,4 +1,4 @@
-package com.in.mzncvmc.common.login;
+package com.in.mzncvmc.common.auth.login;
 
 import lombok.Getter;
 import lombok.Setter;

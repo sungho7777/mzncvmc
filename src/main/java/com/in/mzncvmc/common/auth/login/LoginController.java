@@ -1,4 +1,4 @@
-package com.in.mzncvmc.common.login;
+package com.in.mzncvmc.common.auth.login;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;

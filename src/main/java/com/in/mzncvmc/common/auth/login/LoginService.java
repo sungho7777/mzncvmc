@@ -1,6 +1,5 @@
-package com.in.mzncvmc.common.system.service;
+package com.in.mzncvmc.common.auth.login;
 
-import com.in.mzncvmc.common.login.LoginResponse;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.mail.MailService;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
@@ -19,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class LoginService {
 
     @Autowired
     private UserHistoryService userHistoryService;
@@ -176,7 +175,6 @@ public class AuthService {
                 )
         );
     }
-
     /**
      * 사용자 클라이언트 IP 가져온다.
      *

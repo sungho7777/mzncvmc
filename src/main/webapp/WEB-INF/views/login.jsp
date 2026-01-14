@@ -18,7 +18,7 @@
     <script src="/common/sbadminpro/js/jquery-3.7.1.min.js"></script>
 
 </head>
-<body class="bg-primary">
+<body class="bg-cyan">
 <div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
         <main>
@@ -58,7 +58,7 @@
                                                class="form-control form-control-solid" type="password" placeholder="" aria-label="Password" aria-describedby="password" />
                                     </div>
                                     <!-- Form Group (forgot password link)-->
-                                    <div class="mb-3"><a class="small" href="auth-password-social.html">Forgot your password?</a></div>
+                                    <div class="mb-3"><a class="small" href="/recovery">Forgot your password?</a></div>
                                     <!-- Form Group (login box)-->
                                     <div class="d-flex align-items-center justify-content-between mb-0">
                                         <div class="form-check">
@@ -70,12 +70,14 @@
                                 </form>
                             </div>
                             <hr class="my-0" />
+                            <%--
                             <div class="card-body px-5 py-4">
                                 <div class="small text-center">
                                     New user?
                                     <a href="#" onclick="resetPassword();">Reset Password an account!</a>
                                 </div>
                             </div>
+                            --%>
                         </div>
                     </div>
                 </div>
@@ -86,7 +88,7 @@
         <footer class="footer-admin mt-auto footer-dark">
             <div class="container-xl px-4">
                 <div class="row">
-                    <div class="col-md-6 small">Copyright &copy; Your Website 2021</div>
+                    <div class="col-md-6 small">Copyright &copy; Your Website 2026</div>
                     <div class="col-md-6 text-md-end small">
                         <a href="#!">Privacy Policy</a>
                         &middot;
@@ -97,21 +99,12 @@
         </footer>
     </div>
 
-
-    <!-- Button trigger modal -->
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userOtpModal">User Otp Modal</button>
-    <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#userMfaModal">User Mfa Modal</button>
-
     <!-- Modal -->
     <%@ include file="include/modal/generateUserOtpModal.jsp" %>
     <%@ include file="include/modal/generateUserMfaModal.jsp" %>
 
     <%@ include file="include/modal/loginUserOtpModal.jsp" %>
     <%@ include file="include/modal/loginUserMfaModal.jsp" %>
-
-
-
-
 </div>
 <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 <script src="/common/sbadminpro/js/scripts.js"></script>
@@ -262,25 +255,34 @@
         });
 
         const data = await response.json();
+        if(response.ok){
 
+            if(data.statusLogin == 'success') {
+                // 무조건 로그인.
+                successLogin(data);
+            }else if(data.statusLogin == 'fall'){
+                // 실패
+                alert(data.message);
+            }else{
 
-        if(data.statusLogin == 'success'){
-            // 무조건 로그인.
-            successLogin(data);
-        }else{
-
-            if(data.statusLogin == 'generateUserOtp'){
-                // false → MFA 비활성화 또는 설정 정보 없음 -> 설정 시작(이메일 OTP, 구글 TOTP)
-                // 모달 띄우기
-                generateUserOtpModal();
-            }else if(data.statusLogin == 'loginUserOtp'){
-                // 메일을 통한 OTP 로그인 모달 띄우기.
-                loginUserOtpModal();
-            }else if(data.statusLogin == 'loginUserMfa'){
-                // 구글 TOTP을 통한 OTP 로그인 모달 띄우기.
-                loginUserMfaModal();
+                if(data.statusLogin == 'generateUserOtp'){
+                    // false → MFA 비활성화 또는 설정 정보 없음 -> 설정 시작(이메일 OTP, 구글 TOTP)
+                    // 모달 띄우기
+                    generateUserOtpModal();
+                }else if(data.statusLogin == 'loginUserOtp'){
+                    // 메일을 통한 OTP 로그인 모달 띄우기.
+                    loginUserOtpModal();
+                }else if(data.statusLogin == 'loginUserMfa'){
+                    // 구글 TOTP을 통한 OTP 로그인 모달 띄우기.
+                    loginUserMfaModal();
+                }
             }
+        }else{
+            alert(data.error);
         }
+
+        $("#password").val("");
+        $("#password").focus();
     });
 
     // MFA 설정을 위한 메일 OTP 입력 모달 띄우기
@@ -354,31 +356,6 @@
         setTimeout(() => {
             window.location.href = '/main';
         }, 150);
-    };
-    /**
-     * 패스워드 초기화
-     *
-     * @returns {boolean}
-     */
-    const resetPassword = async() => {
-
-        const username = document.getElementById("username").value;
-        const password = document.getElementById("password").value;
-
-        const response = await fetch('/api/account/resetPassword', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        });
-
-        const data = await response.json();
-
-        alert(data.message);
     };
 </script>
 </body>

@@ -70,13 +70,14 @@
 
         const data = await response.json();
 
-        alert(data.message);
         if(data.status == 'success'){
             if(_pwNotifyDuration == '999'){
-                alert('신규 사용자입니다. 다시 로그인하세요.');
+                alert(data.message + "\nPlease log in again.");
                 main.goLogout();
+                return;
             }
         }
 
+        alert(data.message);
     };
 </script>

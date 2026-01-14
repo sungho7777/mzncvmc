@@ -1,4 +1,4 @@
-package com.in.mzncvmc.common.login;
+package com.in.mzncvmc.common.auth.login;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
