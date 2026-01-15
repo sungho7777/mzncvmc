@@ -196,7 +196,7 @@
         if (!data || data.length === 0) {
             // 데이터 없으면 안내 메시지 표시
             const tr = document.createElement("tr");
-            tr.innerHTML = `<td colspan="8" class="text-center">조회된 데이터가 없습니다.</td>`;
+            tr.innerHTML = `<td colspan="8" class="text-center">The data you searched for does not exist.</td>`;
             tbody.appendChild(tr);
             return;
         }

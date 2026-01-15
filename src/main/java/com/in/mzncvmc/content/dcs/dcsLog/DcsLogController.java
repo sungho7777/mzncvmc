@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.in.mzncvmc.common.system.constants.CommonConstants.*;
 import static com.in.mzncvmc.common.system.constants.CommonConstants.CONTENT_PAGE;
@@ -19,6 +20,7 @@ public class DcsLogController {
     private final String DCS_LOG = "dcsLog";
     private final String MENU_LIST_JSP = "dcs/dcsLog/list.jsp";
     private final String MENU_VIEW_JSP = "dcs/dcsLog/view.jsp";
+    private final String MENU_AMEND_JSP = "dcs/dcsLog/amend.jsp";
 
     /**
      * L.리스트 화면이동 (list)
@@ -44,6 +46,21 @@ public class DcsLogController {
 
         model.addAttribute(ID, id);
         setCommonAttributes(model, MENU_VIEW_JSP);
+        return MAIN;
+    }
+
+    /**
+     * A.수정화면 화면이동 (amend)
+     *
+     * @param !model
+     * @return MAIN
+     */
+    @GetMapping(SLASH_AMEND_ID)
+    public String amendPage(@PathVariable Long id, @RequestParam String mapping, Model model) {
+
+        model.addAttribute(ID, id);
+        model.addAttribute(MAPPING, mapping);
+        setCommonAttributes(model, MENU_AMEND_JSP);
         return MAIN;
     }
 

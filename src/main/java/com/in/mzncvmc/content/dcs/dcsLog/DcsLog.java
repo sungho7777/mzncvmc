@@ -15,24 +15,26 @@ public class DcsLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "log_id", unique = true, nullable = false)
     private Long logId;
-    @Column(name = "server_no", nullable = false)
+    @Column(name = "server_no")
     private String serverNo;
-    @Column(name = "log_date", nullable = false)
+    @Column(name = "log_date")
     private String logDate;
-    @Column(name = "random_no", nullable = false)
+    @Column(name = "log_time")
+    private String logTime;
+    @Column(name = "random_no")
     private String randomNo;
-    @Column(name = "User_id", nullable = false)
+    @Column(name = "User_id")
     private String userId;
-    @Column(name = "hsb", nullable = false)
+    @Column(name = "hsb")
     private String hsb;
-    @Column(name = "screen_id", nullable = false)
+    @Column(name = "screen_id")
     private String screenId;
-    @Column(name = "url", nullable = false)
+    @Column(name = "url")
     private String url;
-    @Column(name = "action", nullable = false)
+    @Column(name = "action")
     private String action;
-    @Column(name = "ip", nullable = false)
+    @Column(name = "ip")
     private String ip;
-    @Column(name = "type", nullable = false)
+    @Column(name = "type")
     private String type;
 }

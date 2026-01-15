@@ -101,107 +101,6 @@
         </div>
     </div>
 </div>
-<%--
-
-<style>
-
-    #pagination {
-        margin-top: 15px;
-        text-align: center;
-    }
-
-    #pagination .page-btn {
-        margin: 0 3px;
-        padding: 5px 10px;
-        border: 1px solid #ccc;
-        background: #f9f9f9;
-        cursor: pointer;
-    }
-
-    #pagination .page-btn.active {
-        font-weight: bold;
-        background: #007bff;
-        color: white;
-    }
-
-
-</style>
-<main>
-    <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-    <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
-        For more information about DataTables, please visit the <a target="_blank"
-                                                                   href="https://datatables.net">official DataTables documentation</a>.</p>
-
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="dataTables_wrapper dt-bootstrap4">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <label class="d-flex align-items-center ">
-                                <span class="mr-2">Search:</span>
-                                <input type="search" id="searchBox" class="form-control form-control-sm" placeholder="" aria-controls="dataTable" style="width: 30%;">
-
-                                <span class="mr-2">Status:</span>
-                                <select id="status" class="form-control form-control-sm" style="width: 30%;">
-                                    <option value="">-- 전체 --</option> <!-- 선택 안함일 경우 전체 조회 -->
-                                    <option value="ACTIVE">ACTIVE</option>
-                                    <option value="INACTIVE">INACTIVE</option>
-                                </select>
-                                <a href="#" onclick="getList();" class="btn btn-primary btn-icon-split" style="margin-left: 5px;">
-                                    <span class="icon text-white-50">
-                                        <i class="fas fa-search fa-sm"></i>
-                                    </span>
-                                </a>
-
-                            </label>
-                        </div>
-                        <div class="col-sm-12 col-md-6">
-                            <a id="goAmendBtn" href="#" class="btn btn-secondary btn-icon-split" style="margin-left: 5px;">
-                                    <span class="icon text-white-50">
-                                        New
-                                    </span>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>순서</th>
-                                    <th>회사명</th>
-                                    <th>사업자 등록번호</th>
-                                    <th>대표자명</th>
-                                    <th>업종</th>
-                                    <th>전화번호</th>
-                                    <th>이메일</th>
-                                    <th>홈페이지</th>
-                                    <th>상태</th>
-                                    <th>비고</th>
-                                </tr>
-                                </thead>
-                                <tbody id="grid" />
-                                <tr>
-                                    <td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>
-                                </tr>
-                            </table>
-                            <div id="pagination" class="pagination"></div>
-                            <div id="summary" ></div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>
---%>
 
 <script type="text/javascript">
     const MENU = "company";
@@ -300,7 +199,7 @@
         if (!data || data.length === 0) {
             // 데이터 없으면 안내 메시지 표시
             const tr = document.createElement("tr");
-            tr.innerHTML = `<td colspan="10" class="text-center">조회된 데이터가 없습니다.</td>`;
+            tr.innerHTML = `<td colspan="10" class="text-center">The data you searched for does not exist.</td>`;
             tbody.appendChild(tr);
             return;
         }

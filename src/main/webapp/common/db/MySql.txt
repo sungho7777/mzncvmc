@@ -220,6 +220,28 @@ CREATE TABLE user_mfa (
 
 SELECT * FROM user_mfa;
 
+# DCS Log 분석용 테이블
+DROP TABLE IF EXISTS dcs_log;
+CREATE TABLE dcs_log (
+    log_id    BIGINT NOT NULL AUTO_INCREMENT,
+    server_no VARCHAR(255) NULL COMMENT '',
+    log_date  VARCHAR(255) NULL COMMENT '',
+    log_time  VARCHAR(255) NULL COMMENT '',
+    random_no VARCHAR(255) NULL COMMENT '',
+    user_id   VARCHAR(255) NULL COMMENT '',
+    hsb       VARCHAR(255) NULL COMMENT '',
+    screen_id VARCHAR(255) NULL COMMENT '',
+    url       VARCHAR(255) NULL COMMENT '',
+    action    VARCHAR(255) NULL COMMENT '',
+    ip        VARCHAR(255) NULL COMMENT '',
+    type      VARCHAR(255) NULL COMMENT '',
+    PRIMARY KEY (log_id)
+) ENGINE=InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_unicode_ci
+  COMMENT='DCS Log 분석용 테이블';
+
+SELECT * FROM dcs_log;
 
 
 

@@ -11,6 +11,7 @@ public class DcsLogDto {
     private Long logId;
     private String serverNo;
     private String logDate;
+    private String logTime;
     private String randomNo;
     private String userId;
     private String hsb;
