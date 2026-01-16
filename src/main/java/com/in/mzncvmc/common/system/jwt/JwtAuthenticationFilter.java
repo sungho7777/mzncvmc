@@ -1,7 +1,9 @@
 package com.in.mzncvmc.common.system.jwt;
 
+import com.in.mzncvmc.common.system.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.log4j.Log4j2;
@@ -25,6 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -39,12 +43,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // JWT Token은 "Bearer token" 형태로 전송됨
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
+
+            System.out.println("headerToken : " + jwtToken );
+
             try {
-                username = jwtUtil.extractUsername(jwtToken);
+                username = jwtToken == null ? null : jwtUtil.extractUsername(jwtToken);
             } catch (Exception e) {
-                log.warn("JWT Token 파싱 실패", e);
+                log.warn("JWT Header Token 파싱 실패", e);
+            }
+        }else{
+            jwtToken = cookieUtil.extractAccessTokenCookie("accessToken", request);
+            System.out.println("cookieToken : " + jwtToken );
+
+            try {
+                username = jwtToken == null ? null : jwtUtil.extractUsername(jwtToken);
+            } catch (Exception e) {
+                log.warn("JWT Cookie Token 파싱 실패", e);
             }
         }
+
+
 
         // 토큰을 검증하고 SecurityContext에 저장
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -67,4 +85,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
 }

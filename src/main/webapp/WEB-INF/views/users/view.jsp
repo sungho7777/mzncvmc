@@ -217,8 +217,8 @@
         await fetch(API_URL + "/" + ID, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(res => res.json())
@@ -260,8 +260,8 @@
         const response = await fetch('/api/account/changePassword', {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             },
             body: JSON.stringify({
                 currentPassword: document.getElementById('currentPassword').value,
@@ -279,41 +279,6 @@
 
             
         }
-
-/*
-
-        await fetch("/api/account/changePassword", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
-            },
-            body: JSON.stringify({
-                currentPassword: document.getElementById('currentPassword').value,
-                newPassword: document.getElementById('newPassword').value,
-                confirmPassword: document.getElementById('confirmPassword').value
-            })
-        })
-            .then(res => {
-                if (!res.ok) throw new Error('비밀번호 변경 실패');
-
-                localStorage.setItem('pwNotifyDuration', '10');
-                if(_pwNotifyDuration == '999'){
-                    alert('비밀번호가 변경되었습니다. 다시 로그인하세요.');
-                    main.goLogout();
-                }
-                alert('비밀번호가 변경되었습니다.');
-            })
-            .then(result => {
-
-                //renderTable(result.data);
-            })
-            .finally(() => {
-                setTimeout(() => $('#loading').hide(), 250);
-            })
-            .catch(err => console.error("에러:", err));
-*/
-
     };
 
 

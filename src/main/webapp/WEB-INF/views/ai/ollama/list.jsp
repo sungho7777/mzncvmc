@@ -162,8 +162,8 @@
             url: API_URL + "/status",
             method: 'GET',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             },
             success: function(data) {
                 if (data.status === 'online') {
@@ -213,8 +213,8 @@
             url: API_URL + "/ask",
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             },
             contentType: 'application/json',
             data: JSON.stringify({
@@ -222,7 +222,9 @@
             }),
             success: function(data) {
                 removeLoadingMessage();
-console.log(data);
+
+                console.log(data);
+
                 if (data.success) {
                     addMessage(data.answer, 'ai');
                 } else {
@@ -303,8 +305,8 @@ console.log(data);
         await fetch(API_URL + "/ask", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             },
             body: JSON.stringify({ prompt: promptValue })
         })

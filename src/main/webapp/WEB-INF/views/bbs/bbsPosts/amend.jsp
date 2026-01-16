@@ -174,8 +174,8 @@
         await fetch(API_URL + "/" + ID, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(res => res.json())
@@ -252,8 +252,8 @@
             const res = await fetch(API_URL + `/` + data.postId, {
                 method: data.mapping,
                 headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                    "Content-Type": "application/json"
+                    //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
                 },
                 body: JSON.stringify(data)
             });

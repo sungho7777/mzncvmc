@@ -62,8 +62,8 @@
         await fetch(API_URL + "/" + ID, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(res => res.json())

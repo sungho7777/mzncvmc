@@ -143,8 +143,8 @@
         await fetch(API_URL + "?" + query.toString(), {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(res => res.json())
@@ -168,8 +168,8 @@
         await fetch(API_URL + `/` + id, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(response => {

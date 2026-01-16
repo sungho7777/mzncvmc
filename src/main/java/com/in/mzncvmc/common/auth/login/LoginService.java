@@ -2,11 +2,16 @@ package com.in.mzncvmc.common.auth.login;
 
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.mail.MailService;
+import com.in.mzncvmc.common.system.response.ApiResponse;
+import com.in.mzncvmc.common.system.util.ClientUtil;
+import com.in.mzncvmc.common.system.util.CookieUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +24,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class LoginService {
-
     @Autowired
     private UserHistoryService userHistoryService;
     @Autowired
@@ -32,7 +36,10 @@ public class LoginService {
     private UsersService usersService;
     @Autowired
     private JwtUtil jwtUtil;
-
+    @Autowired
+    private CookieUtil cookieUtil;
+    @Autowired
+    private ClientUtil clientUtil;
 
     public ResponseEntity<?> returnGenerateUserOtp(
             Users users,
@@ -123,6 +130,7 @@ public class LoginService {
     public ResponseEntity<?> returnSuccessLogin(
             Users users,
             HttpServletRequest httpRequest,
+            HttpServletResponse response,
             String message) {
 
         UserDetails userDetails =
@@ -134,8 +142,10 @@ public class LoginService {
         usersService.updateUsersConnected(users.getUsername(), "Y");
         userHistoryService.saveLogin(
                 users.getUsername(),
-                getClientIp(httpRequest)
+                clientUtil.getClientIp(httpRequest)
         );
+
+        cookieUtil.insertAccessTokenCookie("accessToken", accessToken, response);
 
         return ResponseEntity.ok(
                 new LoginResponse(
@@ -150,6 +160,22 @@ public class LoginService {
                 )
         );
     }
+
+    /**
+     * 사용자 로그아웃 성공 및 토큰 처리
+     *
+     * @param
+     * @return ApiResponse
+     */
+    public ApiResponse<?> returnSuccessLogout(HttpServletResponse response) {
+
+        cookieUtil.deleteAccessTokenCookie("accessToken", response);
+        cookieUtil.deleteAccessTokenCookie("refreshToken", response);
+
+        return ApiResponse.success(true,"Logged out successfully");
+    }
+
+
     /**
      * 사용자 로그인 실패처리
      *
@@ -175,17 +201,5 @@ public class LoginService {
                 )
         );
     }
-    /**
-     * 사용자 클라이언트 IP 가져온다.
-     *
-     * @param request
-     * @return 로그인 Remote Addr
-     */
-    public String getClientIp(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
-            return xForwardedFor.split(",")[0].trim();
-        }
-        return request.getRemoteAddr();
-    }
+
 }

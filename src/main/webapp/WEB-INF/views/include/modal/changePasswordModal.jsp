@@ -57,8 +57,8 @@
         const response = await fetch('/api/account/changePassword', {
             method: 'POST',
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             },
             body: JSON.stringify({
                 currentPassword: document.getElementById('currentPassword').value,

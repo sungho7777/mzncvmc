@@ -53,8 +53,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                         .requestMatchers("/WEB-INF/views/**").permitAll()
-                        .requestMatchers("/main").permitAll()
-                        .requestMatchers("/m/**").permitAll()
 
                         .requestMatchers("/login", "/recovery").permitAll() // 로그인, 비밀번호찾기 페이지
                         .requestMatchers(HttpMethod.GET, "/error").permitAll()

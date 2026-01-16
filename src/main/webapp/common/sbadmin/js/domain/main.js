@@ -38,14 +38,11 @@ window.main = {
     },
     // 로그아웃
     goLogout(){
-        const accessToken = localStorage.getItem("accessToken");
-        console.log("accessToken", accessToken);
-
         fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
                 'Content-Type': 'application/json'
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(response => {

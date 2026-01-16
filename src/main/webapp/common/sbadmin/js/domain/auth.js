@@ -11,8 +11,8 @@ window.auth = {
       const response = await fetch('/api/user/authorities', {
         method: 'GET',
         headers: {
-          'Authorization': 'Bearer ' + accessToken,
           'Content-Type': 'application/json'
+          , 'Authorization': 'Bearer ' + accessToken
         }
       });
       if (response.ok) {

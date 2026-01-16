@@ -126,8 +126,8 @@
         await fetch(API_URL + "?" + query.toString() + "&categoryId=" + CATEGORY_ID, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(res => res.json())
@@ -152,8 +152,8 @@
         await fetch(API_URL + `/` + id + "?categoryId=" + CATEGORY_ID, {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json",
-                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                "Content-Type": "application/json"
+                //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
         })
             .then(response => {

@@ -28,8 +28,8 @@
         <div class="col-lg-12">
             <form id="amendForm">
                 <div class="card mb-4">
+                    <div class="card-header">Server No</div>
                     <div class="card-body">
-                        <div class="card-header">Server No</div>
                         <input class="form-control" id="serverNo" name="serverNo" type="text" placeholder="Enter server No" value="1" />
                     </div>
                 </div>
@@ -89,8 +89,8 @@
             const res = await fetch(API_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                    "Content-Type": "application/json"
+                    //, 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
                 },
                 body: JSON.stringify(data)
             });

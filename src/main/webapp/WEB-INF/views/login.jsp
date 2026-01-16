@@ -127,8 +127,8 @@
                 const response = await fetch('/api/user/authorities', {
                     method: 'GET',
                     headers: {
-                        'Authorization': 'Bearer ' + token,
                         'Content-Type': 'application/json'
+                        , 'Authorization': 'Bearer ' + token
                     }
                 });
 
@@ -356,6 +356,7 @@
 
         // 잠시 후 메인화면으로 이동
         setTimeout(() => {
+            //alert('login 성공');
             window.location.href = '/main';
         }, 150);
     };

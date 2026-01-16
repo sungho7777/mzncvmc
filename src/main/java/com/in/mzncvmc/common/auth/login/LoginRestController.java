@@ -3,6 +3,7 @@ package com.in.mzncvmc.common.auth.login;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.common.system.service.MfaService;
+import com.in.mzncvmc.common.system.util.ClientUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.userMfa.UserMfaService;
 import com.in.mzncvmc.content.userMfa.UserMfaVerifyDto;
@@ -10,7 +11,9 @@ import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.userOtp.UserOtpVerifyDto;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,8 @@ public class LoginRestController {
     private UsersService usersService;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private ClientUtil clientUtil;
 
     /**
      * 사용자 로그인 시도
@@ -66,7 +71,10 @@ public class LoginRestController {
      * @return 로그인 LoginResponse
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request,
+                                   HttpServletRequest httpRequest,
+                                   HttpServletResponse response
+    ) {
         Optional<Users> optional = usersService.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -96,7 +104,7 @@ public class LoginRestController {
             // 신규 사용자 일단 로그인 시켜서 비밀번호변경 하도록 한다.
             // 사용자 로그인 성공 및 토큰 처리
             // statusLogin == 'success'
-            return loginService.returnSuccessLogin(users, httpRequest, "Login successful. You are a new member. Please change your password.");
+            return loginService.returnSuccessLogin(users, httpRequest, response, "Login successful. You are a new member. Please change your password.");
         }else{
             if(users.getUserId() == 1L){
                 // TODO 테스트를 위해 [admin] 계정은 무조건 통과
@@ -123,7 +131,7 @@ public class LoginRestController {
             }
             // 사용자 로그인 성공 및 토큰 처리
             // statusLogin == 'success'
-            return loginService.returnSuccessLogin(users, httpRequest, "Login successful");
+            return loginService.returnSuccessLogin(users, httpRequest, response, "Login successful");
         }
     }
 
@@ -204,7 +212,10 @@ public class LoginRestController {
      * @return 로그인 LoginResponse
      */
     @PostMapping("/verifyUserOtp")
-    public ResponseEntity<?> verifyUserOtp(@RequestBody UserOtpVerifyDto userOtpVerifyDto, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> verifyUserOtp(@RequestBody UserOtpVerifyDto userOtpVerifyDto,
+                                           HttpServletRequest httpRequest,
+                                           HttpServletResponse response
+                                           ) {
 
         // OTP 검증
         ApiResponse apiResponse = userOtpService.verifyUserOtp(userOtpVerifyDto);
@@ -220,7 +231,7 @@ public class LoginRestController {
         Users users = optional.get();
 
         return (apiResponse.getStatus().equals("success")) ?
-                loginService.returnSuccessLogin(users, httpRequest, apiResponse.getMessage()):
+                loginService.returnSuccessLogin(users, httpRequest, response, apiResponse.getMessage()):
                 loginService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
     }
 
@@ -232,7 +243,10 @@ public class LoginRestController {
      * @return 로그인 LoginResponse
      */
     @PostMapping("/verifyUserMfa")
-    public ResponseEntity<?> verifyUserMfa(@RequestBody UserMfaVerifyDto request, HttpServletRequest httpRequest) throws Exception {
+    public ResponseEntity<?> verifyUserMfa(@RequestBody UserMfaVerifyDto request,
+                                           HttpServletRequest httpRequest,
+                                           HttpServletResponse response
+    ) throws Exception {
         Optional<Users> optional = usersService.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -255,7 +269,7 @@ public class LoginRestController {
         }
 
         return (apiResponse.getStatus().equals("success")) ?
-                loginService.returnSuccessLogin(users, httpRequest, apiResponse.getMessage()):
+                loginService.returnSuccessLogin(users, httpRequest, response, apiResponse.getMessage()):
                 loginService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
     }
 
@@ -266,14 +280,15 @@ public class LoginRestController {
      * @return 로그아웃 response message
      */
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ApiResponse<?> logout(HttpServletRequest request,
+                                 HttpServletResponse response) {
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
             String actualToken = token.substring(7);
             try {
                 String username = jwtUtil.extractUsername(actualToken);
-                userHistoryService.saveLogout(username, loginService.getClientIp(request));
+                userHistoryService.saveLogout(username, clientUtil.getClientIp(request));
 
                 // 로그인 접속상태 Y 으로 업데이트
                 usersService.updateUsersConnected(username, "N");
@@ -281,11 +296,7 @@ public class LoginRestController {
                 // 토큰이 유효하지 않아도 로그아웃은 성공으로 처리
             }
         }
-        // JWT는 stateless이므로 서버에서 토큰을 무효화할 수 없음
-        // 클라이언트에서 토큰을 삭제하도록 응답
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Logged out successfully");
 
-        return ResponseEntity.ok(response);
+        return loginService.returnSuccessLogout(response);
     }
 }
