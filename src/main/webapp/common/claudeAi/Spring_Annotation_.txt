@@ -1,0 +1,130 @@
+1. 컴포넌트 등록 계열 (Bean 등록)
+    @Component
+        스프링이 자동으로 Bean으로 등록.
+        직접 역할 구분이 필요 없을 때 사용.
+
+    @Service
+    @Component과 동일하지만 비즈니스 로직 계층 의미 부여.
+
+    @Repository
+        DAO 계층 의미.
+        JPA 예외를 Spring 예외로 변환하는 기능 포함.
+
+    @Controller
+        MVC 컨트롤러 (View 반환).
+
+    @RestController
+    @Controller + @ResponseBody.
+        JSON/XML 응답 전용 API 컨트롤러.
+
+2. 의존성 주입 (DI)
+    @Autowired
+        타입 기준 Bean 자동 주입.
+
+    @Qualifier("beanName")
+    @Autowired 시 Bean 이름 지정.
+
+    @RequiredArgsConstructor (Lombok)
+        final 필드 생성자 자동 생성 → 권장 DI 방식.
+
+3. 요청 매핑 (Web)
+    @RequestMapping
+        URL 공통 매핑.
+
+    @GetMapping / @PostMapping / @PutMapping / @DeleteMapping
+        HTTP Method 전용 매핑.
+
+    @RequestParam
+        쿼리 파라미터 매핑.
+
+    @PathVariable
+        URL 경로 변수 매핑.
+
+    @RequestBody
+        JSON → 객체 변환.
+
+4. 트랜잭션
+    @Transactional
+        트랜잭션 시작/커밋/롤백 자동 처리.
+        RuntimeException 발생 시 롤백.
+
+5. JPA 엔티티
+    @Entity
+        JPA 테이블 매핑.
+
+    @Table(name="...")
+        테이블명 지정.
+
+    @Id
+        PK 지정.
+
+    @GeneratedValue
+        PK 자동 생성 전략.
+
+    @Column
+        컬럼 상세 속성 지정.
+
+6. 설정 및 환경
+    @Configuration
+        설정 클래스 선언.
+
+    @Bean
+        수동 Bean 등록.
+
+    @Value("${key}")
+        properties 값 주입.
+
+    @ConfigurationProperties
+        여러 설정값 객체 바인딩.
+
+7. AOP / 공통 처리
+    @Aspect
+        AOP 클래스 선언.
+
+    @Before / @After / @Around
+        공통 로직 삽입 지점 정의.
+
+8. 예외 처리
+    @ControllerAdvice
+        전역 예외 처리기.
+
+    @ExceptionHandler
+        특정 예외 처리 메서드 지정.
+
+9. 보안 (Spring Security)
+    @EnableWebSecurity
+        시큐리티 활성화.
+
+    @PreAuthorize("hasRole('ADMIN')")
+        메서드 단위 권한 제어.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--

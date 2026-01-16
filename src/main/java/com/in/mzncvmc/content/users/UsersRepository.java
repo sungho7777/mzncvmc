@@ -1,15 +1,12 @@
 package com.in.mzncvmc.content.users;
 
-import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.domain.Page;        // Page<T>
-import org.springframework.data.domain.Pageable;   // Pageable
-import org.springframework.data.domain.PageRequest; // PageRequest.of()
-import org.springframework.data.domain.Sort;        // 정렬 옵션
 
 import java.util.List;
 import java.util.Optional;
@@ -19,8 +16,10 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     Optional<Users> findByUsername(String username);
     Optional<Users> findByEmail(String email);
     boolean existsByUsername(String username);
+    //
     boolean existsByEmail(String email);
-
+    //
+    //Optional<Users> findByProviderAndProviderId(Users.Provider provider, String providerId);
     /**
      * 데이터 목록 조회
      *

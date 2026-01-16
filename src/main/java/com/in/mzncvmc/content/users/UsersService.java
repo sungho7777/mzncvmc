@@ -1,9 +1,11 @@
 package com.in.mzncvmc.content.users;
 
+import com.in.mzncvmc.common.auth.oAuth.OAuthUserInfo;
 import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
 import com.in.mzncvmc.content.userMfa.UserMfa;
 import com.in.mzncvmc.content.userMfa.UserMfaRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,38 +37,35 @@ public class UsersService{
     private final UserMfaRepository userMfaRepository;
     @Autowired
     private final CompanyRepository companyRepository;
-/*
 
-    public Users createUser(String username, String email, String password) {
-        if (usersRepository.existsByUsername(username)) {
-            throw new RuntimeException("Username already exists");
-        }
 
-        if (usersRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email already exists");
-        }
+    @Transactional
+    public Users processOAuthUser(OAuthUserInfo oAuthUserInfo) {
+        Users.Provider provider = Users.Provider.valueOf(oAuthUserInfo.getProvider());
 
-        Users user = new Users();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-
-        return usersRepository.save(user);
+        // 기존 사용자 확인
+        return null;
+        /*
+        return usersRepository.findByProviderAndProviderId(provider, oAuthUserInfo.getProviderId())
+                .map(existingUser -> {
+                    // 기존 사용자 정보 업데이트
+                    //existingUser.setName(oAuthUserInfo.getName());
+                    //existingUser.setProfileImage(oAuthUserInfo.getProfileImage());
+                    return usersRepository.save(existingUser);
+                })
+                .orElseGet(() -> {
+                    // 신규 사용자 생성
+                    Users newUser = Users.builder()
+                            .email(oAuthUserInfo.getEmail())
+                            .fullName(oAuthUserInfo.getName())
+                            //.profileImage(oAuthUserInfo.getProfileImage())
+                            //.provider(provider)
+                            //.providerId(oAuthUserInfo.getProviderId())
+                            .role(Users.Role.USER)
+                            .build();
+                    return usersRepository.save(newUser);
+                });*/
     }
-*/
-
-/*
-
-    public boolean existsByUsername(String username) {
-
-        return usersRepository.existsByUsername(username);
-    }
-
-    public boolean existsByEmail(String email) {
-
-        return usersRepository.existsByEmail(email);
-    }
-*/
 
 
 
@@ -98,6 +97,7 @@ public class UsersService{
         user.setCompanyId(company);
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
+        user.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         user.setPwNotifyDuration("999");
@@ -161,6 +161,13 @@ public class UsersService{
 
         return entityToDto(user); // 엔티티 → DTO 변환 메서드
     }
+    @Transactional(readOnly = true)
+    public UsersDto findByEmail(String email) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Data not found"));
+
+        return entityToDto(user); // 엔티티 → DTO 변환 메서드
+    }
 
     /**
      * U.데이터 수정
@@ -180,6 +187,7 @@ public class UsersService{
         existing.setCompanyId(company);
         existing.setFullName(dto.getFullName());
         existing.setEmail(dto.getEmail());
+        existing.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
         existing.setPhone(dto.getPhone());
         existing.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         existing.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
@@ -215,6 +223,7 @@ public class UsersService{
             .username(entity.getUsername())
             .fullName(entity.getFullName())
             .email(entity.getEmail())
+            .providerId(entity.getProviderId().name()) // OAUTH2
             .phone(entity.getPhone())
             .role(entity.getRole().name())
             .status(entity.getStatus().name())

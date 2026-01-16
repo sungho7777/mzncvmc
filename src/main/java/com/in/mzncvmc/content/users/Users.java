@@ -43,9 +43,14 @@ public class Users implements UserDetails {
     @Comment("사용자 이름")
     private String fullName;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false, unique = true)
     @Comment("이메일")
     private String email;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Comment("OAUTH2")
+    private Provider providerId = Provider.LOCAL;
 
     @Column(length = 20)
     @Comment("전화번호")
@@ -92,6 +97,10 @@ public class Users implements UserDetails {
         ADMIN,
         MANAGER,
         USER
+    }
+
+    public enum Provider {
+        LOCAL, GOOGLE, KAKAO, NAVER
     }
 
     public enum Status {

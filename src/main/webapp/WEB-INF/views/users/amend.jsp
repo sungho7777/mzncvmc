@@ -82,21 +82,27 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="fullName">Full Name</label>
-                                        <input class="form-control" id="fullName" name="fullName" type="text" placeholder="Enter your organization name" value="Hong Gill Dong" />
+                                        <input class="form-control" id="fullName" name="fullName" type="text" placeholder="Enter your organization name" value="Park Sung Ho" />
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="small mb-1" for="email">Email address</label>
-                                    <input class="form-control" id="email" name="email" type="email" placeholder="Enter your email address" value="username@example.com" />
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="email">Email address</label>
+                                        <input class="form-control" id="email" name="email" type="email" placeholder="Enter your email address" value="mzncvmc@gmail.com" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="role">OAuth2.0</label>
+                                        <input class="form-control" id="providerId" name="providerId" type="text" placeholder="Enter your providerId" value="LOCAL" />
+                                    </div>
                                 </div>
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="phone">Phone number</label>
-                                        <input class="form-control" id="phone" name="phone" type="tel" placeholder="Enter your phone number" value="010-1234-5678" />
+                                        <input class="form-control" id="phone" name="phone" type="tel" placeholder="Enter your phone number" value="010-8888-1111" />
                                     </div>
                                     <div class="col-md-6">
                                         <label class="small mb-1" for="role">Role</label>
-                                        <input class="form-control" id="role" name="role" type="text" name="birthday" placeholder="Enter your birthday" value="USER" />
+                                        <input class="form-control" id="role" name="role" type="text"placeholder="Enter your birthday" value="USER" />
                                     </div>
                                 </div>
 
@@ -222,6 +228,7 @@
         $("#username").val(data.username);
         $("#fullName").val(data.fullName);
         $("#email").val(data.email);
+        $("#providerId").val(data.providerId);
         $("#phone").val(data.phone);
         $("#role").val(data.role);
         $("#status").val(data.status);

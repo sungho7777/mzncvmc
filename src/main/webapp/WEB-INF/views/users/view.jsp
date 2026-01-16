@@ -95,9 +95,15 @@
                                         <div id="fullName" class="bg-light p-4 small"></div>
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="small mb-1" for="email">Email address</label>
-                                    <div id="email" class="bg-light p-4 small"></div>
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="email">Email address</label>
+                                        <div id="email" class="bg-light p-4 small"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="phone">OAuth2.0</label>
+                                        <div id="providerId" class="bg-light p-4 small"></div>
+                                    </div>
                                 </div>
                                 <div class="row gx-3 mb-3">
                                     <div class="col-md-6">
@@ -238,6 +244,7 @@
         $("#username").text(data.username);
         $("#fullName").text(data.fullName);
         $("#email").text(data.email);
+        $("#providerId").text(data.providerId);
         $("#phone").text(data.phone);
         $("#role").text(data.role);
         $("#status").text(data.status);
