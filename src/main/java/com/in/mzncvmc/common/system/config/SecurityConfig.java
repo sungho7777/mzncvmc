@@ -64,7 +64,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/account/resetPassword",
                                          "/api/account/recoveryPassword").permitAll()
 
-                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll() // 일반 로그인 관련된 api
+                        .requestMatchers("/api/oauth/**").permitAll() // OAuth 로그인 관련된 api
                         .requestMatchers("/api/public/**").permitAll()
 
                         .requestMatchers("/api/files/preview/**").permitAll() // 미리보기는 인증 없이 허용

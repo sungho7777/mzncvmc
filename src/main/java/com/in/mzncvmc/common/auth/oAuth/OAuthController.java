@@ -19,8 +19,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;
 
+import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_API;
+
 @Controller
-@RequestMapping("/oauth")
+@RequestMapping(SLASH_API + "/oauth")
 @RequiredArgsConstructor
 public class OAuthController {
     @Autowired

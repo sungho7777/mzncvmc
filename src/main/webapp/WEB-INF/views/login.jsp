@@ -18,6 +18,9 @@
     <script src="/common/sbadminpro/js/jquery-3.7.1.min.js"></script>
 
 </head>
+<style>
+
+</style>
 <body class="bg-cyan">
 <div id="layoutAuthentication">
     <div id="layoutAuthentication_content">
@@ -29,17 +32,14 @@
                         <div class="card my-5">
                             <div class="card-body p-5 text-center">
                                 <div class="h3 fw-light mb-3">Sign In</div>
+
+
+
                                 <!-- Social login links-->
-                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
-                                <%--
-                                <a class="btn btn-icon btn-facebook mx-1" href="#!"><i class="fab fa-facebook-f fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-github mx-1" href="#!"><i class="fab fa-github fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-google mx-1" href="#!"><i class="fab fa-google fa-fw fa-sm"></i></a>
-                                <a class="btn btn-icon btn-twitter mx-1" href="#!"><i class="fab fa-twitter fa-fw fa-sm text-white"></i></a>
-                                --%>
+                                <button class="btn btn-red btn-icon" type="button" onclick="loginWithGoogle();">G </button>
+                                <button class="btn btn-yellow btn-icon" type="button" onclick="loginWithKakao();">K</button>
+                                <button class="btn btn-green btn-icon" type="button" onclick="loginWithNaver();">N</button>
+                                <button class="btn btn-purple btn-icon" type="button" onclick="loginWithGithub();">G</button>
                             </div>
                             <hr class="my-0" />
                             <div class="card-body p-5">
@@ -359,6 +359,20 @@
             //alert('login 성공');
             window.location.href = '/main';
         }, 150);
+    };
+    const loginWithGoogle = () => {
+        console.log('loginWithGoogle');
+        // /api/auth/login
+        window.location.href = '/api/oauth/google';
+    };
+    const loginWithKakao = () => {
+        console.log('loginWithGoogle');
+    };
+    const loginWithNaver = () => {
+        console.log('loginWithGoogle');
+    };
+    const loginWithGithub = () => {
+        console.log('loginWithGoogle');
     };
 </script>
 </body>
