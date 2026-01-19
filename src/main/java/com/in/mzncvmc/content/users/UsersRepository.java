@@ -19,7 +19,10 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     //
     boolean existsByEmail(String email);
     //
-    //Optional<Users> findByProviderAndProviderId(Users.Provider provider, String providerId);
+    Optional<Users> findByProviderAndProviderId(String provider, String providerId);
+
+
+
     /**
      * 데이터 목록 조회
      *

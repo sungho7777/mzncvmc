@@ -1,14 +1,18 @@
 package com.in.mzncvmc.common.auth.oAuth;
 
+import com.in.mzncvmc.common.auth.login.LoginService;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +35,8 @@ public class OAuthController {
     private final UsersService usersService;
     @Autowired
     private final JwtUtil jwtUtil;
+    @Autowired
+    private LoginService loginService;
 
     @Value("${oauth.google.client-id}")
     private String googleClientId;
@@ -74,42 +80,29 @@ public class OAuthController {
     }
 
     // Google 콜백 (Authorization Code 수신 및 처리)
+    // TODO 현재 방화벽 정책 때문에 회사서는 못 함.. 나중에 노트북에서 할 것.
     @GetMapping("/callback/google")
-    public String googleCallback(@RequestParam String code,
-                                 HttpSession session,
-                                 HttpServletResponse response) {
-        try {
-            // 1. Authorization Code로 Access Token 요청
-            String accessToken = oAuthService.getGoogleAccessToken(code);
-
-            // 2. Access Token으로 사용자 정보 조회
-            OAuthUserInfo userInfo = oAuthService.getGoogleUserInfo(accessToken);
-
-            // 3. 사용자 처리 (회원가입 또는 로그인)
-            Users user = usersService.processOAuthUser(userInfo);
-
-            // 4. JWT 생성
-            //String jwtToken = jwtUtil.generateToken(user.getEmail(), user.getId(), user.getRole().name());
-
-            // 5. 세션 및 쿠키 설정
-            //session.setAttribute("userId", user.getId()); // TODO error
-            session.setAttribute("userEmail", user.getEmail());
-            //session.setAttribute("userName", user.getName()); // TODO error
-            session.setAttribute("accessToken", accessToken);
-
-            //Cookie jwtCookie = new Cookie("jwt", jwtToken); // TODO error
-            Cookie jwtCookie = new Cookie("jwt", "jwtToken");
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setPath("/");
-            jwtCookie.setMaxAge(24 * 60 * 60); // 1일
-            response.addCookie(jwtCookie);
-
-            return "redirect:/dashboard";
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "redirect:/login?error=oauth_failed";
+    public ResponseEntity<?> googleCallback(@RequestParam(required=false) String code,
+                                            @RequestParam(required=false) String error,
+                                            HttpSession session,
+                                            HttpServletRequest httpRequest,
+                                            HttpServletResponse response) throws IOException {
+        if(error != null) {
+            return ResponseEntity.status(400).body("OAuth login cancelled");
         }
+
+        // 1. Authorization Code로 Access Token 요청
+        String accessToken = oAuthService.getGoogleAccessToken(code);
+
+        // 2. Access Token으로 사용자 정보 조회
+        OAuthUserInfo userInfo = oAuthService.getGoogleUserInfo(accessToken);
+
+        // 3. 사용자 처리 (회원가입 또는 로그인)
+        Users users = usersService.processOAuthUser(userInfo);
+
+        // 사용자 로그인 성공 및 토큰 처리
+        // statusLogin == 'success'
+        return loginService.returnSuccessLogin(users, httpRequest, response, "Login successful");
     }
 
     // Kakao 로그인 시작

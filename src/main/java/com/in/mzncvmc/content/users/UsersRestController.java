@@ -31,6 +31,26 @@ public class UsersRestController {
 
         Long newDataId = usersService.insert(dto);
 
+/*
+        Users user = new Users();
+        user.setUsername(dto.getUsername());
+        user.setCompanyId(company);
+        user.setFullName(dto.getFullName());
+        user.setEmail(dto.getEmail());
+        user.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
+        user.setPhone(dto.getPhone());
+        user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
+        user.setPwNotifyDuration("999");
+        user.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
+        //user.setConnected(Users.Connected.valueOf("N"));
+
+        // 비밀번호 기본값 설정 (암호화 적용)
+        user.setPassword(passwordEncoder.encode(userFirstPassword));
+
+        Users saved = usersRepository.save(user);
+*/
+
+
         return ApiResponse.success(newDataId, "New Data created successfully");
     }
 

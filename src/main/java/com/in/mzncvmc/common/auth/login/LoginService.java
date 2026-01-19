@@ -172,7 +172,11 @@ public class LoginService {
         cookieUtil.deleteAccessTokenCookie("accessToken", response);
         cookieUtil.deleteAccessTokenCookie("refreshToken", response);
 
-        return ApiResponse.success(true,"Logged out successfully");
+        return ApiResponse.success(true,"Logged Out Successfully");
+    }
+    public ApiResponse<?> returnFailLogout(HttpServletResponse response) {
+
+        return ApiResponse.success(true,"Logged Out Fail");
     }
 
 
@@ -183,7 +187,7 @@ public class LoginService {
      *        httpRequest
      * @return 로그인 LoginResponse
      */
-    public ResponseEntity<?> returnFallLogin(
+    public ResponseEntity<?> returnFailLogin(
             Users users,
             HttpServletRequest httpRequest,
             String message) {

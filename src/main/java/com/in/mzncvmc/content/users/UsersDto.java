@@ -1,5 +1,7 @@
 package com.in.mzncvmc.content.users;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Getter
@@ -15,13 +17,18 @@ public class UsersDto {
     private String username; // 로그인 아이디
     private String fullName; // 사용자 이름
     private String email; // 이메일
-    private String providerId; // OAUTH2
+    private String provider; // OAUTH2 provider
+    private String providerId; // OAUTH2 provider id
     private String phone; // 전화번호
     private String role; // 권한
     private String status; // 계정 상태
     private String connected; // 접속여부
     private String pwNotifyDuration; // 비밀번호 알림기간
 
+
+    public enum Provider {
+        LOCAL, GOOGLE, KAKAO, NAVER
+    }
 /*
 userId
 companyId
@@ -30,6 +37,7 @@ companyType
 username
 fullName
 email
+provider
 providerId
 phone
 role

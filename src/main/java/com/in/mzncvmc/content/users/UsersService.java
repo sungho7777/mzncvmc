@@ -1,6 +1,7 @@
 package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.common.auth.oAuth.OAuthUserInfo;
+import com.in.mzncvmc.common.system.mail.MailService;
 import com.in.mzncvmc.content.company.Company;
 import com.in.mzncvmc.content.company.CompanyRepository;
 import com.in.mzncvmc.content.userMfa.UserMfa;
@@ -37,37 +38,38 @@ public class UsersService{
     private final UserMfaRepository userMfaRepository;
     @Autowired
     private final CompanyRepository companyRepository;
-
+    @Autowired
+    private final MailService mailService;
 
     @Transactional
-    public Users processOAuthUser(OAuthUserInfo oAuthUserInfo) {
-        Users.Provider provider = Users.Provider.valueOf(oAuthUserInfo.getProvider());
+    public Users processOAuthUser(OAuthUserInfo userInfo) {
 
-        // 기존 사용자 확인
-        return null;
-        /*
-        return usersRepository.findByProviderAndProviderId(provider, oAuthUserInfo.getProviderId())
-                .map(existingUser -> {
-                    // 기존 사용자 정보 업데이트
-                    //existingUser.setName(oAuthUserInfo.getName());
-                    //existingUser.setProfileImage(oAuthUserInfo.getProfileImage());
-                    return usersRepository.save(existingUser);
-                })
-                .orElseGet(() -> {
-                    // 신규 사용자 생성
-                    Users newUser = Users.builder()
-                            .email(oAuthUserInfo.getEmail())
-                            .fullName(oAuthUserInfo.getName())
-                            //.profileImage(oAuthUserInfo.getProfileImage())
-                            //.provider(provider)
-                            //.providerId(oAuthUserInfo.getProviderId())
-                            .role(Users.Role.USER)
-                            .build();
-                    return usersRepository.save(newUser);
-                });*/
+        String provider = userInfo.getProvider();       // "google"
+        String providerId = userInfo.getProviderId();   // google user id
+
+        // 1. 기존 사용자 조회
+        Optional<Users> optionalUser = usersRepository.findByProviderAndProviderId(provider, providerId);
+
+        if(optionalUser.isPresent()) {
+            // 기존 회원 → 바로 반환
+            return optionalUser.get();
+        }
+
+        // 2. 신규 회원 생성
+        Users newUser = Users.builder()
+                .username(userInfo.getEmail())
+                .email(userInfo.getEmail())
+                .fullName(userInfo.getName())
+                //.profileImage(userInfo.getProfileImage()) // TODO 컬럼 추가
+                .provider(Users.Provider.valueOf(provider))
+                .providerId(providerId)
+                .role(Users.Role.valueOf("USER"))
+                .build();
+
+        mailService.sendCreateOAuthUser(newUser.getEmail());
+
+        return usersRepository.save(newUser);
     }
-
-
 
     /**
      * R.데이터 단일조회
@@ -97,7 +99,8 @@ public class UsersService{
         user.setCompanyId(company);
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
-        user.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
+        user.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
+        user.setProviderId(null);
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         user.setPwNotifyDuration("999");
@@ -108,6 +111,8 @@ public class UsersService{
         user.setPassword(passwordEncoder.encode(userFirstPassword));
 
         Users saved = usersRepository.save(user);
+
+        mailService.sendCreateLocalUser(saved.getEmail());
 
         return saved.getUserId();
     }
@@ -187,7 +192,8 @@ public class UsersService{
         existing.setCompanyId(company);
         existing.setFullName(dto.getFullName());
         existing.setEmail(dto.getEmail());
-        existing.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
+        existing.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
+        existing.setProviderId(null);
         existing.setPhone(dto.getPhone());
         existing.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         existing.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
@@ -223,7 +229,9 @@ public class UsersService{
             .username(entity.getUsername())
             .fullName(entity.getFullName())
             .email(entity.getEmail())
-            .providerId(entity.getProviderId().name()) // OAUTH2
+            .provider(entity.getProviderId())
+            .providerId(entity.getProviderId())
+
             .phone(entity.getPhone())
             .role(entity.getRole().name())
             .status(entity.getStatus().name())

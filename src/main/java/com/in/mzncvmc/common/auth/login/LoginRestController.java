@@ -84,7 +84,7 @@ public class LoginRestController {
 
         // 확인
         if (users.getConnected() == Users.Connected.Y) {
-            return loginService.returnFallLogin(users, httpRequest, "The user is already logged in elsewhere.");
+            return loginService.returnFailLogin(users, httpRequest, "The user is already logged in elsewhere.");
         }
 
         // 인증
@@ -96,7 +96,7 @@ public class LoginRestController {
                     )
             );
         } catch (BadCredentialsException e) {
-            return loginService.returnFallLogin(users, httpRequest, "Invalid username or password");
+            return loginService.returnFailLogin(users, httpRequest, "Invalid username or password");
         }
 
         // 설정에 의해 분기처리.
@@ -109,25 +109,27 @@ public class LoginRestController {
             if(users.getUserId() == 1L){
                 // TODO 테스트를 위해 [admin] 계정은 무조건 통과
             }else{
-                // 사용자의 구글 TOTP 설정 여부를 확인 한다.
-                boolean isMfaEnabled = userMfaService.isMfaEnabled(users.getUserId());
-                if(isMfaEnabled){
-                    // true → MFA 활성화
-                    if(userMfaUse.equals("Y")){
-                        if(userOtpUse.equals("Y")) {
-                            // OTP 생성 + 저장
-                            // statusLogin == 'loginUserOtp'
-                            return loginService.returnLoginUserOtp(users, httpRequest);
+                // MFA 설정이 활성화 되었을때 진행 한다.
+                if(userMfaUse.equals("Y")){
+                    // 사용자의 구글 TOTP 설정 여부를 확인 한다.
+                    boolean isMfaEnabled = userMfaService.isMfaEnabled(users.getUserId());
+                    if(isMfaEnabled){
+                        // true → MFA 활성화
+                        if(userMfaUse.equals("Y")){
+                            if(userOtpUse.equals("Y")) {
+                                // OTP 생성 + 저장
+                                // statusLogin == 'loginUserOtp'
+                                return loginService.returnLoginUserOtp(users, httpRequest);
+                            }
+                            // statusLogin == 'loginUserMfa'
+                            return loginService.returnLoginUserMfa(users, httpRequest);
                         }
-                        // statusLogin == 'loginUserMfa'
-                        return loginService.returnLoginUserMfa(users, httpRequest);
+                    }else{
+                        // false → MFA 비활성화 또는 설정 정보 없음 -> 설정 시작(이메일 OTP, 구글 TOTP)
+                        // statusLogin == 'generateUserOtp'
+                        return loginService.returnGenerateUserOtp(users, httpRequest);
                     }
-                }else{
-                    // false → MFA 비활성화 또는 설정 정보 없음 -> 설정 시작(이메일 OTP, 구글 TOTP)
-                    // statusLogin == 'generateUserOtp'
-                    return loginService.returnGenerateUserOtp(users, httpRequest);
                 }
-
             }
             // 사용자 로그인 성공 및 토큰 처리
             // statusLogin == 'success'
@@ -232,7 +234,7 @@ public class LoginRestController {
 
         return (apiResponse.getStatus().equals("success")) ?
                 loginService.returnSuccessLogin(users, httpRequest, response, apiResponse.getMessage()):
-                loginService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
+                loginService.returnFailLogin(users, httpRequest, apiResponse.getMessage());
     }
 
     /**
@@ -270,7 +272,7 @@ public class LoginRestController {
 
         return (apiResponse.getStatus().equals("success")) ?
                 loginService.returnSuccessLogin(users, httpRequest, response, apiResponse.getMessage()):
-                loginService.returnFallLogin(users, httpRequest, apiResponse.getMessage());
+                loginService.returnFailLogin(users, httpRequest, apiResponse.getMessage());
     }
 
     /**
@@ -292,11 +294,14 @@ public class LoginRestController {
 
                 // 로그인 접속상태 Y 으로 업데이트
                 usersService.updateUsersConnected(username, "N");
+
             } catch (Exception e) {
                 // 토큰이 유효하지 않아도 로그아웃은 성공으로 처리
             }
+
+            return loginService.returnSuccessLogout(response);
         }
 
-        return loginService.returnSuccessLogout(response);
+        return loginService.returnFailLogout(response);
     }
 }

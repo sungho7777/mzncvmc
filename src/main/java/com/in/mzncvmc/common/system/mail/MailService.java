@@ -65,4 +65,16 @@ public class MailService {
         log.info("MailService.sendResetUserMfa.email : " + email);
     }
 
+    //
+    public void sendCreateLocalUser(String email) {
+
+        log.info("MailService.sendCreateLocalUser.text : 로컬 사용자 생성되었습니다.");
+        log.info("MailService.sendResetUserMfa.email : " + email);
+    }
+    //
+    public void sendCreateOAuthUser(String email) {
+
+        log.info("MailService.sendCreateOAuthUser.text : OAuth2.0 사용자 생성되었습니다.");
+        log.info("MailService.sendResetUserMfa.email : " + email);
+    }
 }

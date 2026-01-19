@@ -49,8 +49,12 @@ public class Users implements UserDetails {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @Comment("OAUTH2")
-    private Provider providerId = Provider.LOCAL;
+    @Comment("provider")
+    private Provider provider = Provider.LOCAL;
+
+    @Column(nullable = false)
+    @Comment("provider Id")
+    private String providerId;
 
     @Column(length = 20)
     @Comment("전화번호")

@@ -81,7 +81,8 @@ CREATE TABLE users (
         password VARCHAR(255) NOT NULL COMMENT '암호화된 비밀번호',
         full_name VARCHAR(100) DEFAULT NULL COMMENT '사용자 이름',
         email VARCHAR(100) DEFAULT NULL UNIQUE COMMENT '이메일',
-        provider_id ENUM('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER', 'GIT') DEFAULT 'LOCAL' COMMENT 'OAUTH2',
+        provider ENUM('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER', 'GIT') DEFAULT 'LOCAL' COMMENT 'OAUTH2 provider',
+        provider_id VARCHAR(20) DEFAULT NULL COMMENT 'OAUTH2 provider_id',
         phone VARCHAR(20) DEFAULT NULL COMMENT '전화번호',
         role ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER' COMMENT '권한',
         status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '계정 상태',
@@ -98,11 +99,10 @@ CREATE TABLE users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='사용자 정보 테이블';
 
 # 테이블 입력
-INSERT INTO users (company_id, username, password, full_name, email, provider_id, phone, role, status, connected, pw_notify_duration, last_login)
+INSERT INTO users (company_id, username, password, full_name, email, provider, phone, role, status, connected, pw_notify_duration, last_login)
 VALUES
     (1, 'admin', '1', '홍길동', 'admin@gmail.com', 'LOCAL', '010-1111-2222', 'ADMIN', 'ACTIVE', 'N', '999', NULL),
-    (2, 'manager', '1', '나관리', 'manager@gmail.com', 'LOCAL', '010-3333-4444', 'USER', 'ACTIVE', 'N', '999', NULL),
-    (2, 'mzncvmc', '1', '박성호', 'mzncvmc@gmail.com', 'LOCAL', '010-8888-2222', 'USER', 'ACTIVE', 'N', '999', NULL),
+    (2, 'biz.sungho', '1', '비즈성호', 'biz.sungho@gmail.com', 'LOCAL', '010-3333-4444', 'USER', 'ACTIVE', 'N', '999', NULL),
     (3, 'userpark', '1', '박성백', 'userpark@globalsol.com', 'LOCAL', '010-7777-8888', 'USER', 'INACTIVE', 'N', '999', NULL),
     (3, 'userminsu', '1', '김민수', 'userminsu@koreatech.com', 'LOCAL', '010-1212-3434', 'USER', 'ACTIVE', 'N', '999', NULL),
     (3, 'userchoi', '1', '최은지', 'userchoi@koreatech.com', 'LOCAL', '010-5656-7878', 'USER', 'ACTIVE', 'N', '999', NULL),
