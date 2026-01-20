@@ -19,8 +19,11 @@ public interface UsersRepository extends JpaRepository<Users, Long> {
     //
     boolean existsByEmail(String email);
     //
-    Optional<Users> findByProviderAndProviderId(String provider, String providerId);
-
+    //Optional<Users> findByProviderAndProviderId(String provider, String providerId);
+    Optional<Users> findByProviderAndProviderId(
+            Users.Provider provider,
+            String providerId
+    );
 
 
     /**

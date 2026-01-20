@@ -46,24 +46,39 @@ public class UsersService{
 
         String provider = userInfo.getProvider();       // "google"
         String providerId = userInfo.getProviderId();   // google user id
+        Users.Provider providerEnum =
+                Users.Provider.valueOf(provider.toUpperCase());
+
+        Optional<Users> optionalUser =
+                usersRepository.findByProviderAndProviderId(providerEnum, providerId);
 
         // 1. 기존 사용자 조회
-        Optional<Users> optionalUser = usersRepository.findByProviderAndProviderId(provider, providerId);
+        //Optional<Users> optionalUser = usersRepository.findByProviderAndProviderId(provider, providerId);
 
         if(optionalUser.isPresent()) {
             // 기존 회원 → 바로 반환
             return optionalUser.get();
         }
 
+        Company company = companyRepository.findById(1L)
+                .orElseThrow(() -> new IllegalArgumentException("Company not found"));
+
         // 2. 신규 회원 생성
         Users newUser = Users.builder()
+                .companyId(company)
                 .username(userInfo.getEmail())
-                .email(userInfo.getEmail())
+                .password("1")
                 .fullName(userInfo.getName())
+                .email(userInfo.getEmail())
                 //.profileImage(userInfo.getProfileImage()) // TODO 컬럼 추가
-                .provider(Users.Provider.valueOf(provider))
+                .provider(Users.Provider.valueOf(provider.toUpperCase()))
                 .providerId(providerId)
                 .role(Users.Role.valueOf("USER"))
+
+                .status(Users.Status.valueOf("ACTIVE".toUpperCase()))
+                .pwNotifyDuration("999")
+                .connected(Users.Connected.valueOf("N".toUpperCase()))
+
                 .build();
 
         mailService.sendCreateOAuthUser(newUser.getEmail());

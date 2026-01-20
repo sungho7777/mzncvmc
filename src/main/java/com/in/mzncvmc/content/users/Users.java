@@ -52,7 +52,7 @@ public class Users implements UserDetails {
     @Comment("provider")
     private Provider provider = Provider.LOCAL;
 
-    @Column(nullable = false)
+    @Column(name = "provider_id", length = 255, nullable = false)
     @Comment("provider Id")
     private String providerId;
 

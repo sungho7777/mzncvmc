@@ -82,7 +82,7 @@ CREATE TABLE users (
         full_name VARCHAR(100) DEFAULT NULL COMMENT '사용자 이름',
         email VARCHAR(100) DEFAULT NULL UNIQUE COMMENT '이메일',
         provider ENUM('LOCAL', 'GOOGLE', 'KAKAO', 'NAVER', 'GIT') DEFAULT 'LOCAL' COMMENT 'OAUTH2 provider',
-        provider_id VARCHAR(20) DEFAULT NULL COMMENT 'OAUTH2 provider_id',
+        provider_id VARCHAR(255) NOT NULL DEFAULT '1' COMMENT 'OAUTH2 provider_id',
         phone VARCHAR(20) DEFAULT NULL COMMENT '전화번호',
         role ENUM('ADMIN','MANAGER','USER') DEFAULT 'USER' COMMENT '권한',
         status ENUM('ACTIVE','INACTIVE') DEFAULT 'ACTIVE' COMMENT '계정 상태',
