@@ -4,6 +4,7 @@ import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.common.system.service.MfaService;
 import com.in.mzncvmc.common.system.util.ClientUtil;
+import com.in.mzncvmc.common.system.util.CookieUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.userMfa.UserMfaService;
 import com.in.mzncvmc.content.userMfa.UserMfaVerifyDto;
@@ -14,6 +15,7 @@ import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,8 @@ public class LoginRestController {
     private UsersService usersService;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private CookieUtil cookieUtil;
     @Autowired
     private ClientUtil clientUtil;
 
@@ -284,7 +288,8 @@ public class LoginRestController {
     @PostMapping("/logout")
     public ApiResponse<?> logout(HttpServletRequest request,
                                  HttpServletResponse response) {
-        String token = request.getHeader("Authorization");
+        //String token = request.getHeader("Authorization");
+        String token = "Bearer "+cookieUtil.extractAccessTokenCookie("accessToken", request);
 
         if (token != null && token.startsWith("Bearer ")) {
             String actualToken = token.substring(7);
@@ -299,7 +304,10 @@ public class LoginRestController {
                 // 토큰이 유효하지 않아도 로그아웃은 성공으로 처리
             }
 
-            return loginService.returnSuccessLogout(response);
+
+
+
+            return loginService.returnSuccessLogout(request, response);
         }
 
         return loginService.returnFailLogout(response);

@@ -149,8 +149,8 @@
         if(!auth.accessTokenCheck()) return false;
 
 
-        const userId = localStorage.getItem('userId');
-        $("#createdBy").val(userId);
+        //const userId = localStorage.getItem('userId');
+        //$("#createdBy").val(userId);
 
         if(Number(ID) > 0) getAmend();
         console.log("amend init");

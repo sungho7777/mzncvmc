@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="ko" data-bs-theme="auto">
     <head>
@@ -91,10 +92,16 @@
         <script src="/common/sbadminpro/js/scripts.js"></script>
 
         <!-- common.script -->
-        <script src="/common/sbadmin/js/domain/valided.js"></script>
-        <script src="/common/sbadmin/js/domain/auth.js"></script>
+        <script>
+            window.auth = {
+                accessToken: "${fn:escapeXml(sessionScope.accessToken)}"
+                , pwNotifyDuration: "${fn:escapeXml(sessionScope.loginUser.pwNotifyDuration)}"
+            };
+        </script>
         <script src="/common/sbadmin/js/domain/main.js"></script>
+        <script src="/common/sbadmin/js/domain/auth.js"></script>
         <script src="/common/sbadmin/js/domain/board.js"></script>
+        <script src="/common/sbadmin/js/domain/valided.js"></script>
 
     </body>
 </html>

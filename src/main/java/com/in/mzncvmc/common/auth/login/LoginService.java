@@ -5,6 +5,7 @@ import com.in.mzncvmc.common.system.mail.MailService;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.common.system.util.ClientUtil;
 import com.in.mzncvmc.common.system.util.CookieUtil;
+import com.in.mzncvmc.common.system.util.SessionUtil;
 import com.in.mzncvmc.content.userHistory.UserHistoryService;
 import com.in.mzncvmc.content.userOtp.UserOtpService;
 import com.in.mzncvmc.content.users.Users;
@@ -12,6 +13,7 @@ import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,8 @@ public class LoginService {
     private JwtUtil jwtUtil;
     @Autowired
     private CookieUtil cookieUtil;
+    @Autowired
+    private SessionUtil sessionUtil;
     @Autowired
     private ClientUtil clientUtil;
 
@@ -129,7 +133,7 @@ public class LoginService {
      */
     public ResponseEntity<?> returnSuccessLogin(
             Users users,
-            HttpServletRequest httpRequest,
+            HttpServletRequest request,
             HttpServletResponse response,
             String message) {
 
@@ -142,10 +146,12 @@ public class LoginService {
         usersService.updateUsersConnected(users.getUsername(), "Y");
         userHistoryService.saveLogin(
                 users.getUsername(),
-                clientUtil.getClientIp(httpRequest)
+                clientUtil.getClientIp(request)
         );
 
         cookieUtil.insertAccessTokenCookie("accessToken", accessToken, response);
+        sessionUtil.insertAccessTokenSession("accessToken", accessToken, request);
+        sessionUtil.insertUserDetailsSession("loginUser", userDetails, request);
 
         return ResponseEntity.ok(
                 new LoginResponse(
@@ -167,10 +173,17 @@ public class LoginService {
      * @param
      * @return ApiResponse
      */
-    public ApiResponse<?> returnSuccessLogout(HttpServletResponse response) {
+    public ApiResponse<?> returnSuccessLogout(HttpServletRequest request,
+                                              HttpServletResponse response) {
 
         cookieUtil.deleteAccessTokenCookie("accessToken", response);
         cookieUtil.deleteAccessTokenCookie("refreshToken", response);
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute("loginUser");
+            session.removeAttribute("accessToken");
+        }
 
         return ApiResponse.success(true,"Logged Out Successfully");
     }

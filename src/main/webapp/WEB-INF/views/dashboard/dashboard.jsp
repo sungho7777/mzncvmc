@@ -298,7 +298,7 @@
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('accessToken', data.accessToken);
+                //localStorage.setItem('accessToken', data.accessToken);
                 return true;
             } else {
                 return false;

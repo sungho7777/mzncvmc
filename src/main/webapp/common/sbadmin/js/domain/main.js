@@ -1,6 +1,11 @@
+
+
+//const ACCESS_TOKEN_MAIN = window.auth.accessToken;
+
 // main.js
 window.main = {
-    init() {},
+    init() {
+    },
     // dashboard 화면이동
     goDashboard(menu){
         if(!auth.accessTokenCheck()) return false;
@@ -38,17 +43,18 @@ window.main = {
     },
     // 로그아웃
     goLogout(){
+
         fetch('/api/auth/logout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
-                , 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                //, 'Authorization': 'Bearer ' + ACCESS_TOKEN_MAIN
             }
         })
             .then(response => {
                 if (response.ok) {
                     // 로컬 스토리지에서 토큰 제거
-                    main.removeLocalStorage();
+                    //main.removeLocalStorage();
 
                     window.location.href = '/login';
                 } else {
@@ -63,20 +69,19 @@ window.main = {
     },
     removeLocalStorage(){
         // 네트워크 오류 등의 경우 토큰 제거
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('username');
-        localStorage.removeItem('pwNotifyDuration');
+        //localStorage.removeItem('accessToken');
+        //localStorage.removeItem('refreshToken');
+        //localStorage.removeItem('userId');
+        //localStorage.removeItem('username');
+        //localStorage.removeItem('pwNotifyDuration');
     },
     showAlert() {}
 };
 
 setTimeout(() => {
+    const PW_NOTIFY_DURATION_MAIN = window.auth.pwNotifyDuration;
 
-    const pwNotifyDuration = localStorage.getItem("pwNotifyDuration");
-
-    if(pwNotifyDuration == '999'){
+    if(PW_NOTIFY_DURATION_MAIN == '999'){
         // 신규 사용자는 비밀번호를 변경하도록 유도한다.
         const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'), {
             backdrop: 'static',

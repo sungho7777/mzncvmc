@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="ko" data-bs-theme="auto">
 <head>
@@ -112,14 +114,20 @@
 <!-- common.script -->
 <script src="/common/sbadmin/js/domain/valided.js"></script>
 
+<script>
+    window.auth = {
+        accessToken: "${fn:escapeXml(sessionScope.accessToken)}"
+        , pwNotifyDuration: "${fn:escapeXml(sessionScope.loginUser.pwNotifyDuration)}"
+    };
+</script>
+
 <script type="text/javascript">
     document.getElementById("username").focus();
     window.addEventListener('load', async function() {
+        const ACCESS_TOKEN_LOGIN = window.auth.accessToken;
 
-        const token = localStorage.getItem('accessToken');
-
-        if (token) {
-            console.log(token);
+        if (ACCESS_TOKEN_LOGIN) {
+            console.log(ACCESS_TOKEN_LOGIN);
             console.log('토큰이 존재함, 유효성 검증 후 main 페이지로 이동');
 
             try {
@@ -128,18 +136,12 @@
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
-                        , 'Authorization': 'Bearer ' + token
+                        , 'Authorization': 'Bearer ' + ACCESS_TOKEN_LOGIN
                     }
                 });
 
                 if (response.ok) {
                     console.log('유효한 토큰, 메인 페이지로 리다이렉트');
-
-                    // 사용자에게 알림 (선택사항)
-                    const username = localStorage.getItem('username');
-                    if (username) {
-                        console.log(`${username}님, 이미 로그인되어 있습니다.`);
-                    }
 
                     // 메인 페이지로 리다이렉트
                     window.location.href = '/main';
@@ -156,15 +158,11 @@
                         return;
                     } else {
                         console.log('토큰 갱신 실패, 로컬 스토리지 정리');
-                        // 갱신 실패 시 토큰 정리
-                        removeLocalStorage();
                     }
                 }
 
             } catch (error) {
                 console.error('토큰 검증 중 오류:', error);
-                // 네트워크 오류 등의 경우 토큰 제거
-                removeLocalStorage();
             }
         }
 
@@ -178,20 +176,6 @@
             document.getElementById("password").focus();
         }
     });
-
-    /**
-     * localStorage 초기화
-     *
-     * @returns {boolean}
-     */
-    const removeLocalStorage = () =>{
-        // 네트워크 오류 등의 경우 토큰 제거
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('username');
-        localStorage.removeItem('pwNotifyDuration');
-    };
 
     /**
      * 토큰 갱신 함수
@@ -219,7 +203,7 @@
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('accessToken', data.accessToken);
+                //localStorage.setItem('accessToken', data.accessToken);
                 console.log('토큰 갱신 성공');
                 return true;
             } else {
@@ -348,11 +332,6 @@
 
         // 로그인 성공 - 토큰을 localStorage에 저장
         localStorage.setItem('rememberUsername', $('#checkRememberUsername').is(':checked') ? data.username : "");
-        localStorage.setItem('accessToken', data.accessToken);
-        localStorage.setItem('refreshToken', data.refreshToken);
-        localStorage.setItem('userId', data.userId);
-        localStorage.setItem('username', data.username);
-        localStorage.setItem('pwNotifyDuration', data.pwNotifyDuration);
 
         // 잠시 후 메인화면으로 이동
         setTimeout(() => {
