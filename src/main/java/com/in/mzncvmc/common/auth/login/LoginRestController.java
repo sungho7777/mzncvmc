@@ -1,5 +1,9 @@
 package com.in.mzncvmc.common.auth.login;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.common.system.service.MfaService;
@@ -21,15 +25,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +48,15 @@ public class LoginRestController {
     private String userOtpUse;
     @Value("${user.mfa.use}")
     private String userMfaUse;
+
+    @Value("${user.mfa.android.google.url}")
+    private String userMfaAndroidGoogleUrl;
+    @Value("${user.mfa.android.microsoft.url}")
+    private String userMfaAndroidMicrosoftUrl;
+    @Value("${user.mfa.ios.google.url}")
+    private String userMfaIosGoogleUrl;
+    @Value("${user.mfa.ios.microsoft.url}")
+    private String userMfaIosMicrosoftUrl;
 
     @Autowired
     private UserHistoryService userHistoryService;
@@ -142,6 +154,30 @@ public class LoginRestController {
     }
 
     /**
+     * 사용자 MFA QR 설치 이미지 생성
+     *
+     * @param
+     * @return ApiResponse
+     */
+    @GetMapping("/authenticatorStoreQr")
+    public ResponseEntity<byte[]> authenticatorStoreQr() throws Exception {
+
+        String qrText =
+                "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2";
+
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, 300, 300);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", baos);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(baos.toByteArray());
+    }
+
+
+    /**
      * 사용자 MFA 설정을 위한 선작업 메일 OTP 인증
      *
      * @param userOtpVerifyDto
@@ -192,8 +228,8 @@ public class LoginRestController {
      *        request
      * @return 로그인 LoginResponse
      */
-    @PostMapping("/generateUserMfa")
-    public ApiResponse<?> generateUserMfa(@RequestBody UserMfaVerifyDto request, HttpServletRequest httpRequest) throws Exception {
+    @PostMapping("/verifyAndEnableMFA")
+    public ApiResponse<?> verifyAndEnableMFA(@RequestBody UserMfaVerifyDto request, HttpServletRequest httpRequest) throws Exception {
         Optional<Users> optional = usersService.findByUsername(request.getUsername());
         if (optional.isEmpty()) {
             // "사용자가 존재하지 않습니다."

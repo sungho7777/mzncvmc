@@ -1,5 +1,5 @@
 // auth.js
-const ACCESS_TOKEN_AUTH = window.auth.accessToken;
+//const ACCESS_TOKEN_AUTH = window.auth.accessToken;
 
 window.auth = {
 

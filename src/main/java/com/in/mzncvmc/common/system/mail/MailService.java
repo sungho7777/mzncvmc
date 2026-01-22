@@ -29,11 +29,13 @@ public class MailService {
     public void sendMFAConfirmationEmail(String email, List<String> backupCodes) {
 
         log.info("MailService.sendMFAConfirmationEmail.text : MFA가 성공적으로 활성화되었습니다. 다시 로그인 시도하세요.");
+        System.out.println("backupCodes : ");
         List<Map<String, Object>> backupCodeList = new ArrayList<>();
         for (String code : backupCodes) {
 
             System.out.println(code);
         }
+        log.info("MailService.sendMFAConfirmationEmail.text : 다시 로그인 시도하세요.");
         log.info("MailService.sendMFAConfirmationEmail.email : " + email);
     }
 

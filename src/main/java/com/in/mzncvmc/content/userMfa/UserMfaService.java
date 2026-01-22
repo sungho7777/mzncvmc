@@ -101,33 +101,10 @@ public class UserMfaService {
             userMfa.setFailedAttempts(0); // 실패 횟수 초기화
             userMfa.setLockedUntil(null); // 잠금 해제 시간 초기화
             userMfa.setBackupCodes(null); // 백업코드 초긱화
+            userMfa.setLastVerifiedAt(null); // 마지막으로 확인된 시간
             userMfaRepository.save(userMfa);
         });
     }
-    /**
-     * D.데이터 삭제
-     *
-     * @param id 삭제할 데이터 ID
-     * @throws IllegalArgumentException 데이터 미존재
-    @Transactional
-    public void delete(Long id) {
-        UserMfa userMfa = userMfaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Data not found"));
-
-        userMfaRepository.delete(userMfa);
-    }
-     */
-
-    /**
-     * D.MFA 완전 삭제
-     *
-     * @param userId 삭제할 데이터 Vo
-
-    @Transactional
-    public void deleteMFA(Long userId) {
-
-        userMfaRepository.deleteByUserId(userId);
-    }*/
 
     /**
      * ETC.엔티티 → DTO 변환용 private 메서드
@@ -163,18 +140,6 @@ public class UserMfaService {
     }
 
     /**
-     * 사용자의 MFA 정보 조회
-     *
-     * @param userId
-     * @return UserMfa
-    public Optional<UserMfa> getUserMfa(Long userId) {
-
-
-        return userMfaRepository.findByUserId(userId);
-    }
-     */
-
-    /**
      * MFA Secret 생성 및 임시 저장 (아직 활성화 안됨)
      * (MFA 비밀 키를 초기화하고 DB저장합니다.)
      *
@@ -191,8 +156,9 @@ public class UserMfaService {
         if (existingMfa.isPresent()) {
             userMfa = existingMfa.get();
 
+            String lastVerifiedAt = String.valueOf(userMfa.getLastVerifiedAt());
             secret = userMfa.getMfaSecret();
-            if (!StringUtils.hasText(secret)) {
+            if (!StringUtils.hasText(secret) || lastVerifiedAt.equals("null")) {
                 // 초기화 된 유져
                 secret = mfaService.generateSecret();
                 String encryptedSecret = mfaService.encryptSecret(secret);

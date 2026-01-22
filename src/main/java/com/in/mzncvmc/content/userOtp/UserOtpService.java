@@ -1,8 +1,13 @@
 package com.in.mzncvmc.content.userOtp;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.in.mzncvmc.common.system.response.ApiResponse;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +61,28 @@ public class UserOtpService {
 
         userOtpRepository.save(entity);
     }
+
+    /**
+     * 사용자 MFA QR 설치 이미지 생성
+     *
+     * @param response
+     * @return ApiResponse
+     */
+    @Transactional
+    public ApiResponse googleAuthenticatorQr(HttpServletResponse response) throws Exception {
+
+        String qrText = "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2";
+
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        BitMatrix bitMatrix = qrCodeWriter.encode(qrText, BarcodeFormat.QR_CODE, 250, 250);
+
+        response.setContentType("image/png");
+        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", response.getOutputStream());
+
+
+        return ApiResponse.success(true, "Qr successfully activated.");
+    }
+
 
     /**
      * Mail OTP 코드 검증

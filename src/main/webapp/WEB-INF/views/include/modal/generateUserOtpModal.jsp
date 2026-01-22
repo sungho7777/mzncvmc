@@ -18,6 +18,18 @@
                         <label class="small mb-1" for="generateUserOtp_otpCode">Otp Code</label>
                         <input class="form-control" id="generateUserOtp_otpCode" type="text" placeholder="Enter current Otp Code" />
                     </div>
+                    <!-- Step Component Example -->
+                    <div class="step mb-5">
+                        <div class="step-item active">
+                            <a class="step-item-link" href="#!">Step 1</a>
+                        </div>
+                        <div class="step-item">
+                            <a class="step-item-link disabled" href="#!">Step 2</a>
+                        </div>
+                        <div class="step-item">
+                            <a class="step-item-link disabled" href="#!">Step 3</a>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

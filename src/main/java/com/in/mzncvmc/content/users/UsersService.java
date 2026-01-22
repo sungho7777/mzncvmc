@@ -115,7 +115,7 @@ public class UsersService{
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
         user.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
-        user.setProviderId(null);
+        user.setProviderId("1");
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         user.setPwNotifyDuration("999");
