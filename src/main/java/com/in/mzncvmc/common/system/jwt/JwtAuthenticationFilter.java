@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
 
-            System.out.println("headerToken : " + jwtToken );
+            //System.out.println("headerToken : " + jwtToken );
 
             try {
                 username = jwtToken == null ? null : jwtUtil.extractUsername(jwtToken);
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }else{
             jwtToken = cookieUtil.extractAccessTokenCookie("accessToken", request);
-            System.out.println("cookieToken : " + jwtToken );
+            //System.out.println("cookieToken : " + jwtToken );
 
             try {
                 username = jwtToken == null ? null : jwtUtil.extractUsername(jwtToken);

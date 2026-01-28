@@ -44,7 +44,7 @@
                                     <!-- Form Group (submit options)-->
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                         <a class="small" href="/login">Return to login</a>
-                                        <button id="RecoveryPassword-btn" class="btn btn-primary" type="button">Recovery Password</button>
+                                        <button id="PasswordRecovery-btn" class="btn btn-primary" type="button">Password Recovery</button>
                                     </div>
                                 </form>
                             </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                    <button id="ResetPassword-btn" class="btn btn-primary" type="button">Reset Password</button>
+                    <button id="PasswordReset-btn" class="btn btn-primary" type="button">Password Reset</button>
                 </div>
             </div>
         </div>
@@ -107,22 +107,22 @@
     document.getElementById("username").focus();
 
     document.addEventListener('DOMContentLoaded', function() {
-        const RecoveryPasswordBtn = document.getElementById('RecoveryPassword-btn');
-        const ResetPasswordBtn = document.getElementById('ResetPassword-btn');
+        const PasswordRecoveryBtn = document.getElementById('PasswordRecovery-btn');
+        const PasswordResetBtn = document.getElementById('PasswordReset-btn');
 
         // 비밀번호 복구 이메일 보냄.
-        RecoveryPasswordBtn.addEventListener('click', function(e) {
+        PasswordRecoveryBtn.addEventListener('click', function(e) {
             //e.preventDefault(); // 기본 링크 동작을 막음
 
-            recoveryPassword();
+            passwordRecovery();
 
 
         });
         // 복구 코드 검증 요청.
-        ResetPasswordBtn.addEventListener('click', function(e) {
+        PasswordResetBtn.addEventListener('click', function(e) {
             //e.preventDefault(); // 기본 링크 동작을 막음
 
-            resetPassword();
+            passwordReset();
         });
     });
 
@@ -131,13 +131,13 @@
      *
      * @returns {boolean}
      */
-    const recoveryPassword = async() => {
+    const passwordRecovery = async() => {
 
         const username = $("#username").val();
         const email = $("#email").val();
         //const recoveryCode = $("#recoveryCode").val();
 
-        const response = await fetch('/api/account/recoveryPassword', {
+        const response = await fetch('/api/password/recovery', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -170,13 +170,13 @@
      *
      * @returns {boolean}
      */
-    const resetPassword = async() => {
+    const passwordReset = async() => {
 
         const username = $("#username").val();
         const email = $("#email").val();
         const recoveryCode = $("#recoveryCode").val();
 
-        const response = await fetch('/api/account/resetPassword', {
+        const response = await fetch('/api/password/reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

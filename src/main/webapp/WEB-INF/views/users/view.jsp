@@ -151,7 +151,7 @@
                                     <label class="small mb-1" for="confirmPassword">Confirm Password</label>
                                     <input class="form-control" id="confirmPassword" type="password" placeholder="Confirm new password" />
                                 </div>
-                                <button type="button" class="btn btn-primary" onclick="_changePassword();">Password Change</button>
+                                <button type="button" class="btn btn-primary" onclick="_passwordChange();">Password Change</button>
                             </form>
                         </div>
                     </div>
@@ -256,12 +256,12 @@
         $("#companyView").attr("onclick", "main.goView('company', null, " + data.companyId + ");");
     };
 
-    const _changePassword = async () => {
+    const _passwordChange = async () => {
         const _pwNotifyDuration = localStorage.getItem('pwNotifyDuration');
 
         $('#loading').show();
 
-        const response = await fetch('/api/account/changePassword', {
+        const response = await fetch('/api/password/change', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

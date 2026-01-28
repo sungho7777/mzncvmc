@@ -61,8 +61,8 @@ public class SecurityConfig {
                         .requestMatchers("/common/sbadminpro/**").permitAll()
 
                         // 비밀번호 초기화 인증 없이 허용
-                        .requestMatchers("/api/account/resetPassword",
-                                         "/api/account/recoveryPassword").permitAll()
+                        .requestMatchers("/api/password/reset",
+                                         "/api/password/recovery").permitAll()
 
                         .requestMatchers("/api/auth/**").permitAll() // 일반 로그인 관련된 api
                         .requestMatchers("/api/oauth/**").permitAll() // OAuth 로그인 관련된 api

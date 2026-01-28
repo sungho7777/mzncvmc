@@ -50,12 +50,12 @@ public class MailService {
         log.info("MailService.sendUserMfaFailCountInterruption.email : " + email);
     }
 
-    public void sendChangePassword(String email){
+    public void sendPasswordChange(String email){
 
-        log.info("MailService.sendChangePassword.text : 비밀번호 변경 성공");
-        log.info("MailService.sendChangePassword.email : " + email);
+        log.info("MailService.sendPasswordChange.text : 비밀번호 변경 성공");
+        log.info("MailService.sendPasswordChange.email : " + email);
     }
-    public void sendResetPassword(String email){
+    public void sendPasswordReset(String email){
 
         log.info("MailService.sendResetPassword.text : 비밀번호 초기화 성공");
         log.info("MailService.sendResetPassword.email : " + email);

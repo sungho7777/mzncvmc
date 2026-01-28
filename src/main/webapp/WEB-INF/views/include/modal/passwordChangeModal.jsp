@@ -3,11 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!-- Modal -->
-<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+<div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="changePasswordModalLabel">Change Password Plz</h5>
+                <h5 class="modal-title" id="passwordChangeModalLabel">Change Password Plz</h5>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -31,7 +31,7 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                <button id="changePassword-btn" class="btn btn-primary" type="button">change Password</button>
+                <button id="passwordChange-btn" class="btn btn-primary" type="button">Password Change</button>
             </div>
         </div>
     </div>
@@ -40,21 +40,21 @@
 
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
-        const changePasswordBtn = document.getElementById('changePassword-btn');
+        const passwordChangeBtn = document.getElementById('passwordChange-btn');
 
-        changePasswordBtn.addEventListener('click', function(e) {
+        passwordChangeBtn.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 동작을 막음
 
-            changePassword();
+            passwordChange();
         });
     });
 
-    const changePassword = async () => {
+    const passwordChange = async () => {
         const _pwNotifyDuration = localStorage.getItem('pwNotifyDuration');
 
         $('#loading').show();
 
-        const response = await fetch('/api/account/changePassword', {
+        const response = await fetch('/api/password/change', {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"

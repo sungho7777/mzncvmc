@@ -1,11 +1,11 @@
-package com.in.mzncvmc.content.users.account;
+package com.in.mzncvmc.content.users.password;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ChangePasswordDto {
+public class PasswordChangeDto {
     private String currentPassword;
     private String newPassword;
     private String confirmPassword;

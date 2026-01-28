@@ -81,11 +81,11 @@ setTimeout(() => {
 
     if(pwNotifyDuration == '999'){
         // 신규 사용자는 비밀번호를 변경하도록 유도한다.
-        const changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'), {
+        const passwordChangeModal = new bootstrap.Modal(document.getElementById('passwordChangeModal'), {
             backdrop: 'static',
             keyboard: false
         });
-        changePasswordModal.show();
+        passwordChangeModal.show();
     }else{
 /*
         const loginDetailsModal = new bootstrap.Modal(document.getElementById('loginDetailsModal'), {

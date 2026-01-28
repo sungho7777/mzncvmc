@@ -85,7 +85,7 @@
             <%@ include file="include/modal/successModal.jsp" %>
             <%@ include file="include/modal/deleteModal.jsp" %>
             <%@ include file="include/modal/loginDetailsModal.jsp" %>
-            <%@ include file="include/modal/changePasswordModal.jsp" %>
+            <%@ include file="include/modal/passwordChangeModal.jsp" %>
         </div>
 
         <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
