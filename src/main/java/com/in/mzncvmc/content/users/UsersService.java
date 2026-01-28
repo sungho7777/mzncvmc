@@ -18,8 +18,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
+import java.util.UUID;
+
+import static org.apache.commons.io.FilenameUtils.getExtension;
 
 @Log4j2
 @Service
@@ -29,6 +37,9 @@ public class UsersService{
 
     @Value("${user.first.password}")
     private String userFirstPassword;
+
+    @Value("${file.upload.base-path:/uploads}")
+    private String basePath;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -114,7 +125,9 @@ public class UsersService{
         user.setCompanyId(company);
         user.setFullName(dto.getFullName());
         user.setEmail(dto.getEmail());
-        user.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
+        user.setProfileImagePath(dto.getProfileImagePath());
+
+        user.setProvider(Users.Provider.valueOf(dto.getProvider().toUpperCase())); // default 'LOCAL'
         user.setProviderId("1");
         user.setPhone(dto.getPhone());
         user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
@@ -207,8 +220,8 @@ public class UsersService{
         existing.setCompanyId(company);
         existing.setFullName(dto.getFullName());
         existing.setEmail(dto.getEmail());
-        existing.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
-        existing.setProviderId(null);
+        //existing.setProvider(Users.Provider.valueOf(dto.getProviderId().toUpperCase())); // default 'LOCAL'
+        //existing.setProviderId(null);
         existing.setPhone(dto.getPhone());
         existing.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
         existing.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));

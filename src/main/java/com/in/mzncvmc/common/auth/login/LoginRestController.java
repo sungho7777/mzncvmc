@@ -213,6 +213,9 @@ public class LoginRestController {
         String secret = userMfaService.initiateAndStoreMFASecret(userId);
         String qrCodeBase64 = mfaService.generateQRCodeBase64(username, secret);
 
+        System.out.println("secret : " + secret);
+        System.out.println("qrCodeBase64 : " + qrCodeBase64);
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("qrCode", "data:image/png;base64," + qrCodeBase64);

@@ -17,6 +17,7 @@ public class UsersDto {
     private String username; // 로그인 아이디
     private String fullName; // 사용자 이름
     private String email; // 이메일
+    private String profileImagePath; // 프로필 이미지 경로
     private String provider; // OAUTH2 provider
     private String providerId; // OAUTH2 provider id
     private String phone; // 전화번호

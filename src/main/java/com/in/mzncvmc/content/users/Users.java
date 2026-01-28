@@ -47,6 +47,10 @@ public class Users implements UserDetails {
     @Comment("이메일")
     private String email;
 
+    @Column(length = 100, unique = true)
+    @Comment("프로필 이미지 경로")
+    private String profileImagePath;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("provider")

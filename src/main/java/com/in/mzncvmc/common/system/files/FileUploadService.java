@@ -69,6 +69,8 @@ public class FileUploadService {
                     .fileExtension(FilenameUtils.getExtension(file.getOriginalFilename()).toLowerCase())
                     .mimeType(tika.detect(file.getInputStream()))
                     .createdBy(userId)
+                    .isDeleted(false)
+                    .deletedDate(null)
                     .build();
 
             return fileRepository.save(fileEntity);

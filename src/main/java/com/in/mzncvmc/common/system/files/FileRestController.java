@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_ID;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/files")
@@ -58,6 +60,7 @@ public class FileRestController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
 
     /**
      * 다중 파일 업로드
@@ -155,12 +158,8 @@ public class FileRestController {
         }
     }
 
-    /**
-     * JWT 토큰에서 사용자 ID 추출 (실제 구현에 맞게 수정 필요)
-     */
     private Long getUserId(UserDetails userDetails) {
-        // 실제 JWT 구현에 따라 수정 필요
-        // 예: JwtUserDetails에서 userId 추출
-        return 1L; // 임시 값
+
+        return 1L;
     }
 }

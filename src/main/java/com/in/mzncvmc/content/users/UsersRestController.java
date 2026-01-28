@@ -1,11 +1,21 @@
 package com.in.mzncvmc.content.users;
 
 import com.in.mzncvmc.common.system.response.ApiResponse;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_API;
 import static com.in.mzncvmc.common.system.constants.CommonConstants.SLASH_ID;
@@ -30,26 +40,6 @@ public class UsersRestController {
         log.debug("UsersRestcontroller.createData : " + dto);
 
         Long newDataId = usersService.insert(dto);
-
-/*
-        Users user = new Users();
-        user.setUsername(dto.getUsername());
-        user.setCompanyId(company);
-        user.setFullName(dto.getFullName());
-        user.setEmail(dto.getEmail());
-        user.setProviderId(Users.Provider.valueOf(dto.getProviderId().toUpperCase()));
-        user.setPhone(dto.getPhone());
-        user.setRole(Users.Role.valueOf(dto.getRole().toUpperCase()));
-        user.setPwNotifyDuration("999");
-        user.setStatus(Users.Status.valueOf(dto.getStatus().toUpperCase()));
-        //user.setConnected(Users.Connected.valueOf("N"));
-
-        // 비밀번호 기본값 설정 (암호화 적용)
-        user.setPassword(passwordEncoder.encode(userFirstPassword));
-
-        Users saved = usersRepository.save(user);
-*/
-
 
         return ApiResponse.success(newDataId, "New Data created successfully");
     }

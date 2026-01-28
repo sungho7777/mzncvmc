@@ -58,6 +58,10 @@
                             <!-- Profile picture upload button-->
                             <button class="btn btn-primary" type="button">Upload new image</button>
                         </div>
+
+                        <input type="file" id="fileInput" />
+                        <button onclick="uploadFile()">업로드</button>
+
                     </div>
                 </div>
                 <div class="col-xl-8">
@@ -91,8 +95,16 @@
                                         <input class="form-control" id="email" name="email" type="email" placeholder="Enter your email address" value="mzncvmc@gmail.com" />
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="small mb-1" for="role">OAuth2.0</label>
-                                        <input class="form-control" id="providerId" name="providerId" type="text" placeholder="Enter your providerId" value="LOCAL" />
+                                    </div>
+                                </div>
+                                <div class="row gx-3 mb-3">
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="role">Provider</label>
+                                        <input class="form-control" id="provider" name="provider" type="text" placeholder="Enter your providerId" value="LOCAL" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="small mb-1" for="role">Provider Id</label>
+                                        <input class="form-control" id="providerId" name="providerId" type="text" placeholder="Enter your providerId" value="1" />
                                     </div>
                                 </div>
                                 <div class="row gx-3 mb-3">
@@ -242,6 +254,8 @@
      */
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+
+
     const amendData = async () => {
         const form = document.getElementById("amendForm");
         const data = Object.fromEntries(new FormData(form).entries());
@@ -259,6 +273,8 @@
 
         $('#loading').show(); // 로딩 표시
 
+        //file.uploadFile("USERS", data.userId, "fileInput");
+
         try {
             const res = await fetch(API_URL + `/` + data.userId, {
                 method: data.mapping,
@@ -270,6 +286,7 @@
             });
 
             if (!res.ok) throw new Error("서버 에러 발생: " + res.status);
+
 
             const jsonData = await res.json();
             console.log("응답 updateData JSON:", jsonData);
@@ -321,4 +338,13 @@
 
         return errors;
     };
+
+
+
+
+
+
+
+
+
 </script>

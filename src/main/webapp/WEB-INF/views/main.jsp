@@ -99,6 +99,7 @@
             };
         </script>
         <script src="/common/sbadmin/js/domain/main.js"></script>
+        <script src="/common/sbadmin/js/domain/file.js"></script>
         <script src="/common/sbadmin/js/domain/auth.js"></script>
         <script src="/common/sbadmin/js/domain/board.js"></script>
         <script src="/common/sbadmin/js/domain/valided.js"></script>
