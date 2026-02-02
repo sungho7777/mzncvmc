@@ -257,7 +257,7 @@ public class UsersService{
             .username(entity.getUsername())
             .fullName(entity.getFullName())
             .email(entity.getEmail())
-            .provider(entity.getProviderId())
+            .provider(entity.getProvider().name())
             .providerId(entity.getProviderId())
 
             .phone(entity.getPhone())

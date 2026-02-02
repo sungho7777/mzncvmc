@@ -327,11 +327,10 @@ public class LoginRestController {
     @PostMapping("/logout")
     public ApiResponse<?> logout(HttpServletRequest request,
                                  HttpServletResponse response) {
-        //String token = request.getHeader("Authorization");
-        String token = "Bearer "+cookieUtil.extractAccessTokenCookie("accessToken", request);
+        String jwtToken = cookieUtil.extractAccessTokenCookie("accessToken", request);
 
-        if (token != null && token.startsWith("Bearer ")) {
-            String actualToken = token.substring(7);
+        if (jwtToken != null) {
+            String actualToken = jwtToken;
             try {
                 String username = jwtUtil.extractUsername(actualToken);
                 userHistoryService.saveLogout(username, clientUtil.getClientIp(request));
@@ -342,9 +341,6 @@ public class LoginRestController {
             } catch (Exception e) {
                 // 토큰이 유효하지 않아도 로그아웃은 성공으로 처리
             }
-
-
-
 
             return loginService.returnSuccessLogout(request, response);
         }

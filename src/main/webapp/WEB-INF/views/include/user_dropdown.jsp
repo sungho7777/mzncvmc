@@ -25,6 +25,7 @@
 </li>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        /*
         const userId = localStorage.getItem('userId');
         const username = localStorage.getItem('username');
         if (userId && username) {
@@ -32,5 +33,6 @@
             $("#user-dropdown-email").text("mzncvmc@gmail.com");
             $("#user-dropdown-profile").attr("onclick", "main.goView('users', null, " + userId + ");");
         }
+        */
     });
 </script>

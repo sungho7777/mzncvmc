@@ -240,6 +240,7 @@
         $("#username").val(data.username);
         $("#fullName").val(data.fullName);
         $("#email").val(data.email);
+        $("#provider").val(data.provider);
         $("#providerId").val(data.providerId);
         $("#phone").val(data.phone);
         $("#role").val(data.role);

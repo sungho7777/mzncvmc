@@ -2,6 +2,9 @@ package com.in.mzncvmc.common.auth.oAuth;
 
 import com.in.mzncvmc.common.auth.login.LoginService;
 import com.in.mzncvmc.common.system.jwt.JwtUtil;
+import com.in.mzncvmc.common.system.util.ClientUtil;
+import com.in.mzncvmc.common.system.util.CookieUtil;
+import com.in.mzncvmc.common.system.util.SessionUtil;
 import com.in.mzncvmc.content.users.Users;
 import com.in.mzncvmc.content.users.UsersService;
 import jakarta.servlet.http.Cookie;
@@ -11,8 +14,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +38,15 @@ public class OAuthController {
     @Autowired
     private final UsersService usersService;
     @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
     private final JwtUtil jwtUtil;
+    @Autowired
+    private CookieUtil cookieUtil;
+    @Autowired
+    private SessionUtil sessionUtil;
+    @Autowired
+    private ClientUtil clientUtil;
     @Autowired
     private LoginService loginService;
 
@@ -82,27 +94,32 @@ public class OAuthController {
     // Google 콜백 (Authorization Code 수신 및 처리)
     // TODO 현재 방화벽 정책 때문에 회사서는 못 함.. 나중에 노트북에서 할 것.
     @GetMapping("/callback/google")
-    public ResponseEntity<?> googleCallback(@RequestParam(required=false) String code,
+    public void googleCallback(@RequestParam(required=false) String code,
                                             @RequestParam(required=false) String error,
                                             HttpSession session,
                                             HttpServletRequest httpRequest,
                                             HttpServletResponse response) throws IOException {
-        if(error != null) {
-            return ResponseEntity.status(400).body("OAuth login cancelled");
-        }
+        // 1. 구글 Access Token (절대 외부 노출 X)
+        String googleAccessToken = oAuthService.getGoogleAccessToken(code);
 
-        // 1. Authorization Code로 Access Token 요청
-        String accessToken = oAuthService.getGoogleAccessToken(code);
+        // 2. 구글 사용자 정보 조회
+        OAuthUserInfo userInfo = oAuthService.getGoogleUserInfo(googleAccessToken);
 
-        // 2. Access Token으로 사용자 정보 조회
-        OAuthUserInfo userInfo = oAuthService.getGoogleUserInfo(accessToken);
-
-        // 3. 사용자 처리 (회원가입 또는 로그인)
+        // 3. 사용자 처리
         Users users = usersService.processOAuthUser(userInfo);
 
-        // 사용자 로그인 성공 및 토큰 처리
-        // statusLogin == 'success'
-        return loginService.returnSuccessLogin(users, httpRequest, response, "Login successful");
+        // 4. 우리 서버용 JWT 발급
+        UserDetails userDetails =
+                userDetailsService.loadUserByUsername(users.getUsername());
+
+        String jwtAccessToken = jwtUtil.generateToken(userDetails);
+
+        // 5. JWT만 쿠키/세션에 저장
+        cookieUtil.insertAccessTokenCookie("accessToken", jwtAccessToken, response);
+        sessionUtil.insertAccessTokenSession("accessToken", jwtAccessToken, httpRequest);
+        sessionUtil.insertUserDetailsSession("loginUser", userDetails, httpRequest);
+
+        response.sendRedirect("/main");
     }
 
     // Kakao 로그인 시작

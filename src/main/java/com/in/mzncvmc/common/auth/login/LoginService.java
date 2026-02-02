@@ -166,6 +166,13 @@ public class LoginService {
                 )
         );
     }
+    public void onAuthenticationSuccess(
+            Users users,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            String message) {
+
+    }
 
     /**
      * 사용자 로그아웃 성공 및 토큰 처리
