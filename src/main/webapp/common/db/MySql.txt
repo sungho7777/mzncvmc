@@ -257,9 +257,49 @@ CREATE TABLE password_history (
 );
 
 
+# 메뉴 관리 테이블
+DROP TABLE IF EXISTS admin_menu;
+CREATE TABLE IF NOT EXISTS admin_menu (
+    menu_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    parent_id BIGINT NULL,
+    menu_name VARCHAR(100) NOT NULL,
+    menu_url VARCHAR(255) NULL,
+    menu_order INT NOT NULL DEFAULT 1,
+    menu_level INT NOT NULL DEFAULT 1,
+    use_yn CHAR(1) NOT NULL DEFAULT 'Y',
+    icon_class VARCHAR(100) NULL,
+    FOREIGN KEY (parent_id) REFERENCES admin_menu(menu_id) ON DELETE CASCADE
+);
 
+# 샘플 데이터 삽입
+INSERT INTO admin_menu (menu_id, parent_id, menu_name, menu_url, menu_order, menu_level, use_yn, icon_class)
+VALUES (1, NULL, 'Dashboard', '/m/dashboard', 1, 1, 'Y', 'fa fa-dashboard')
+        , (2, NULL, '시스템 관리', NULL, 2, 1, 'Y', 'fa fa-cog')
+        , (3, NULL, '사용자 관리', NULL, 3, 1, 'Y', 'fa fa-users')
+        , (4, NULL, '콘텐츠 관리', NULL, 4, 1, 'Y', 'fa fa-file-text')
 
+        , (5, 2, '메뉴 관리', '/m/menu/list', 1, 2, 'Y', 'fa fa-bars')
+        , (6, 2, '코드 관리', '/m/code/list', 2, 2, 'Y', 'fa fa-code')
+        , (7, 2, '권한 관리', '/m/auth/list', 3, 2, 'Y', 'fa fa-lock')
 
+        , (8, 3, '업체 목록', '/m/company/list', 1, 2, 'Y', 'fa fa-user')
+        , (9, 3, '사용자 목록', '/m/users/list', 2, 2, 'Y', 'fa fa-user')
+        , (10, 3, '그룹 관리', '/m/group/list', 3, 2, 'Y', 'fa fa-users')
+        , (11, 3, '접속 이력', '/m/access/log', 4, 2, 'Y', 'fa fa-history')
+
+        , (12, 4, 'DCS 로그관리', '/m/dcs/dcsLog/list', 1, 2, 'Y', 'fa fa-list')
+        , (13, 4, '공지사항', '/m/notice/list', 2, 2, 'Y', 'fa fa-bullhorn')
+        , (14, 4, 'FAQ 관리', '/m/faq/list', 3, 2, 'Y', 'fa fa-question-circle')
+
+        , (15, 11, '게시글 관리', '/m/board/post/list', 1, 3, 'Y', 'fa fa-file-o')
+        , (16, 11, '댓글 관리', '/m/board/comment/list', 2, 3, 'Y', 'fa fa-comment-o')
+    ;
+
+# AUTO_INCREMENT 초기값 설정
+ALTER TABLE admin_menu AUTO_INCREMENT = 100;
+
+# 데이터 확인 쿼리
+SELECT * FROM admin_menu ORDER BY menu_level, menu_order;
 
 
 

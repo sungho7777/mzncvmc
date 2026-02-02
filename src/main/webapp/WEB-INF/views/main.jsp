@@ -70,7 +70,6 @@
                         </div>
 
                         <script type="text/javascript">
-
                         </script>
 
 
@@ -91,13 +90,20 @@
         <script src="/common/sbadminpro/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="/common/sbadminpro/js/scripts.js"></script>
 
+
+        <script src="/common/sbadmin/js/domain/menu.js"></script>
         <!-- common.script -->
         <script>
             window.auth = {
                 accessToken: "${fn:escapeXml(sessionScope.accessToken)}"
                 , pwNotifyDuration: "${fn:escapeXml(sessionScope.loginUser.pwNotifyDuration)}"
             };
+            $(document).ready(function () {
+                menu.init();
+            });
+
         </script>
+
         <script src="/common/sbadmin/js/domain/main.js"></script>
         <script src="/common/sbadmin/js/domain/file.js"></script>
         <script src="/common/sbadmin/js/domain/auth.js"></script>
